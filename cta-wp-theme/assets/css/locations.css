@@ -1,0 +1,860 @@
+/* ============================================
+   Locations Page Styles
+   ============================================ */
+
+/* Delivery Options Section */
+.locations-delivery-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .locations-delivery-options {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+  }
+}
+
+.locations-delivery-card {
+  background: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  padding: 40px 32px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.locations-delivery-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.locations-delivery-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(245, 239, 224, 0.8);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.locations-delivery-icon i {
+  font-size: 28px;
+  color: #9b8560;
+}
+
+.locations-delivery-card:hover .locations-delivery-icon {
+  background: rgba(245, 239, 224, 1);
+  transform: scale(1.05);
+}
+
+.locations-delivery-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--brown-dark);
+  margin: 0 0 12px;
+  line-height: 1.3;
+}
+
+.locations-delivery-address {
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 0 0 16px;
+  font-size: 15px;
+}
+
+.locations-delivery-card p {
+  color: var(--brown-medium);
+  line-height: 1.6;
+  margin: 0 0 16px;
+}
+
+.locations-delivery-card p:last-of-type {
+  margin-bottom: 20px;
+}
+
+.locations-delivery-highlight {
+  padding: 16px;
+  background: var(--cream-bg);
+  border-radius: 8px;
+  margin: 0;
+}
+
+.locations-delivery-highlight p {
+  margin: 0;
+  font-size: 15px;
+  color: var(--brown-medium);
+}
+
+.locations-delivery-highlight strong {
+  color: var(--brown-dark);
+}
+
+/* Contact Prompt */
+.locations-contact-prompt {
+  margin-top: 48px;
+  padding: 32px;
+  background: var(--white);
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.locations-contact-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--brown-dark);
+  margin: 0 0 16px;
+}
+
+.locations-contact-details {
+  margin: 0;
+  font-size: 16px;
+  color: var(--brown-medium);
+}
+
+.locations-contact-details a {
+  font-weight: 600;
+  color: var(--primary-blue);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.locations-contact-details a:hover {
+  color: var(--primary-teal);
+  text-decoration: underline;
+}
+
+.locations-contact-separator {
+  margin: 0 16px;
+  color: var(--border-color);
+}
+
+/* Kent Locations Grid */
+.locations-kent-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .locations-kent-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .locations-kent-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+}
+
+.location-kent-card {
+  position: relative;
+  background: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  padding: 40px 32px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+@media (max-width: 639px) {
+  .location-kent-card {
+    padding: 32px 24px;
+  }
+}
+
+.location-kent-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: rgba(155, 133, 96, 0.3);
+}
+
+/* Primary Card (Maidstone) */
+.location-kent-card-primary {
+  border: 2px solid #9b8560;
+  box-shadow: 0 6px 24px rgba(155, 133, 96, 0.15);
+}
+
+@media (min-width: 768px) {
+  .location-kent-card-primary {
+    transform: scale(1.02);
+  }
+  
+  .location-kent-card-primary:hover {
+    transform: scale(1.02) translateY(-4px);
+  }
+}
+
+.location-kent-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 6px 16px;
+  background: #9b8560;
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 20px;
+}
+
+.location-kent-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(245, 239, 224, 0.6), rgba(245, 239, 224, 0.9));
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.location-kent-icon i {
+  font-size: 32px;
+  color: #9b8560;
+}
+
+.location-kent-card:hover .location-kent-icon {
+  background: linear-gradient(135deg, rgba(245, 239, 224, 0.9), rgba(245, 239, 224, 1));
+  transform: scale(1.1);
+}
+
+.location-kent-card-primary .location-kent-icon {
+  background: linear-gradient(135deg, #9b8560, #b29456);
+}
+
+.location-kent-card-primary .location-kent-icon i {
+  color: var(--white);
+}
+
+.location-kent-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--brown-dark);
+  margin: 0 0 12px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 639px) {
+  .location-kent-title {
+    font-size: 20px;
+  }
+}
+
+.location-kent-description {
+  color: var(--brown-medium);
+  line-height: 1.6;
+  margin: 0 0 24px;
+  font-size: 15px;
+  flex-grow: 1;
+}
+
+.location-kent-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0 0 28px;
+  padding: 24px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  text-align: left;
+}
+
+.location-kent-detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.location-kent-detail-item i {
+  color: #9b8560;
+  font-size: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.location-kent-detail-item div {
+  flex: 1;
+}
+
+.location-kent-detail-item strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brown-dark);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.location-kent-detail-item span {
+  display: block;
+  font-size: 14px;
+  color: var(--brown-medium);
+  line-height: 1.5;
+}
+
+.location-kent-card .btn {
+  width: 100%;
+  margin-top: auto;
+  font-size: 15px;
+  font-weight: 600;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* UK-Wide Locations Grid */
+.locations-uk-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .locations-uk-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .locations-uk-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+}
+
+.location-uk-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 32px 28px;
+  background: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+@media (max-width: 639px) {
+  .location-uk-card {
+    padding: 24px 20px;
+    gap: 16px;
+  }
+}
+
+.location-uk-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #35938d, #4aa8a1);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.location-uk-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: #35938d;
+}
+
+.location-uk-card:hover::before {
+  transform: scaleX(1);
+}
+
+.location-uk-card i {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #35938d;
+  background: linear-gradient(135deg, rgba(53, 147, 141, 0.1), rgba(53, 147, 141, 0.05));
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 639px) {
+  .location-uk-card i {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+}
+
+.location-uk-card:hover i {
+  background: linear-gradient(135deg, #35938d, #4aa8a1);
+  color: var(--white);
+  transform: scale(1.1);
+}
+
+.location-uk-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--brown-dark);
+  margin: 0;
+  line-height: 1.4;
+  transition: color 0.25s ease;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 639px) {
+  .location-uk-card h3 {
+    font-size: 16px;
+  }
+}
+
+.location-uk-card:hover h3 {
+  color: #35938d;
+}
+
+/* Content intro styling */
+.content-intro {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.content-lead {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--brown-medium);
+  margin: 0 0 24px;
+}
+
+.content-lead:last-child {
+  margin-bottom: 0;
+}
+
+@media (min-width: 768px) {
+  .content-lead {
+    font-size: 19px;
+  }
+}
+
+/* ============================================
+   Why Choose Us - Benefits Section
+   ============================================ */
+
+.locations-benefits-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .locations-benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .locations-benefits-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+}
+
+.locations-benefit-card {
+  position: relative;
+  background: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  padding: 40px 32px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+@media (max-width: 639px) {
+  .locations-benefit-card {
+    padding: 32px 24px;
+  }
+}
+
+.locations-benefit-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.locations-benefit-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.locations-benefit-card:hover::before {
+  transform: scaleX(1);
+}
+
+.locations-benefit-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 36px;
+  color: var(--white);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 639px) {
+  .locations-benefit-icon {
+    width: 72px;
+    height: 72px;
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+}
+
+.locations-benefit-card:hover .locations-benefit-icon {
+  transform: scale(1.1);
+}
+
+.locations-benefit-icon-blue {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.locations-benefit-icon-teal {
+  background: linear-gradient(135deg, #35938d, #4aa8a1);
+}
+
+.locations-benefit-icon-gold {
+  background: linear-gradient(135deg, #9b8560, #b29456);
+}
+
+.locations-benefit-icon-green {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.locations-benefit-icon-purple {
+  background: linear-gradient(135deg, #a855f7, #9333ea);
+}
+
+.locations-benefit-icon-orange {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+}
+
+.locations-benefit-card:nth-child(1) {
+  color: #3b82f6;
+}
+
+.locations-benefit-card:nth-child(2) {
+  color: #35938d;
+}
+
+.locations-benefit-card:nth-child(3) {
+  color: #9b8560;
+}
+
+.locations-benefit-card:nth-child(4) {
+  color: #22c55e;
+}
+
+.locations-benefit-card:nth-child(5) {
+  color: #a855f7;
+}
+
+.locations-benefit-card:nth-child(6) {
+  color: #f97316;
+}
+
+.locations-benefit-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--brown-dark);
+  margin: 0 0 16px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 639px) {
+  .locations-benefit-title {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+}
+
+.locations-benefit-description {
+  font-size: 15px;
+  color: var(--brown-medium);
+  line-height: 1.7;
+  margin: 0;
+}
+
+@media (max-width: 639px) {
+  .locations-benefit-description {
+    font-size: 14px;
+  }
+}
+
+/* ============================================
+   Popular Courses Section
+   ============================================ */
+
+.locations-courses-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  max-width: 1200px;
+  margin: 0 auto 64px;
+}
+
+@media (min-width: 640px) {
+  .locations-courses-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .locations-courses-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+}
+
+.locations-course-card {
+  position: relative;
+  background: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  padding: 32px 28px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.locations-course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.locations-course-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 32px;
+  color: var(--white);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.locations-course-card:hover .locations-course-icon {
+  transform: scale(1.1);
+}
+
+.locations-course-icon-red {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.locations-course-icon-blue {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.locations-course-icon-purple {
+  background: linear-gradient(135deg, #a855f7, #9333ea);
+}
+
+.locations-course-icon-teal {
+  background: linear-gradient(135deg, #35938d, #4aa8a1);
+}
+
+.locations-course-icon-orange {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+}
+
+.locations-course-icon-green {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.locations-course-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--brown-dark);
+  margin: 0 0 12px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 639px) {
+  .locations-course-title {
+    font-size: 18px;
+  }
+}
+
+.locations-course-meta {
+  font-size: 14px;
+  font-weight: 600;
+  color: #35938d;
+  margin: 0 0 16px;
+  padding: 6px 14px;
+  background: rgba(53, 147, 141, 0.1);
+  border-radius: 20px;
+  display: inline-block;
+}
+
+.locations-course-description {
+  font-size: 15px;
+  color: var(--brown-medium);
+  line-height: 1.7;
+  margin: 0 0 24px;
+  flex-grow: 1;
+}
+
+@media (max-width: 639px) {
+  .locations-course-description {
+    font-size: 14px;
+  }
+}
+
+.locations-course-card .btn {
+  width: 100%;
+  margin-top: auto;
+}
+
+/* ============================================
+   Specialist Courses Section
+   ============================================ */
+
+.locations-specialist-section {
+  margin-top: 64px;
+  padding: 48px 40px;
+  background: var(--white);
+  border-radius: 20px;
+  border: 2px solid rgba(155, 133, 96, 0.2);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 767px) {
+  .locations-specialist-section {
+    padding: 32px 24px;
+    margin-top: 48px;
+  }
+}
+
+.locations-specialist-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.locations-specialist-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--brown-dark);
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 767px) {
+  .locations-specialist-title {
+    font-size: 24px;
+  }
+}
+
+.locations-specialist-description {
+  font-size: 17px;
+  color: var(--brown-medium);
+  margin: 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 767px) {
+  .locations-specialist-description {
+    font-size: 15px;
+  }
+}
+
+.locations-specialist-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.locations-specialist-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, rgba(245, 239, 224, 0.4), rgba(245, 239, 224, 0.2));
+  border: 1px solid rgba(155, 133, 96, 0.3);
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brown-dark);
+  transition: all 0.25s ease;
+}
+
+@media (max-width: 767px) {
+  .locations-specialist-tag {
+    font-size: 13px;
+    padding: 8px 16px;
+  }
+}
+
+.locations-specialist-tag:hover {
+  background: linear-gradient(135deg, #9b8560, #b29456);
+  border-color: #9b8560;
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(155, 133, 96, 0.3);
+}

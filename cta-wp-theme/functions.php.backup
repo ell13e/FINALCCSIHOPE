@@ -1,0 +1,1046 @@
+<?php
+/**
+ * Continuity Training Academy Theme Functions
+ *
+ * @package CTA_Theme
+ * @version 1.0.0
+ */
+
+defined('ABSPATH') || exit;
+
+/**
+ * Theme Constants
+ */
+define('CTA_THEME_VERSION', '1.0.0');
+define('CTA_THEME_DIR', get_template_directory());
+define('CTA_THEME_URI', get_template_directory_uri());
+
+/**
+ * Include theme files
+ */
+require_once CTA_THEME_DIR . '/inc/theme-setup.php';
+require_once CTA_THEME_DIR . '/inc/post-types.php';
+require_once CTA_THEME_DIR . '/inc/customizer.php';
+require_once CTA_THEME_DIR . '/inc/acf-fields.php';
+require_once CTA_THEME_DIR . '/inc/theme-options.php';
+require_once CTA_THEME_DIR . '/inc/admin.php';
+require_once CTA_THEME_DIR . '/inc/admin-enhancements.php';
+require_once CTA_THEME_DIR . '/inc/admin-styles.php';
+require_once CTA_THEME_DIR . '/inc/api-keys-settings.php';
+require_once CTA_THEME_DIR . '/inc/ai-content-assistant.php';
+require_once CTA_THEME_DIR . '/inc/smart-internal-linker.php';
+require_once CTA_THEME_DIR . '/inc/ai-chat-widget.php';
+require_once CTA_THEME_DIR . '/inc/seo.php';
+require_once CTA_THEME_DIR . '/inc/block-patterns.php';
+require_once CTA_THEME_DIR . '/inc/ajax-handlers.php';
+require_once CTA_THEME_DIR . '/inc/form-submissions-admin.php';
+require_once CTA_THEME_DIR . '/inc/newsletter-subscribers.php';
+require_once CTA_THEME_DIR . '/inc/data-importer.php';
+require_once CTA_THEME_DIR . '/inc/cookie-consent.php';
+require_once CTA_THEME_DIR . '/inc/backup-system.php';
+require_once CTA_THEME_DIR . '/inc/theme-protection.php';
+
+/**
+ * Enqueue styles and scripts
+ */
+function cta_enqueue_assets() {
+    wp_enqueue_style(
+        'cta-google-fonts',
+        'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&family=Lora:wght@400;500;600;700&display=swap',
+        [],
+        null
+    );
+
+    wp_enqueue_style(
+        'font-awesome',
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css',
+        [],
+        '6.5.0'
+    );
+
+    wp_enqueue_style(
+        'cta-main',
+        CTA_THEME_URI . '/assets/css/main.css',
+        ['cta-google-fonts', 'font-awesome'],
+        CTA_THEME_VERSION
+    );
+    
+    // Add reCAPTCHA styling
+    $recaptcha_site_key = function_exists('cta_get_recaptcha_site_key') ? cta_get_recaptcha_site_key() : get_theme_mod('cta_recaptcha_site_key', '');
+    if (!empty($recaptcha_site_key)) {
+        wp_add_inline_style('cta-main', '
+            .cta-centered-recaptcha-wrapper,
+            .contact-form-recaptcha-wrapper,
+            .booking-form-recaptcha-wrapper {
+                margin: 1.5rem 0;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .cta-centered-recaptcha-wrapper .g-recaptcha,
+            .contact-form-recaptcha-wrapper .g-recaptcha,
+            .booking-form-recaptcha-wrapper .g-recaptcha {
+                margin-bottom: 0.5rem;
+            }
+            @media (max-width: 640px) {
+                .cta-centered-recaptcha-wrapper .g-recaptcha,
+                .contact-form-recaptcha-wrapper .g-recaptcha,
+                .booking-form-recaptcha-wrapper .g-recaptcha {
+                    transform: scale(0.85);
+                    transform-origin: 0 0;
+                }
+            }
+        ');
+    }
+
+    wp_enqueue_script(
+        'cta-main',
+        CTA_THEME_URI . '/assets/js/main.js',
+        [],
+        CTA_THEME_VERSION,
+        true
+    );
+
+    wp_enqueue_script(
+        'cta-thank-you-modal',
+        CTA_THEME_URI . '/assets/js/thank-you-modal.js',
+        ['cta-main'],
+        CTA_THEME_VERSION,
+        true
+    );
+
+    wp_localize_script('cta-main', 'ctaData', [
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('cta_nonce'),
+        'themeUrl' => CTA_THEME_URI,
+        'homeUrl' => home_url('/'),
+    ]);
+}
+add_action('wp_enqueue_scripts', 'cta_enqueue_assets');
+
+/**
+ * Enqueue reCAPTCHA script if site key is configured
+ */
+function cta_enqueue_recaptcha() {
+    $site_key = function_exists('cta_get_recaptcha_site_key') ? cta_get_recaptcha_site_key() : get_theme_mod('cta_recaptcha_site_key', '');
+    if (!empty($site_key)) {
+        wp_enqueue_script(
+            'google-recaptcha',
+            'https://www.google.com/recaptcha/api.js',
+            [],
+            null,
+            false
+        );
+    }
+}
+add_action('wp_enqueue_scripts', 'cta_enqueue_recaptcha');
+
+/**
+ * Enqueue page-specific scripts
+ */
+function cta_enqueue_page_scripts() {
+    if (is_front_page()) {
+        wp_enqueue_script(
+            'cta-homepage',
+            CTA_THEME_URI . '/assets/js/homepage-upcoming-courses.js',
+            ['cta-main'],
+            CTA_THEME_VERSION,
+            true
+        );
+        wp_enqueue_script(
+            'cta-form-validation',
+            CTA_THEME_URI . '/assets/js/form-validation.js',
+            ['cta-main'],
+            CTA_THEME_VERSION,
+            true
+        );
+    }
+
+    if (is_post_type_archive('course')) {
+        wp_enqueue_script(
+            'cta-courses',
+            CTA_THEME_URI . '/assets/js/courses.js',
+            ['cta-main'],
+            CTA_THEME_VERSION,
+            true
+        );
+    }
+
+    if (is_page_template('page-templates/page-contact.php')) {
+        wp_enqueue_script(
+            'cta-contact',
+            CTA_THEME_URI . '/assets/js/contact.js',
+            ['cta-main'],
+            CTA_THEME_VERSION,
+            true
+        );
+    }
+
+    if (is_singular('post')) {
+        wp_enqueue_script(
+            'cta-single-post',
+            CTA_THEME_URI . '/assets/js/single-post.js',
+            ['cta-main'],
+            CTA_THEME_VERSION,
+            true
+        );
+    }
+
+    if (is_page_template('page-templates/page-group-training.php')) {
+        wp_enqueue_script(
+            'cta-group-booking',
+            CTA_THEME_URI . '/assets/js/group-booking.js',
+            ['cta-main'],
+            CTA_THEME_VERSION,
+            true
+        );
+    }
+
+    // Note: news-article.js is for static site only, not needed for WordPress
+    // WordPress renders posts server-side, so this script is not enqueued
+}
+add_action('wp_enqueue_scripts', 'cta_enqueue_page_scripts');
+
+/**
+ * Admin styles for better CPT experience
+ */
+function cta_admin_styles() {
+    $screen = get_current_screen();
+    
+    // Post editor styling for better UX
+    if ($screen && $screen->post_type === 'post') {
+        wp_add_inline_style('wp-admin', '
+            /* Modern classic editor layout */
+            #post-body-content {
+                margin-bottom: 30px;
+            }
+            
+            /* Title field styling - make it prominent */
+            #title {
+                font-size: 24px !important;
+                font-weight: 600 !important;
+                padding: 16px 18px !important;
+                border: 2px solid #dcdcde !important;
+                border-radius: 6px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+                margin-bottom: 25px !important;
+                transition: all 0.2s ease !important;
+                background: #fff !important;
+            }
+            
+            #title:focus {
+                border-color: #2271b1 !important;
+                box-shadow: 0 0 0 3px rgba(34, 113, 177, 0.1) !important;
+                outline: none !important;
+            }
+            
+            /* Excerpt field styling */
+            #excerpt {
+                font-size: 15px !important;
+                padding: 14px 16px !important;
+                border: 2px solid #dcdcde !important;
+                border-radius: 6px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+                min-height: 120px !important;
+                line-height: 1.7 !important;
+                transition: all 0.2s ease !important;
+                background: #fff !important;
+            }
+            
+            #excerpt:focus {
+                border-color: #2271b1 !important;
+                box-shadow: 0 0 0 3px rgba(34, 113, 177, 0.1) !important;
+                outline: none !important;
+            }
+            
+            /* Slug field styling */
+            #edit-slug-box {
+                margin: 20px 0 !important;
+                padding: 14px 16px !important;
+                background: #f6f7f7 !important;
+                border: 1px solid #dcdcde !important;
+                border-radius: 6px !important;
+            }
+            
+            #edit-slug-box input {
+                font-size: 14px !important;
+                padding: 8px 12px !important;
+                border: 1.5px solid #dcdcde !important;
+                border-radius: 4px !important;
+                transition: all 0.2s ease !important;
+            }
+            
+            #edit-slug-box input:focus {
+                border-color: #2271b1 !important;
+                box-shadow: 0 0 0 3px rgba(34, 113, 177, 0.1) !important;
+                outline: none !important;
+            }
+            
+            /* Classic editor textarea styling */
+            #content {
+                font-size: 16px !important;
+                line-height: 1.7 !important;
+                padding: 16px 18px !important;
+                border: 2px solid #dcdcde !important;
+                border-radius: 6px !important;
+                transition: all 0.2s ease !important;
+            }
+            
+            #content:focus {
+                border-color: #2271b1 !important;
+                box-shadow: 0 0 0 3px rgba(34, 113, 177, 0.1) !important;
+                outline: none !important;
+            }
+            
+            /* Editor toolbar improvements */
+            #wp-content-editor-tools {
+                background: #f6f7f7 !important;
+                padding: 12px 16px !important;
+                border: 1px solid #dcdcde !important;
+                border-radius: 6px 6px 0 0 !important;
+                margin-bottom: 0 !important;
+            }
+            
+            /* Better spacing for meta boxes */
+            .postbox {
+                border-radius: 6px !important;
+                border: 1px solid #dcdcde !important;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+                margin-bottom: 20px !important;
+            }
+            
+            .postbox .hndle {
+                font-size: 14px !important;
+                font-weight: 600 !important;
+                padding: 12px 16px !important;
+                border-bottom: 1px solid #dcdcde !important;
+            }
+            
+            /* ACF field group styling for posts */
+            .acf-field-group[data-key="group_news_article_content"] {
+                border: 2px solid #2271b1 !important;
+                border-radius: 6px !important;
+                background: #fff !important;
+            }
+            
+            .acf-field-group[data-key="group_news_article_content"] .acf-label {
+                font-size: 16px !important;
+                font-weight: 700 !important;
+                color: #2271b1 !important;
+                margin-bottom: 12px !important;
+            }
+            
+            .acf-field-group[data-key="group_news_article_content"] .acf-field {
+                padding: 20px !important;
+                border-bottom: 1px solid #e5e5e5 !important;
+            }
+            
+            .acf-field-group[data-key="group_news_article_content"] .acf-field:last-child {
+                border-bottom: none !important;
+            }
+            
+            .acf-field[data-name="news_intro"] textarea {
+                font-size: 15px !important;
+                line-height: 1.6 !important;
+                padding: 12px 14px !important;
+                border: 2px solid #ddd !important;
+                border-radius: 4px !important;
+            }
+            
+            .acf-field[data-name="news_intro"] textarea:focus {
+                border-color: #2271b1 !important;
+                box-shadow: 0 0 0 1px #2271b1 !important;
+                outline: none !important;
+            }
+            
+            /* Repeater field styling */
+            .acf-repeater {
+                border: 1px solid #ddd !important;
+                border-radius: 4px !important;
+            }
+            
+            .acf-repeater .acf-row {
+                border-bottom: 2px solid #e5e5e5 !important;
+                padding: 20px !important;
+            }
+            
+            .acf-repeater .acf-row:last-child {
+                border-bottom: none !important;
+            }
+            
+            .acf-repeater .acf-row-handle {
+                background: #f6f7f7 !important;
+            }
+            
+            .acf-field[data-name="section_title"] input {
+                font-size: 16px !important;
+                font-weight: 600 !important;
+                padding: 10px 12px !important;
+                border: 2px solid #ddd !important;
+                border-radius: 4px !important;
+            }
+            
+            .acf-field[data-name="section_title"] input:focus {
+                border-color: #2271b1 !important;
+                box-shadow: 0 0 0 1px #2271b1 !important;
+                outline: none !important;
+            }
+            
+            .acf-field[data-name="section_content"] .acf-editor-wrap {
+                border: 2px solid #ddd !important;
+                border-radius: 4px !important;
+            }
+            
+            .acf-field[data-name="section_content"] .acf-editor-wrap:focus-within {
+                border-color: #2271b1 !important;
+                box-shadow: 0 0 0 1px #2271b1 !important;
+            }
+            
+            /* Sidebar field groups */
+            .acf-field-group[data-key="group_news_article"],
+            .acf-field-group[data-key="group_news_seo"] {
+                border: 1px solid #ddd !important;
+                border-radius: 4px !important;
+            }
+            
+            .acf-field-group[data-key="group_news_article"] .acf-label,
+            .acf-field-group[data-key="group_news_seo"] .acf-label {
+                font-weight: 600 !important;
+            }
+        ');
+    }
+    
+    if ($screen && in_array($screen->post_type, ['course', 'course_event'])) {
+        wp_add_inline_style('wp-admin', '
+            .acf-field {
+                padding: 20px 12px !important;
+            }
+            .acf-label {
+                margin-bottom: 8px !important;
+            }
+            .acf-label label {
+                font-weight: 600 !important;
+                font-size: 14px !important;
+            }
+            .acf-input input[type="text"],
+            .acf-input input[type="number"],
+            .acf-input textarea,
+            .acf-input select {
+                font-size: 14px !important;
+            }
+        ');
+    }
+    
+    // Add inline editing styles and scripts for course and course_event admin tables
+    if ($screen && in_array($screen->post_type, ['course', 'course_event'])) {
+        wp_add_inline_style('wp-admin', '
+            .cta-inline-edit {
+                cursor: pointer;
+                padding: 4px 8px;
+                border-radius: 3px;
+                transition: background-color 0.2s;
+            }
+            .cta-inline-edit:hover {
+                background-color: #f0f0f1;
+            }
+            .cta-inline-edit.editing {
+                background-color: #fff;
+                border: 1px solid #2271b1;
+                padding: 3px 7px;
+            }
+            .cta-inline-edit input,
+            .cta-inline-edit select {
+                border: none;
+                background: transparent;
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                font-size: inherit;
+                font-family: inherit;
+            }
+            .cta-inline-edit input:focus,
+            .cta-inline-edit select:focus {
+                outline: none;
+            }
+        ');
+        
+        wp_enqueue_script('jquery');
+        
+        // Make sure ajaxurl is available
+        wp_localize_script('jquery', 'ctaAdmin', [
+            'ajaxurl' => admin_url('admin-ajax.php'),
+        ]);
+        
+        wp_add_inline_script('jquery', '
+            jQuery(document).ready(function($) {
+                // Inline editing for Courses
+                if ($("body").hasClass("post-type-course")) {
+                    // Price editing
+                    $(document).on("dblclick", ".cta-inline-price", function() {
+                        var $cell = $(this);
+                        var currentValue = $cell.data("value") || "";
+                        var postId = $cell.data("post-id");
+                        
+                        if ($cell.hasClass("editing")) return;
+                        $cell.addClass("editing");
+                        
+                        var $input = $("<input>", {
+                            type: "text",
+                            value: currentValue.replace("£", "").replace(",", ""),
+                            class: "cta-inline-input"
+                        });
+                        
+                        $cell.html($input);
+                        $input.focus().select();
+                        
+                        function saveValue() {
+                            var newValue = $input.val();
+                            if (newValue === currentValue.replace("£", "").replace(",", "")) {
+                                $cell.removeClass("editing");
+                                return;
+                            }
+                            
+                            $.ajax({
+                                url: (typeof ajaxurl !== "undefined" ? ajaxurl : (typeof ctaAdmin !== "undefined" ? ctaAdmin.ajaxurl : "")),
+                                type: "POST",
+                                data: {
+                                    action: "cta_save_inline_field",
+                                    post_id: postId,
+                                    field: "course_price",
+                                    value: newValue,
+                                    nonce: "' . wp_create_nonce('cta_inline_edit') . '"
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        var formatted = "£" + parseFloat(newValue).toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",");
+                                        $cell.data("value", formatted);
+                                        $cell.text(formatted);
+                                    } else {
+                                        $cell.text(currentValue);
+                                    }
+                                    $cell.removeClass("editing");
+                                },
+                                error: function() {
+                                    $cell.text(currentValue);
+                                    $cell.removeClass("editing");
+                                }
+                            });
+                        }
+                        
+                        $input.on("blur", saveValue);
+                        $input.on("keydown", function(e) {
+                            if (e.key === "Enter") {
+                                e.preventDefault();
+                                saveValue();
+                            } else if (e.key === "Escape") {
+                                $cell.text(currentValue);
+                                $cell.removeClass("editing");
+                            }
+                        });
+                    });
+                    
+                    // Duration editing
+                    $(document).on("dblclick", ".cta-inline-duration", function() {
+                        var $cell = $(this);
+                        var currentValue = $cell.data("value") || "";
+                        var postId = $cell.data("post-id");
+                        
+                        if ($cell.hasClass("editing")) return;
+                        $cell.addClass("editing");
+                        
+                        var $input = $("<input>", {
+                            type: "text",
+                            value: currentValue,
+                            class: "cta-inline-input"
+                        });
+                        
+                        $cell.html($input);
+                        $input.focus().select();
+                        
+                        function saveValue() {
+                            var newValue = $input.val();
+                            if (newValue === currentValue) {
+                                $cell.removeClass("editing");
+                                return;
+                            }
+                            
+                            $.ajax({
+                                url: (typeof ajaxurl !== "undefined" ? ajaxurl : (typeof ctaAdmin !== "undefined" ? ctaAdmin.ajaxurl : "")),
+                                type: "POST",
+                                data: {
+                                    action: "cta_save_inline_field",
+                                    post_id: postId,
+                                    field: "course_duration",
+                                    value: newValue,
+                                    nonce: "' . wp_create_nonce('cta_inline_edit') . '"
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        $cell.data("value", newValue);
+                                        $cell.text(newValue || "-");
+                                    } else {
+                                        $cell.text(currentValue || "-");
+                                    }
+                                    $cell.removeClass("editing");
+                                },
+                                error: function() {
+                                    $cell.text(currentValue || "-");
+                                    $cell.removeClass("editing");
+                                }
+                            });
+                        }
+                        
+                        $input.on("blur", saveValue);
+                        $input.on("keydown", function(e) {
+                            if (e.key === "Enter") {
+                                e.preventDefault();
+                                saveValue();
+                            } else if (e.key === "Escape") {
+                                $cell.text(currentValue || "-");
+                                $cell.removeClass("editing");
+                            }
+                        });
+                    });
+                }
+                
+                // Inline editing for Course Events
+                if ($("body").hasClass("post-type-course_event")) {
+                    // Time editing
+                    $(document).on("dblclick", ".cta-inline-time", function() {
+                        var $cell = $(this);
+                        var currentValue = $cell.data("value") || "";
+                        var postId = $cell.data("post-id");
+                        var parts = currentValue.split(" – ");
+                        var startTime = parts[0] || "";
+                        var endTime = parts[1] || "";
+                        
+                        if ($cell.hasClass("editing")) return;
+                        $cell.addClass("editing");
+                        
+                        var $wrapper = $("<div>", { style: "display: flex; gap: 8px; align-items: center;" });
+                        var $startInput = $("<input>", {
+                            type: "time",
+                            value: startTime,
+                            class: "cta-inline-input",
+                            style: "width: 100px;"
+                        });
+                        var $separator = $("<span>", { text: "–" });
+                        var $endInput = $("<input>", {
+                            type: "time",
+                            value: endTime,
+                            class: "cta-inline-input",
+                            style: "width: 100px;"
+                        });
+                        
+                        $wrapper.append($startInput, $separator, $endInput);
+                        $cell.html($wrapper);
+                        $startInput.focus();
+                        
+                        function saveValue() {
+                            var newStart = $startInput.val();
+                            var newEnd = $endInput.val();
+                            var newValue = "";
+                            if (newStart && newEnd) {
+                                newValue = newStart + " – " + newEnd;
+                            } else if (newStart) {
+                                newValue = newStart;
+                            }
+                            
+                            if (newValue === currentValue) {
+                                $cell.removeClass("editing");
+                                return;
+                            }
+                            
+                            $.ajax({
+                                url: (typeof ajaxurl !== "undefined" ? ajaxurl : (typeof ctaAdmin !== "undefined" ? ctaAdmin.ajaxurl : "")),
+                                type: "POST",
+                                data: {
+                                    action: "cta_save_inline_field",
+                                    post_id: postId,
+                                    field: "event_time",
+                                    start_time: newStart,
+                                    end_time: newEnd,
+                                    nonce: "' . wp_create_nonce('cta_inline_edit') . '"
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        $cell.data("value", newValue);
+                                        $cell.text(newValue || "-");
+                                    } else {
+                                        $cell.text(currentValue || "-");
+                                    }
+                                    $cell.removeClass("editing");
+                                },
+                                error: function() {
+                                    $cell.text(currentValue || "-");
+                                    $cell.removeClass("editing");
+                                }
+                            });
+                        }
+                        
+                        $startInput.add($endInput).on("blur", saveValue);
+                        $startInput.add($endInput).on("keydown", function(e) {
+                            if (e.key === "Enter") {
+                                e.preventDefault();
+                                saveValue();
+                            } else if (e.key === "Escape") {
+                                $cell.text(currentValue || "-");
+                                $cell.removeClass("editing");
+                            }
+                        });
+                    });
+                    
+                    // Spaces editing
+                    $(document).on("dblclick", ".cta-inline-spaces", function() {
+                        var $cell = $(this);
+                        var currentValue = $cell.data("value") || "";
+                        var postId = $cell.data("post-id");
+                        
+                        if ($cell.hasClass("editing")) return;
+                        $cell.addClass("editing");
+                        
+                        var $input = $("<input>", {
+                            type: "number",
+                            value: currentValue,
+                            class: "cta-inline-input",
+                            min: "0",
+                            style: "width: 60px;"
+                        });
+                        
+                        $cell.html($input);
+                        $input.focus().select();
+                        
+                        function saveValue() {
+                            var newValue = $input.val();
+                            if (newValue === currentValue) {
+                                $cell.removeClass("editing");
+                                return;
+                            }
+                            
+                            $.ajax({
+                                url: (typeof ajaxurl !== "undefined" ? ajaxurl : (typeof ctaAdmin !== "undefined" ? ctaAdmin.ajaxurl : "")),
+                                type: "POST",
+                                data: {
+                                    action: "cta_save_inline_field",
+                                    post_id: postId,
+                                    field: "spaces_available",
+                                    value: newValue,
+                                    nonce: "' . wp_create_nonce('cta_inline_edit') . '"
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        $cell.data("value", newValue);
+                                        $cell.text(newValue || "-");
+                                    } else {
+                                        $cell.text(currentValue || "-");
+                                    }
+                                    $cell.removeClass("editing");
+                                },
+                                error: function() {
+                                    $cell.text(currentValue || "-");
+                                    $cell.removeClass("editing");
+                                }
+                            });
+                        }
+                        
+                        $input.on("blur", saveValue);
+                        $input.on("keydown", function(e) {
+                            if (e.key === "Enter") {
+                                e.preventDefault();
+                                saveValue();
+                            } else if (e.key === "Escape") {
+                                $cell.text(currentValue || "-");
+                                $cell.removeClass("editing");
+                            }
+                        });
+                    });
+                    
+                    // Status editing (Active/Hidden)
+                    $(document).on("dblclick", ".cta-inline-status", function() {
+                        var $cell = $(this);
+                        var currentValue = $cell.data("value") || "active";
+                        var postId = $cell.data("post-id");
+                        
+                        if ($cell.hasClass("editing")) return;
+                        $cell.addClass("editing");
+                        
+                        var $select = $("<select>", {
+                            class: "cta-inline-input"
+                        });
+                        $select.append($("<option>", { value: "active", text: "Active" }).prop("selected", currentValue === "active"));
+                        $select.append($("<option>", { value: "hidden", text: "Hidden" }).prop("selected", currentValue === "hidden"));
+                        
+                        $cell.html($select);
+                        $select.focus();
+                        
+                        function saveValue() {
+                            var newValue = $select.val();
+                            if (newValue === currentValue) {
+                                $cell.removeClass("editing");
+                                return;
+                            }
+                            
+                            $.ajax({
+                                url: (typeof ajaxurl !== "undefined" ? ajaxurl : (typeof ctaAdmin !== "undefined" ? ctaAdmin.ajaxurl : "")),
+                                type: "POST",
+                                data: {
+                                    action: "cta_save_inline_field",
+                                    post_id: postId,
+                                    field: "event_active",
+                                    value: newValue === "active" ? "1" : "0",
+                                    nonce: "' . wp_create_nonce('cta_inline_edit') . '"
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        $cell.data("value", newValue);
+                                        var displayText = newValue === "active" ? "Active" : "Hidden";
+                                        var color = newValue === "active" ? "#00a32a" : "#d63638";
+                                        $cell.html("<span style=\"color: " + color + ";\">" + displayText + "</span>");
+                                    } else {
+                                        var displayText = currentValue === "active" ? "Active" : "Hidden";
+                                        var color = currentValue === "active" ? "#00a32a" : "#d63638";
+                                        $cell.html("<span style=\"color: " + color + ";\">" + displayText + "</span>");
+                                    }
+                                    $cell.removeClass("editing");
+                                },
+                                error: function() {
+                                    var displayText = currentValue === "active" ? "Active" : "Hidden";
+                                    var color = currentValue === "active" ? "#00a32a" : "#d63638";
+                                    $cell.html("<span style=\"color: " + color + ";\">" + displayText + "</span>");
+                                    $cell.removeClass("editing");
+                                }
+                            });
+                        }
+                        
+                        $select.on("change", saveValue);
+                        $select.on("blur", saveValue);
+                        $select.on("keydown", function(e) {
+                            if (e.key === "Escape") {
+                                var displayText = currentValue === "active" ? "Active" : "Hidden";
+                                var color = currentValue === "active" ? "#00a32a" : "#d63638";
+                                $cell.html("<span style=\"color: " + color + ";\">" + displayText + "</span>");
+                                $cell.removeClass("editing");
+                            }
+                        });
+                    });
+                }
+            });
+        ');
+    }
+}
+add_action('admin_enqueue_scripts', 'cta_admin_styles');
+
+/**
+ * Helper function to get theme asset URL
+ */
+function cta_asset($path) {
+    return CTA_THEME_URI . '/assets/' . ltrim($path, '/');
+}
+
+/**
+ * Helper function to get theme image URL
+ */
+function cta_image($path) {
+    return cta_asset('img/' . ltrim($path, '/'));
+}
+
+/**
+ * Get site contact info (centralized)
+ * 
+ * Tries ACF Theme Options first, falls back to hardcoded values.
+ */
+function cta_get_contact_info() {
+    if (function_exists('cta_get_contact_info_from_options')) {
+        $acf_contact = cta_get_contact_info_from_options();
+        if (!empty($acf_contact['phone']) || !empty($acf_contact['email'])) {
+            return $acf_contact;
+        }
+    }
+    
+    return [
+        'phone' => '01622 587343',
+        'phone_link' => 'tel:01622587343',
+        'email' => 'enquiries@continuitytrainingacademy.co.uk',
+        'address' => [
+            'line1' => 'Continuity Training Academy',
+            'line2' => 'Maidstone, Kent',
+            'postcode' => 'ME14 5NZ',
+        ],
+        'social' => [
+            'facebook' => 'https://facebook.com/continuitytraining',
+            'instagram' => 'https://instagram.com/continuitytrainingacademy',
+            'linkedin' => 'https://www.linkedin.com/company/continuitytrainingacademy/',
+        ],
+    ];
+}
+
+/**
+ * Calculate reading time for content
+ */
+function cta_reading_time($content) {
+    $word_count = str_word_count(strip_tags($content));
+    $reading_time = ceil($word_count / 200);
+    return max(1, $reading_time);
+}
+
+/**
+ * Get page URL by slug
+ */
+function cta_page_url($slug) {
+    $slug_map = [
+        'privacy' => 'privacy-policy',
+        'terms' => 'terms-conditions',
+        'cookies' => 'cookie-policy',
+    ];
+    
+    $actual_slug = isset($slug_map[$slug]) ? $slug_map[$slug] : $slug;
+    
+    $page = get_page_by_path($actual_slug);
+    if ($page) {
+        return get_permalink($page->ID);
+    }
+    return home_url('/' . $actual_slug . '/');
+}
+
+
+/**
+ * Get course categories for navigation
+ */
+function cta_get_course_categories() {
+    return [
+        [
+            'slug' => 'core-care-skills',
+            'name' => 'Core Care Skills',
+            'description' => 'Essential induction and Care Certificate training.',
+            'icon' => 'fa-heart',
+        ],
+        [
+            'slug' => 'communication-workplace-culture',
+            'name' => 'Communication & Workplace Culture',
+            'description' => 'Dignity, equality, communication and care planning.',
+            'icon' => 'fa-users',
+        ],
+        [
+            'slug' => 'nutrition-hygiene',
+            'name' => 'Nutrition & Hygiene',
+            'description' => 'Food safety, nutrition and hygiene practices.',
+            'icon' => 'fa-apple-alt',
+        ],
+        [
+            'slug' => 'emergency-first-aid',
+            'name' => 'Emergency & First Aid',
+            'description' => 'Workplace, paediatric and basic life support.',
+            'icon' => 'fa-first-aid',
+        ],
+        [
+            'slug' => 'safety-compliance',
+            'name' => 'Safety & Compliance',
+            'description' => 'Workplace safety, safeguarding and moving & handling.',
+            'icon' => 'fa-shield-alt',
+        ],
+        [
+            'slug' => 'medication-management',
+            'name' => 'Medication Management',
+            'description' => 'Medicines management, competency and insulin awareness.',
+            'icon' => 'fa-pills',
+        ],
+        [
+            'slug' => 'health-conditions-specialist-care',
+            'name' => 'Health Conditions & Specialist Care',
+            'description' => 'Dementia, diabetes, epilepsy and specialist health conditions.',
+            'icon' => 'fa-stethoscope',
+        ],
+        [
+            'slug' => 'leadership-professional-development',
+            'name' => 'Leadership & Professional Development',
+            'description' => 'Management, supervision and professional skills.',
+            'icon' => 'fa-user-tie',
+        ],
+        [
+            'slug' => 'information-data-management',
+            'name' => 'Information & Data Management',
+            'description' => 'Data protection, record keeping and information governance.',
+            'icon' => 'fa-database',
+        ],
+    ];
+}
+
+/**
+ * Ensure permalink structure is set and flush rewrite rules if needed
+ * This fixes 404 errors on posts when permalinks aren't configured
+ */
+function cta_ensure_permalinks() {
+    $permalink_structure = get_option('permalink_structure');
+    if (empty($permalink_structure)) {
+        update_option('permalink_structure', '/%postname%/');
+        flush_rewrite_rules(false);
+    }
+}
+add_action('init', 'cta_ensure_permalinks', 1);
+
+/**
+ * Fix 404s for single posts by serving them directly
+ * Handles URLs with /news.html appended or .html extensions
+ */
+function cta_fix_single_post_404s() {
+    // Only run on frontend, not admin
+    if (is_admin() || wp_doing_ajax()) {
+        return;
+    }
+    
+    // Check if we're on a 404 page and the URL looks like it should be a post
+    if (is_404()) {
+        $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+        
+        // Remove query string
+        $path = strtok($request_uri, '?');
+        $post_slug = null;
+        
+        // Check if path ends with /news.html (common mistake)
+        if (preg_match('#^/([^/]+)/news\.html$#', $path, $matches)) {
+            $post_slug = $matches[1];
+        }
+        // Check if path has .html extension when it shouldn't (for posts)
+        elseif (preg_match('#^/([^/]+)\.html$#', $path, $matches)) {
+            $post_slug = $matches[1];
+        }
+        
+        if ($post_slug) {
+            // Try to find a post with this slug
+            $post = get_page_by_path($post_slug, OBJECT, 'post');
+            
+            if ($post && $post->post_status === 'publish') {
+                // Set up the query to load this post directly
+                global $wp_query;
+                
+                // Clear the 404 status
+                $wp_query->is_404 = false;
+                $wp_query->is_single = true;
+                $wp_query->is_singular = true;
+                
+                // Set the post data
+                $wp_query->queried_object = $post;
+                $wp_query->queried_object_id = $post->ID;
+                $wp_query->posts = [$post];
+                $wp_query->post_count = 1;
+                $wp_query->found_posts = 1;
+                $wp_query->max_num_pages = 1;
+                
+                // Set the current post
+                $wp_query->post = $post;
+                $GLOBALS['post'] = $post;
+                
+                // Set post type
+                $wp_query->is_post_type_archive = false;
+                $wp_query->is_archive = false;
+                $wp_query->is_home = false;
+                
+                // Status code should be 200, not 404
+                status_header(200);
+            }
+        }
+    }
+}
+add_action('template_redirect', 'cta_fix_single_post_404s', 1);

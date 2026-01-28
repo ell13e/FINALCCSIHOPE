@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "title": "Epilepsy & Emergency Medication",
+    "date": "Wed, 7 Jan 2026",
+    "time": "10:00 AM - 1:00 PM",
+    "spotsLeft": 12,
+    "certification": "Skills for Health approved",
+    "highlights": ["Epilepsy recognition", "Buccal midazolam administration", "Emergency protocols"],
+    "price": "£62"
+  },
+  {
+    "id": 2,
+    "title": "Emergency Paediatric First Aid",
+    "date": "Tue, 27 Jan 2026",
+    "time": "9:30 AM - 4:30 PM",
+    "spotsLeft": 12,
+    "certification": "EYFS/DfE and Ofsted approved",
+    "highlights": ["Paediatric emergency response", "Child-specific protocols", "3-year validity"],
+    "price": "£165"
+  },
+  {
+    "id": 3,
+    "title": "Adult Social Care Certificate",
+    "date": "Mon, 9 Feb 2026",
+    "endDate": "Wed, 11 Feb 2026",
+    "time": "9:00 AM - 4:00 PM",
+    "spotsLeft": 12,
+    "certification": "Same-day certificate",
+    "highlights": ["CQC-compliant", "DBS-checked trainer", "Refreshments included"],
+    "price": "£879"
+  },
+  {
+    "id": 4,
+    "title": "Emergency First Aid at Work",
+    "date": "Tue, 17 Feb 2026",
+    "time": "9:30 AM - 4:00 PM",
+    "spotsLeft": 12,
+    "certification": "HSE-approved certificate",
+    "highlights": ["Emergency response", "Workplace incidents", "3-year validity"],
+    "price": "£165"
+  },
+  {
+    "id": 5,
+    "title": "Epilepsy & Emergency Medication",
+    "date": "Thu, 5 Mar 2026",
+    "time": "9:30 AM - 1:00 PM",
+    "spotsLeft": 12,
+    "certification": "Skills for Health approved",
+    "highlights": ["Epilepsy recognition", "Buccal midazolam administration", "Emergency protocols"],
+    "price": "£62"
+  },
+  {
+    "id": 6,
+    "title": "Emergency First Aid at Work",
+    "date": "Mon, 23 Mar 2026",
+    "time": "9:30 AM - 4:00 PM",
+    "spotsLeft": 12,
+    "certification": "HSE-approved certificate",
+    "highlights": ["Emergency response", "Workplace incidents", "3-year validity"],
+    "price": "£165"
+  },
+  {
+    "id": 7,
+    "title": "Emergency Paediatric First Aid",
+    "date": "Tue, 24 Mar 2026",
+    "time": "9:30 AM - 4:30 PM",
+    "spotsLeft": 12,
+    "certification": "EYFS/DfE and Ofsted approved",
+    "highlights": ["Paediatric emergency response", "Child-specific protocols", "3-year validity"],
+    "price": "£165"
+  }
+]
+

@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTA Comparison Guides - Download All Four</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #2B1B0E; background: #f9f7f4; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 60px 50px; box-shadow: 0 2px 8px rgba(0,0,0,.1); border-radius: 8px; }
+        .header { text-align: center; border-bottom: 3px solid #B29456; padding-bottom: 30px; margin-bottom: 40px; }
+        .logo { font-size: 24px; font-weight: 600; color: #B29456; margin-bottom: 10px; }
+        h1 { font-size: 32px; color: #2B1B0E; margin-bottom: 10px; font-weight: 700; }
+        .tagline { font-size: 14px; color: #666; font-style: italic; }
+        h2 { font-size: 22px; color: #B29456; margin-top: 40px; margin-bottom: 20px; border-left: 4px solid #B29456; padding-left: 15px; }
+        p { margin-bottom: 15px; font-size: 14px; line-height: 1.8; }
+        .guides-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 30px 0; }
+        .guide-card { border: 2px solid #B29456; padding: 25px; border-radius: 8px; background: #faf8f5; transition: all 0.3s ease; }
+        .guide-card:hover { box-shadow: 0 4px 12px rgba(178, 148, 86, 0.3); transform: translateY(-2px); }
+        .guide-card h3 { color: #B29456; font-size: 18px; margin-bottom: 12px; }
+        .guide-card p { font-size: 13px; margin-bottom: 10px; color: #555; }
+        .guide-info { background: #f0ebe3; padding: 12px; border-radius: 4px; margin: 12px 0; font-size: 12px; }
+        .guide-info strong { color: #B29456; }
+        .download-btn { display: inline-block; background: #B29456; color: white; padding: 12px 20px; border-radius: 4px; text-decoration: none; font-weight: 600; margin-top: 12px; cursor: pointer; border: none; font-size: 14px; transition: background 0.3s ease; }
+        .download-btn:hover { background: #9d7e4e; }
+        .instructions { background: #f9f7f4; border-left: 4px solid #B29456; padding: 20px; margin: 30px 0; border-radius: 4px; }
+        .instructions h3 { color: #B29456; margin-bottom: 10px; }
+        .instructions ol { margin-left: 20px; }
+        .instructions li { margin-bottom: 8px; font-size: 14px; }
+        .footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #B29456; text-align: center; font-size: 12px; color: #666; }
+        @media (max-width: 768px) { .guides-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">📋 Continuity Training Academy</div>
+            <h1>Comparison Guides Bundle</h1>
+            <p class="tagline">Four Essential Guides for Care Professional Training & Development</p>
+        </div>
+
+        <h2>Your Four Comparison Guides</h2>
+        <p>Each guide is a complete, standalone HTML file ready to convert to PDF. Click any guide below to open it, then use your browser's "Print to PDF" or "Save as PDF" function.</p>
+
+        <div class="guides-grid">
+            <!-- Guide 1 -->
+            <div class="guide-card">
+                <h3>🚑 Guide 1: First Aid Training</h3>
+                <p><strong>EFAW vs Paediatric: Understanding Your First Aid Options</strong></p>
+                <div class="guide-info">
+                    <strong>Covers:</strong> Emergency First Aid at Work (EFAW) vs Paediatric First Aid<br>
+                    <strong>Best for:</strong> Care homes, domiciliary care, nurseries, childcare<br>
+                    <strong>Decision focus:</strong> Which course for your team's age group
+                </div>
+                <button class="download-btn" onclick="downloadGuide1()">Open Guide 1</button>
+            </div>
+
+            <!-- Guide 2 -->
+            <div class="guide-card">
+                <h3>🛡️ Guide 2: Safeguarding Levels</h3>
+                <p><strong>Level 1 vs Level 2 vs Level 3: Which Do You Need?</strong></p>
+                <div class="guide-info">
+                    <strong>Covers:</strong> Safeguarding L1 (Awareness), L2 (Intermediate), L3 (Advanced)<br>
+                    <strong>Best for:</strong> All care providers<br>
+                    <strong>Decision focus:</strong> Right training level for each role
+                </div>
+                <button class="download-btn" onclick="downloadGuide2()">Open Guide 2</button>
+            </div>
+
+            <!-- Guide 3 -->
+            <div class="guide-card">
+                <h3>💊 Guide 3: Medication Training</h3>
+                <p><strong>Awareness vs Competency vs Management</strong></p>
+                <div class="guide-info">
+                    <strong>Covers:</strong> Medication Awareness, Competency, Management<br>
+                    <strong>Best for:</strong> Care providers administering medications<br>
+                    <strong>Decision focus:</strong> Competency assessment requirements
+                </div>
+                <button class="download-btn" onclick="downloadGuide3()">Open Guide 3</button>
+            </div>
+
+            <!-- Guide 4 -->
+            <div class="guide-card">
+                <h3>🎓 Guide 4: Care & Social Care Certificates</h3>
+                <p><strong>Care Certificate vs Adult Social Care Certificate (Level 3)</strong></p>
+                <div class="guide-info">
+                    <strong>Covers:</strong> Care Certificate (15 Standards) vs ASC Level 3 Qualification<br>
+                    <strong>Best for:</strong> Career development & staff progression<br>
+                    <strong>Decision focus:</strong> Induction vs formal qualification pathway
+                </div>
+                <button class="download-btn" onclick="downloadGuide4()">Open Guide 4</button>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>How to Convert to PDF</h3>
+            <ol>
+                <li>Click <strong>"Open Guide"</strong> for the guide you want</li>
+                <li>A new window will open with the full HTML guide</li>
+                <li>In your browser, press <strong>Ctrl+P</strong> (Windows) or <strong>Cmd+P</strong> (Mac)</li>
+                <li>Select <strong>"Save as PDF"</strong> as your printer</li>
+                <li>Click <strong>"Save"</strong> and choose your location</li>
+                <li>Repeat for each of the four guides</li>
+            </ol>
+            <p><strong>Note:</strong> Each guide is self-contained and ready to share, print, or email to staff and managers.</p>
+        </div>
+
+        <div class="footer">
+            <p><strong>Continuity Training Academy</strong><br>Expert-led training for care professionals<br>Maidstone, Kent | Serving the South East & Mobile Across UK<br>01622 587343 | enquiries@continuitytrainingacademy.co.uk</p>
+        </div>
+    </div>
+
+    <script>
+        function downloadGuide1() {
+            const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Aid Training for Care - EFAW vs Paediatric | CTA</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;line-height:1.6;color:#2B1B0E;background:#f9f7f4;padding:40px 20px}.container{max-width:900px;margin:0 auto;background:white;padding:60px 50px;box-shadow:0 2px 8px rgba(0,0,0,.1)}.header{text-align:center;border-bottom:3px solid #B29456;padding-bottom:30px;margin-bottom:40px}.logo{font-size:24px;font-weight:600;color:#B29456;margin-bottom:10px}h1{font-size:32px;color:#2B1B0E;margin-bottom:10px;font-weight:700}.tagline{font-size:14px;color:#666;font-style:italic}h2{font-size:22px;color:#B29456;margin-top:40px;margin-bottom:20px;border-left:4px solid #B29456;padding-left:15px}h3{font-size:16px;color:#2B1B0E;margin-top:25px;margin-bottom:12px;font-weight:600}p{margin-bottom:15px;text-align:justify;font-size:14px;line-height:1.8}.quick-answer{background:#f9f7f4;border-left:4px solid #B29456;padding:20px;margin:30px 0;border-radius:4px}.quick-answer strong{color:#B29456;display:block;margin-bottom:8px}table{width:100%;border-collapse:collapse;margin:25px 0;font-size:13px}table thead{background:#B29456;color:white}table th{padding:12px;text-align:left;font-weight:600}table td{padding:12px;border-bottom:1px solid #e0e0e0}table tbody tr:nth-child(even){background:#faf8f5}.section{margin:30px 0;padding:20px;background:#faf8f5;border-radius:4px}.section h3{margin-top:0}ul,ol{margin-left:25px;margin-bottom:15px}ul li,ol li{margin-bottom:8px;font-size:14px}.cert-card{border:2px solid #B29456;padding:20px;margin:20px 0;border-radius:4px;background:#faf8f5}.cert-card h4{color:#B29456;font-size:16px;margin-bottom:10px}.footer{margin-top:50px;padding-top:20px;border-top:1px solid #B29456;text-align:center;font-size:12px;color:#666}.cta-box{background:#B29456;color:white;padding:25px;border-radius:4px;margin:30px 0;text-align:center}.cta-box p{margin:0;font-size:14px}.cta-box strong{display:block;font-size:16px;margin-bottom:5px}@media print{body{padding:0;background:white}.container{box-shadow:none;padding:40px}h1,h2{page-break-after:avoid}table{page-break-inside:avoid}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🚑 Continuity Training Academy</div>
+            <h1>First Aid Training – Which Course Do You Need?</h1>
+            <p class="tagline">EFAW vs Paediatric: Understanding Your First Aid Options</p>
+        </div>
+
+        <h2>Quick Answer</h2>
+        <div class="quick-answer">
+            <strong>Emergency First Aid at Work (EFAW) – Level 3</strong>
+            For: All adult care workers, domiciliary carers, residential/nursing care staff | Covers: CPR on adults, choking, severe bleeding, shock, medical emergencies | Duration: 1 day | Validity: 3 years | Cost: £120–150
+        </div>
+
+        <div class="quick-answer">
+            <strong>Emergency Paediatric First Aid – Level 3</strong>
+            For: Childcare staff, nurseries, anyone caring for under-18s | Covers: CPR on infants/children, choking (child-specific), paediatric emergencies | Duration: 1 day | Validity: 3 years | Cost: £120–150
+        </div>
+
+        <h2>EFAW: Emergency First Aid at Work</h2>
+        <div class="cert-card">
+            <h4>What It Covers</h4>
+            <ul>
+                <li><strong>CPR (Cardiopulmonary Resuscitation)</strong> on adults – chest compressions at 100–120 beats/min, rescue breaths, recovery position</li>
+                <li><strong>Choking</strong> – recognising choking, back blows, abdominal thrusts (Heimlich manoeuvre)</li>
+                <li><strong>Severe bleeding</strong> – tourniquet application, pressure dressings, shock management</li>
+                <li><strong>Unconsciousness</strong> – recovery position, airway management, emergency services</li>
+                <li><strong>Common emergencies</strong> – chest pain (suspected MI), stroke, seizures, severe allergic reactions</li>
+                <li><strong>AED use</strong> – automated external defibrillator operation and positioning</li>
+                <li><strong>Head/spinal injury</strong> – recognising and managing without movement</li>
+            </ul>
+
+            <h4 style="margin-top:15px">Learning Style</h4>
+            <p>Scenario-based, hands-on practice with adult mannequins, AED training, real equipment. Each scenario involves live practice and immediate feedback.</p>
+
+            <h4 style="margin-top:15px">CQC Requirement</h4>
+            <p>CQC does not mandate First Aid, but it's listed as recommended for care workers. If an incident occurs and staff lack First Aid, it becomes a compliance concern. Strong First Aid coverage shows commitment to care quality.</p>
+
+            <h4 style="margin-top:15px">Who Needs EFAW</h4>
+            <p>✅ Care home staff (all levels) | ✅ Domiciliary care workers | ✅ Nursing home staff | ✅ Community care managers | ✅ Day centre staff | ✅ Anyone working unsupervised with vulnerable adults</p>
+
+            <h4 style="margin-top:15px">Duration & Cost</h4>
+            <p><strong>1 day (6 hours)</strong> | <strong>£120–150 per person</strong> | <strong>Valid 3 years</strong></p>
+        </div>
+
+        <h2>Paediatric First Aid</h2>
+        <div class="cert-card">
+            <h4>What It Covers</h4>
+            <p><strong>Infant-specific (newborn–12 months):</strong></p>
+            <ul>
+                <li>Infant CPR – one-handed chest compressions (2 fingers), reduced compression depth</li>
+                <li>Infant airway positioning – neutral to prevent obstruction</li>
+                <li>Choking in infants – back blows, chest thrusts (never abdominal)</li>
+                <li>SIDS risk awareness – sleep position, temperature, feeding recognition</li>
+            </ul>
+
+            <p style="margin-top:15px"><strong>Child-specific (1–16 years):</strong></p>
+            <ul>
+                <li>Child CPR – hand position variations by age, compression depth</li>
+                <li>Child choking – back blows, abdominal thrusts (now safe)</li>
+                <li>Febrile convulsions – fever-triggered seizures, management</li>
+                <li>Asthma and allergies – recognition, positioning, inhaler/EpiPen use</li>
+                <li>Poisoning/ingestion – household toxin recognition, first response</li>
+                <li>Fractures and sprains – appropriate immobilisation for children</li>
+                <li>Paediatric shock – managing shock in children (different vital signs)</li>
+            </ul>
+
+            <h4 style="margin-top:15px">Why Paediatric Is Different</h4>
+            <p>Human anatomy changes dramatically birth to adulthood. CPR techniques, airway anatomy, vital signs—everything varies. Using adult CPR on an infant risks rib fractures, internal injuries, or airway damage. Paediatric training teaches age-appropriate responses.</p>
+
+            <h4 style="margin-top:15px">CQC & OFSTED Requirements</h4>
+            <p><strong>For childcare/early years:</strong> OFSTED requires Paediatric First Aid (Level 3) for all staff. Non-compliance can result in Inadequate rating on Safety grounds. <strong>For other services:</strong> Recommended if contact with children under 16.</p>
+
+            <h4 style="margin-top:15px">Who Needs Paediatric</h4>
+            <p>✅ Nursery staff | ✅ Early years providers | ✅ Family support workers (children involved) | ✅ Community services (mixed age) | ✅ Managers overseeing children</p>
+
+            <h4 style="margin-top:15px">Duration & Cost</h4>
+            <p><strong>1 day (6 hours)</strong> | <strong>£120–150 per person</strong> | <strong>Valid 3 years</strong></p>
+        </div>
+
+        <h2>Side-by-Side Comparison</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>EFAW</th>
+                    <th>Paediatric</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>For role</strong></td>
+                    <td>Adult care workers</td>
+                    <td>Childcare staff, nurseries</td>
+                </tr>
+                <tr>
+                    <td><strong>Duration</strong></td>
+                    <td>1 day (6 hours)</td>
+                    <td>1 day (6 hours)</td>
+                </tr>
+                <tr>
+                    <td><strong>CPR focus</strong></td>
+                    <td>Adults (16+), 5–6cm compression depth</td>
+                    <td>Infants & children, modified compression depth</td>
+                </tr>
+                <tr>
+                    <td><strong>Choking technique</strong></td>
+                    <td>Abdominal thrusts (Heimlich)</td>
+                    <td>Back blows first, chest thrusts (no abdominal on infants)</td>
+                </tr>
+                <tr>
+                    <td><strong>Equipment trained</strong></td>
+                    <td>Adult mannequin, adult AED pads</td>
+                    <td>Infant & child mannequins, child AED pads</td>
+                </tr>
+                <tr>
+                    <td><strong>Common scenarios</strong></td>
+                    <td>Chest pain, unconsciousness, severe bleeding, shock, seizures</td>
+                    <td>Choking, febrile convulsions, ingestion, suffocation, SIDS</td>
+                </tr>
+                <tr>
+                    <td><strong>CQC/OFSTED</strong></td>
+                    <td>Recommended for adult care</td>
+                    <td>Mandatory for childcare (OFSTED)</td>
+                </tr>
+                <tr>
+                    <td><strong>Cost</strong></td>
+                    <td>£120–150</td>
+                    <td>£120–150</td>
+                </tr>
+                <tr>
+                    <td><strong>Validity</strong></td>
+                    <td>3 years</td>
+                    <td>3 years</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Who Needs What: Decision Matrix</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Role</th>
+                    <th>EFAW</th>
+                    <th>Paediatric</th>
+                    <th>Both</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Residential care home staff</td>
+                    <td>✅</td>
+                    <td>❌</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td>Domiciliary care (adults only)</td>
+                    <td>✅</td>
+                    <td>❌</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td>Nursing home staff</td>
+                    <td>✅</td>
+                    <td>❌</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td>Nursery staff</td>
+                    <td>❌</td>
+                    <td>✅</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td>Nursery manager</td>
+                    <td>Consider</td>
+                    <td>✅</td>
+                    <td>Recommended</td>
+                </tr>
+                <tr>
+                    <td>Family support worker (mixed age)</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                </tr>
+                <tr>
+                    <td>Community support (all ages)</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                </tr>
+                <tr>
+                    <td>Day centre (all ages)</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>CTA's First Aid Approach</h2>
+        <p>Both EFAW and Paediatric courses are:</p>
+        <ul>
+            <li>✅ HSE-approved (EFAW) / OFSTED-compliant (Paediatric)</li>
+            <li>✅ Scenario-based with real care situations</li>
+            <li>✅ Hands-on practice with mannequins</li>
+            <li>✅ Expert trainers with clinical care experience</li>
+            <li>✅ Small groups for better feedback</li>
+            <li>✅ Tailored to care settings</li>
+        </ul>
+
+        <h2>Common Questions</h2>
+        <div class="section">
+            <h3>Can one course cover both adults and children?</h3>
+            <p>No. Adult CPR on a child causes injury. Children's CPR differs anatomically. You need both if spanning ages.</p>
+        </div>
+
+        <div class="section">
+            <h3>Do I need annual refreshers?</h3>
+            <p>Certificates valid 3 years. However, many providers refresh annually because First Aid skills degrade. Shows commitment to safety.</p>
+        </div>
+
+        <div class="section">
+            <h3>Is online First Aid acceptable?</h3>
+            <p>No. CQC and HSE require hands-on practice. Online doesn't teach physical skills. This is non-negotiable.</p>
+        </div>
+
+        <div class="cta-box">
+            <strong>Book First Aid Training Now</strong>
+            <p>Spaces fill up fast. EFAW and Paediatric courses run monthly.</p>
+            <p><strong>Call us:</strong> 01622 587343 | <strong>Email:</strong> enquiries@continuitytrainingacademy.co.uk</p>
+        </div>
+
+        <div class="footer">
+            <p><strong>Continuity Training Academy</strong><br>Expert-led, hands-on training for care professionals<br>Maidstone, Kent | Serving the South East & Mobile Across UK<br>www.continuitytrainingacademy.co.uk</p>
+        </div>
+    </div>
+</body>
+</html>`;
+            openGuideInNewWindow(html, "Guide-1-First-Aid-Training.html");
+        }
+
+        function downloadGuide2() {
+            const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safeguarding Training Levels L1 L2 L3 - Which Do You Need? | CTA</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;line-height:1.6;color:#2B1B0E;background:#f9f7f4;padding:40px 20px}.container{max-width:900px;margin:0 auto;background:white;padding:60px 50px;box-shadow:0 2px 8px rgba(0,0,0,.1)}.header{text-align:center;border-bottom:3px solid #B29456;padding-bottom:30px;margin-bottom:40px}.logo{font-size:24px;font-weight:600;color:#B29456;margin-bottom:10px}h1{font-size:32px;color:#2B1B0E;margin-bottom:10px;font-weight:700}.tagline{font-size:14px;color:#666;font-style:italic}h2{font-size:22px;color:#B29456;margin-top:40px;margin-bottom:20px;border-left:4px solid #B29456;padding-left:15px}h3{font-size:16px;color:#2B1B0E;margin-top:25px;margin-bottom:12px;font-weight:600}p{margin-bottom:15px;text-align:justify;font-size:14px;line-height:1.8}.quick-answer{background:#f9f7f4;border-left:4px solid #B29456;padding:20px;margin:30px 0;border-radius:4px}.quick-answer strong{color:#B29456;display:block;margin-bottom:8px}table{width:100%;border-collapse:collapse;margin:25px 0;font-size:13px}table thead{background:#B29456;color:white}table th{padding:12px;text-align:left;font-weight:600}table td{padding:12px;border-bottom:1px solid #e0e0e0}table tbody tr:nth-child(even){background:#faf8f5}.section{margin:30px 0;padding:20px;background:#faf8f5;border-radius:4px}.section h3{margin-top:0}ul,ol{margin-left:25px;margin-bottom:15px}ul li,ol li{margin-bottom:8px;font-size:14px}.cert-card{border:2px solid #B29456;padding:20px;margin:20px 0;border-radius:4px;background:#faf8f5}.cert-card h4{color:#B29456;font-size:16px;margin-bottom:10px}.footer{margin-top:50px;padding-top:20px;border-top:1px solid #B29456;text-align:center;font-size:12px;color:#666}.cta-box{background:#B29456;color:white;padding:25px;border-radius:4px;margin:30px 0;text-align:center}.cta-box p{margin:0;font-size:14px}.cta-box strong{display:block;font-size:16px;margin-bottom:5px}@media print{body{padding:0;background:white}.container{box-shadow:none;padding:40px}h1,h2{page-break-after:avoid}table{page-break-inside:avoid}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🛡️ Continuity Training Academy</div>
+            <h1>Safeguarding Training Levels Explained</h1>
+            <p class="tagline">Level 1 vs Level 2 vs Level 3: Which Do You Need?</p>
+        </div>
+
+        <h2>Quick Answer</h2>
+        <div class="quick-answer">
+            <strong>Safeguarding Level 1 (Awareness)</strong>
+            For: All care staff | Covers: Recognising abuse, reporting procedures, your duty | Duration: 2–3 hours | CQC: Mandatory for all
+        </div>
+
+        <div class="quick-answer">
+            <strong>Safeguarding Level 2 (Intermediate)</strong>
+            For: Team leaders, supervisors, care coordinators | Covers: Level 1 + investigation support, recording, policy implementation | Duration: 1 day workshop | CQC: Expected for supervisory roles
+        </div>
+
+        <div class="quick-answer">
+            <strong>Safeguarding Level 3 (Advanced)</strong>
+            For: Registered Managers, Designated Safeguarding Leads | Covers: Strategy, multi-agency working, managing allegations, legal responsibility | Duration: 2–3 days | CQC: Mandatory for registered managers
+        </div>
+
+        <h2>Level 1: Safeguarding Awareness</h2>
+        <div class="cert-card">
+            <h4>Content</h4>
+            <ul>
+                <li>What constitutes abuse (physical, emotional, sexual, financial, neglect, institutional)</li>
+                <li>Signs and symptoms to recognise</li>
+                <li>Roles and responsibilities of care workers</li>
+                <li>Reporting procedures (who, when, how)</li>
+                <li>Confidentiality and data protection</li>
+                <li>Supporting victims</li>
+                <li>Creating a safeguarding culture</li>
+            </ul>
+
+            <h4 style="margin-top:15px">Learning Style</h4>
+            <p>Lecture-based, case studies, video scenarios, Q&A</p>
+
+            <h4 style="margin-top:15px">Delivery & Assessment</h4>
+            <p>2–3 hours (can be compressed or spread). Assessment via quiz or observation, not formal accreditation.</p>
+
+            <h4 style="margin-top:15px">Certificate Validity</h4>
+            <p>3 years (refresher required if not achieved through Care Certificate or diploma)</p>
+
+            <h4 style="margin-top:15px">Who Needs Level 1</h4>
+            <p>✅ All care workers, regardless of role. This is foundational.</p>
+
+            <h4 style="margin-top:15px">CQC Expectation</h4>
+            <p>All staff must complete Level 1 within induction period. Non-compliance = red flag.</p>
+        </div>
+
+        <h2>Level 2: Safeguarding Intermediate</h2>
+        <div class="cert-card">
+            <h4>Content (Everything in Level 1, Plus)</h4>
+            <ul>
+                <li>Detailed abuse types (institutional, self-neglect, modern slavery)</li>
+                <li>Recognising signs in vulnerable populations (dementia, learning disabilities, autism)</li>
+                <li>The safeguarding enquiry process (Local Authority involvement, investigation timelines)</li>
+                <li>Your role as supervisor during a safeguarding concern</li>
+                <li>Recording and evidence gathering (contemporaneous notes, confidentiality)</li>
+                <li>Supporting staff and victims during investigation</li>
+                <li>Policy implementation and audit</li>
+                <li>Restraint and use of reasonable force (legal framework)</li>
+                <li>Whistleblowing and raising concerns</li>
+            </ul>
+
+            <h4 style="margin-top:15px">Learning Style</h4>
+            <p>Workshop-based, case scenarios, small group discussion, practical exercises</p>
+
+            <h4 style="margin-top:15px">Delivery & Assessment</h4>
+            <p>1 full day (6 hours). Formal accredited assessment (scenario-based, reflection, evidence of understanding).</p>
+
+            <h4 style="margin-top:15px">Certificate</h4>
+            <p>Accredited certificate, valid 3 years</p>
+
+            <h4 style="margin-top:15px">Who Needs Level 2</h4>
+            <p>✅ Team leaders | ✅ Senior care assistants | ✅ Care coordinators | ✅ Shift leaders | ✅ Any supervisory staff</p>
+
+            <h4 style="margin-top:15px">CQC Expectation</h4>
+            <p>Expected for supervisory roles. If not held = expected finding during inspection.</p>
+        </div>
+
+        <h2>Level 3: Safeguarding Advanced</h2>
+        <div class="cert-card">
+            <h4>Content (Everything in Levels 1–2, Plus)</h4>
+            <ul>
+                <li>Safeguarding strategy and policy development</li>
+                <li>Managing allegations (staff, providers, contractors)</li>
+                <li>Multi-agency working (police, social care investigators, health)</li>
+                <li>Capacity and consent in safeguarding (Mental Capacity Act)</li>
+                <li>Deprivation of Liberty Safeguards (DoLS) and Liberty Protection Safeguards (LPS)</li>
+                <li>Complex safeguarding (honour-based violence, exploitation)</li>
+                <li>Safeguarding in specific conditions (dementia, learning disability, autism, mental health)</li>
+                <li>Creating a safer recruitment and vetting system</li>
+                <li>Safeguarding audit and quality assurance</li>
+                <li>Mandatory reporting and legal responsibilities</li>
+                <li>Vicarious liability and organisational accountability</li>
+                <li>Managing risk and balancing autonomy with protection</li>
+            </ul>
+
+            <h4 style="margin-top:15px">Learning Style</h4>
+            <p>Intensive workshop, case law review, leadership scenarios, strategic planning</p>
+
+            <h4 style="margin-top:15px">Delivery & Assessment</h4>
+            <p>2–3 days intensive (often with follow-up modules). Rigorous assessment (case study analysis, reflection on leadership, knowledge test).</p>
+
+            <h4 style="margin-top:15px">Certificate</h4>
+            <p>Accredited certificate, valid 3 years (renewal at 2–2.5 years for active managers recommended)</p>
+
+            <h4 style="margin-top:15px">Who Needs Level 3</h4>
+            <p>✅ Registered Managers (mandatory) | ✅ Designated Safeguarding Leads (mandatory) | ✅ Senior operations/quality managers | ✅ Board members (recommended)</p>
+
+            <h4 style="margin-top:15px">CQC Expectation</h4>
+            <p>Mandatory for Registered Managers. Absence = serious compliance gap.</p>
+        </div>
+
+        <h2>Comparison Table</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Element</th>
+                    <th>Level 1</th>
+                    <th>Level 2</th>
+                    <th>Level 3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Duration</strong></td>
+                    <td>2–3 hours</td>
+                    <td>6 hours (1 day)</td>
+                    <td>12–16 hours (2–3 days)</td>
+                </tr>
+                <tr>
+                    <td><strong>Focus</strong></td>
+                    <td>Recognition & reporting</td>
+                    <td>Supervision & support</td>
+                    <td>Strategy & accountability</td>
+                </tr>
+                <tr>
+                    <td><strong>Who teaches</strong></td>
+                    <td>Often internal trainer</td>
+                    <td>External specialist</td>
+                    <td>Senior safeguarding specialist</td>
+                </tr>
+                <tr>
+                    <td><strong>Assessment</strong></td>
+                    <td>Informal (quiz)</td>
+                    <td>Formal (accredited)</td>
+                    <td>Rigorous (case-based)</td>
+                </tr>
+                <tr>
+                    <td><strong>Certificate</strong></td>
+                    <td>Usually unaccredited</td>
+                    <td>Accredited (3-year validity)</td>
+                    <td>Accredited (3-year validity)</td>
+                </tr>
+                <tr>
+                    <td><strong>For whom</strong></td>
+                    <td>All care staff</td>
+                    <td>Supervisors/team leads</td>
+                    <td>Managers/leads</td>
+                </tr>
+                <tr>
+                    <td><strong>Cost</strong></td>
+                    <td>£30–60</td>
+                    <td>£80–120</td>
+                    <td>£150–250</td>
+                </tr>
+                <tr>
+                    <td><strong>Refresher timing</strong></td>
+                    <td>3 years</td>
+                    <td>3 years</td>
+                    <td>2–3 years (recommended)</td>
+                </tr>
+                <tr>
+                    <td><strong>CQC requirement</strong></td>
+                    <td>Mandatory for all</td>
+                    <td>Expected for supervisors</td>
+                    <td>Mandatory for RMs</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Real-World Scenario: Bruise Found on Resident</h2>
+        <div class="section">
+            <h3>With Level 1 Only (Care Assistant):</h3>
+            <p>Recognises it might be abuse. Reports to team leader. Doesn't know what happens next.</p>
+        </div>
+
+        <div class="section">
+            <h3>With Level 2 (Team Leader):</h3>
+            <p>Receives report. Documents observations (size, shape, location, resident statement). Contacts local authority safeguarding team. Supports care assistant and resident. Keeps appropriate records. Understands investigation timeline.</p>
+        </div>
+
+        <div class="section">
+            <h3>With Level 3 (Registered Manager):</h3>
+            <p>Oversees entire process. Manages staff allegations (if relevant). Ensures policy is followed. Liaises with multi-agency team. Reviews care plans for risk. Reports to board/regulators. Evaluates organisational safeguarding systems.</p>
+        </div>
+
+        <h2>CQC Reality Check</h2>
+        <p>Inspectors specifically check:</p>
+        <ul>
+            <li><strong>All staff have L1?</strong> Yes/No → If No = compliance concern</li>
+            <li><strong>Supervisors have L2?</strong> Yes/No → If No = expected finding</li>
+            <li><strong>Registered Manager has L3?</strong> Yes/No → If No = serious concern</li>
+            <li><strong>Certificates current?</strong> Yes/No → If No = red flag</li>
+            <li><strong>Evidence of competence beyond certificate?</strong> Case handling, supervision records → Shows actual capability</li>
+        </ul>
+
+        <h2>Planning Your Team's Safeguarding Training</h2>
+        <div class="section">
+            <h3>Step 1: Map Your Roles</h3>
+            <p>How many care assistants (need L1)? How many supervisors (need L2)? How many registered managers (need L3)?</p>
+        </div>
+
+        <div class="section">
+            <h3>Step 2: Check Currency</h3>
+            <p>When did staff last complete safeguarding? Are any certificates about to expire? Have staff been promoted?</p>
+        </div>
+
+        <div class="section">
+            <h3>Step 3: Plan Bookings</h3>
+            <p>L1 refreshers: Bulk book annually or half-yearly. L2: New supervisors or refreshers. L3: Advanced booking for registered managers.</p>
+        </div>
+
+        <div class="section">
+            <h3>Step 4: Budget</h3>
+            <p>L1 (all staff): £30–60 × number. L2 (supervisory): £80–120 × number. L3 (managers): £150–250 × number.</p>
+        </div>
+
+        <h2>CTA's Safeguarding Training</h2>
+        <ul>
+            <li><strong>Level 1</strong> – 2-hour update or half-day workshop, scenario-based, practical examples from care settings</li>
+            <li><strong>Level 2</strong> – Full-day workshop, case study analysis, recording practice, supporting staff exercise</li>
+            <li><strong>Level 3</strong> – 2-day intensive for managers, legal framework, multi-agency simulation, strategic safeguarding planning</li>
+        </ul>
+        <p>All delivered by trainers with safeguarding experience, not just training credentials.</p>
+
+        <div class="cta-box">
+            <strong>Book Safeguarding Training Now</strong>
+            <p>We tailor training to your team's structure and CQC readiness.</p>
+            <p><strong>Call us:</strong> 01622 587343 | <strong>Email:</strong> enquiries@continuitytrainingacademy.co.uk</p>
+        </div>
+
+        <div class="footer">
+            <p><strong>Continuity Training Academy</strong><br>Expert-led, hands-on training for care professionals<br>Maidstone, Kent | Serving the South East & Mobile Across UK<br>www.continuitytrainingacademy.co.uk</p>
+        </div>
+    </div>
+</body>
+</html>`;
+            openGuideInNewWindow(html, "Guide-2-Safeguarding-Levels.html");
+        }
+
+        function downloadGuide3() {
+            const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medication Training Levels - Awareness vs Competency vs Management | CTA</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;line-height:1.6;color:#2B1B0E;background:#f9f7f4;padding:40px 20px}.container{max-width:900px;margin:0 auto;background:white;padding:60px 50px;box-shadow:0 2px 8px rgba(0,0,0,.1)}.header{text-align:center;border-bottom:3px solid #B29456;padding-bottom:30px;margin-bottom:40px}.logo{font-size:24px;font-weight:600;color:#B29456;margin-bottom:10px}h1{font-size:32px;color:#2B1B0E;margin-bottom:10px;font-weight:700}.tagline{font-size:14px;color:#666;font-style:italic}h2{font-size:22px;color:#B29456;margin-top:40px;margin-bottom:20px;border-left:4px solid #B29456;padding-left:15px}h3{font-size:16px;color:#2B1B0E;margin-top:25px;margin-bottom:12px;font-weight:600}p{margin-bottom:15px;text-align:justify;font-size:14px;line-height:1.8}.quick-answer{background:#f9f7f4;border-left:4px solid #B29456;padding:20px;margin:30px 0;border-radius:4px}.quick-answer strong{color:#B29456;display:block;margin-bottom:8px}table{width:100%;border-collapse:collapse;margin:25px 0;font-size:13px}table thead{background:#B29456;color:white}table th{padding:12px;text-align:left;font-weight:600}table td{padding:12px;border-bottom:1px solid #e0e0e0}table tbody tr:nth-child(even){background:#faf8f5}.section{margin:30px 0;padding:20px;background:#faf8f5;border-radius:4px}.section h3{margin-top:0}ul,ol{margin-left:25px;margin-bottom:15px}ul li,ol li{margin-bottom:8px;font-size:14px}.cert-card{border:2px solid #B29456;padding:20px;margin:20px 0;border-radius:4px;background:#faf8f5}.cert-card h4{color:#B29456;font-size:16px;margin-bottom:10px}.footer{margin-top:50px;padding-top:20px;border-top:1px solid #B29456;text-align:center;font-size:12px;color:#666}.cta-box{background:#B29456;color:white;padding:25px;border-radius:4px;margin:30px 0;text-align:center}.cta-box p{margin:0;font-size:14px}.cta-box strong{display:block;font-size:16px;margin-bottom:5px}@media print{body{padding:0;background:white}.container{box-shadow:none;padding:40px}h1,h2{page-break-after:avoid}table{page-break-inside:avoid}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">💊 Continuity Training Academy</div>
+            <h1>Medication Training Levels</h1>
+            <p class="tagline">Awareness vs Competency vs Management: What's the Difference?</p>
+        </div>
+
+        <h2>Quick Answer</h2>
+        <div class="quick-answer">
+            <strong>Medication Awareness</strong>
+            For: Support workers, care assistants | Covers: Understanding medications, safe storage, why accuracy matters | Can: Discuss but NOT administer | Duration: 2–4 hours
+        </div>
+
+        <div class="quick-answer">
+            <strong>Medication Competency</strong>
+            For: Care workers administering medications | Covers: The 5 Rights, administration techniques, assessment | Can: Administer medications directly | Duration: 1–2 days + practical assessment
+        </div>
+
+        <div class="quick-answer">
+            <strong>Medication Management</strong>
+            For: Registered Managers, clinical leads | Covers: Strategy, delegation, monitoring, accountability | Can: Oversee medication administration across service | Duration: 2–3 days
+        </div>
+
+        <h2>Detailed Breakdown</h2>
+
+        <h3>Medication Awareness (Foundation Level)</h3>
+        <div class="cert-card">
+            <h4>What It Covers</h4>
+            <ul>
+                <li>What medications are and why people take them</li>
+                <li>Common medication types (painkillers, antibiotics, heart medication, mental health meds, etc.)</li>
+                <li>Side effects and interactions</li>
+                <li>Safe storage (temperature, light, security, locked cupboards)</li>
+                <li>Confidentiality and records</li>
+                <li>Recognising when something is wrong (wrong medication, incorrect dose, allergic reaction)</li>
+                <li>Who to report concerns to</li>
+            </ul>
+
+            <h4 style="margin-top:15px">What You CAN Do</h4>
+            <p>✅ Understand what medications are for | ✅ Remind someone to take medication (prompt, not administer) | ✅ Store medications safely | ✅ Recognise side effects | ✅ Report concerns | ✅ Support person taking own medication</p>
+
+            <h4 style="margin-top:15px">What You CANNOT Do</h4>
+            <p>❌ Give/administer medications | ❌ Decide when to withhold medication | ❌ Advise on medication interactions | ❌ Check competence of others</p>
+
+            <h4 style="margin-top:15px">Duration</h4>
+            <p>2–4 hours (often combined with general induction or online module)</p>
+
+            <h4 style="margin-top:15px">Assessment</h4>
+            <p>Informal (quiz, observation, discussion)</p>
+
+            <h4 style="margin-top:15px">Who Needs It</h4>
+            <p>✅ Care assistants (in roles not administering meds) | ✅ Support workers | ✅ Day centre staff | ✅ Domestic/catering staff (helpful for context)</p>
+
+            <h4 style="margin-top:15px">CQC Expectation</h4>
+            <p>Basic awareness expected for all care staff. Shows understanding of medication safety importance.</p>
+        </div>
+
+        <h3>Medication Competency (Practitioner Level)</h3>
+        <div class="cert-card">
+            <h4>What It Covers</h4>
+            <ul>
+                <li><strong>The 5 Rights:</strong> Right person, right drug, right dose, right route, right time</li>
+                <li>Medication administration procedures and techniques</li>
+                <li>Routes of administration (oral, topical, injected, inhaled, etc.)</li>
+                <li>Pre-administration checks (allergies, contraindications, interactions)</li>
+                <li>Recognising and managing side effects and adverse reactions</li>
+                <li>When to withhold medication (clinical judgment)</li>
+                <li>Record-keeping and documentation</li>
+                <li>Medication storage and disposal</li>
+                <li>Communication with person receiving medication (consent, explanation)</li>
+                <li>Emergency response (what to do if wrong medication given)</li>
+            </ul>
+
+            <h4 style="margin-top:15px">What You CAN Do</h4>
+            <p>✅ Administer medications directly to people | ✅ Make decisions about withholding (if clinically appropriate) | ✅ Assess competence through observation | ✅ Document administration | ✅ Respond to emergencies</p>
+
+            <h4 style="margin-top:15px">What You CANNOT Do</h4>
+            <p>❌ Prescribe medications | ❌ Diagnose (decide someone needs medication) | ❌ Advise on dose changes without clinical oversight | ❌ Manage medication protocols for the service</p>
+
+            <h4 style="margin-top:15px">Duration</h4>
+            <p>1–2 days classroom + practical assessment (usually observed administering in workplace)</p>
+
+            <h4 style="margin-top:15px">Assessment</h4>
+            <p><strong>Rigorous.</strong> Trainer observes you administering medications, checks your knowledge of the 5 Rights, reviews your documentation. You must demonstrate competence in practice, not just pass a quiz.</p>
+
+            <h4 style="margin-top:15px">Certificate</h4>
+            <p>Competency sign-off (not always a formal accredited certificate, but documented evidence of competence)</p>
+
+            <h4 style="margin-top:15px">Who Needs It</h4>
+            <p>✅ Care workers administering medications | ✅ Nurses giving injections | ✅ Any role involving direct medication administration | ✅ Community workers managing own meds for service users</p>
+
+            <h4 style="margin-top:15px">CQC Expectation</h4>
+            <p><strong>Mandatory for any role administering medications.</strong> Inspectors specifically ask: "How do you assess someone is competent to give medications?" If you can't evidence a competency assessment, it's a red flag.</p>
+
+            <h4 style="margin-top:15px">Refresher Frequency</h4>
+            <p>Usually annually (or when major changes occur—new service, new medication types, incident). More frequent than general training because this is high-risk, high-compliance area.</p>
+        </div>
+
+        <h3>Medication Management (Leadership Level)</h3>
+        <div class="cert-card">
+            <h4>What It Covers</h4>
+            <ul>
+                <li>Medication policy development and implementation</li>
+                <li>Assessing staff competency for medication administration</li>
+                <li>Creating medication protocols for your service</li>
+                <li>Delegation (who can administer what)</li>
+                <li>Monitoring medication administration across your service</li>
+                <li>Managing medication errors and incidents</li>
+                <li>Governance and accountability</li>
+                <li>Working with prescribers, pharmacists, care coordinators</li>
+                <li>Regulatory compliance (CQC, Health & Safety)</li>
+                <li>Staff training and supervision strategy</li>
+                <li>Auditing medication records and processes</li>
+            </ul>
+
+            <h4 style="margin-top:15px">What You CAN Do</h4>
+            <p>✅ Set medication policies for your service | ✅ Assess and sign off competency | ✅ Oversee medication administration | ✅ Manage errors and incidents | ✅ Make strategic decisions about medication protocols</p>
+
+            <h4 style="margin-top:15px">What You CANNOT Do (Unless Clinically Qualified)</h4>
+            <p>❌ Prescribe changes to medications | ❌ Advise on clinical interactions (work with pharmacist) | ❌ Diagnose medication needs</p>
+
+            <h4 style="margin-top:15px">Duration</h4>
+            <p>2–3 days intensive, often with follow-up modules</p>
+
+            <h4 style="margin-top:15px">Assessment</h4>
+            <p>Case study analysis, strategy development, policy review</p>
+
+            <h4 style="margin-top:15px">Who Needs It</h4>
+            <p>✅ Registered Managers | ✅ Clinical leads | ✅ Medication leads | ✅ Service managers responsible for medication safety</p>
+
+            <h4 style="margin-top:15px">CQC Expectation</h4>
+            <p><strong>Expected for registered managers.</strong> Inspectors ask: "How do you oversee medication safety? Who's responsible for medication compliance? How do you handle errors?" Strong medication management from leadership = better CQC rating.</p>
+        </div>
+
+        <h2>Comparison Table</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Medication Awareness</th>
+                    <th>Medication Competency</th>
+                    <th>Medication Management</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>For role</strong></td>
+                    <td>Support/care assistant (no admin)</td>
+                    <td>Care worker (administers meds)</td>
+                    <td>Manager/clinical lead</td>
+                </tr>
+                <tr>
+                    <td><strong>Duration</strong></td>
+                    <td>2–4 hours</td>
+                    <td>1–2 days + assessment</td>
+                    <td>2–3 days intensive</td>
+                </tr>
+                <tr>
+                    <td><strong>Content depth</strong></td>
+                    <td>Foundational understanding</td>
+                    <td>Practical administration skills</td>
+                    <td>Strategic oversight</td>
+                </tr>
+                <tr>
+                    <td><strong>Can administer?</strong></td>
+                    <td>❌ No</td>
+                    <td>✅ Yes (assessed competent)</td>
+                    <td>✅ Yes (but usually delegates)</td>
+                </tr>
+                <tr>
+                    <td><strong>Assessment</strong></td>
+                    <td>Informal (quiz)</td>
+                    <td>Rigorous (practical observation)</td>
+                    <td>Case study/strategy</td>
+                </tr>
+                <tr>
+                    <td><strong>Certificate type</strong></td>
+                    <td>Awareness certificate</td>
+                    <td>Competency sign-off</td>
+                    <td>Management accreditation</td>
+                </tr>
+                <tr>
+                    <td><strong>Refresher timing</strong></td>
+                    <td>3 years (if formal)</td>
+                    <td>Usually annual</td>
+                    <td>2–3 years</td>
+                </tr>
+                <tr>
+                    <td><strong>Cost</strong></td>
+                    <td>£30–60</td>
+                    <td>£100–200</td>
+                    <td>£150–300</td>
+                </tr>
+                <tr>
+                    <td><strong>CQC expectation</strong></td>
+                    <td>General awareness</td>
+                    <td>Mandatory if administering</td>
+                    <td>Expected for managers</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Real Scenario: Wrong Medication Given</h2>
+        <div class="section">
+            <h3>What Each Level Does</h3>
+            <p><strong>Care assistant (Awareness only):</strong> Notices the error when delivering medication to second resident, alerts medication administrator, documents what happened, supports the person affected.</p>
+            <p><strong>Care worker (Competency):</strong> Realises the error before administration, uses knowledge of 5 Rights to catch it, alerts manager, documents the near-miss, understands why it's serious and how to prevent it next time.</p>
+            <p><strong>Registered Manager (Management):</strong> Reviews the incident, assesses how it happened, implements process changes to prevent recurrence, reports to safeguarding if needed, manages regulatory notification if required, reviews competency of staff involved, updates medication policy if necessary.</p>
+        </div>
+
+        <h2>CQC Reality Check</h2>
+        <p>Inspectors ask:</p>
+        <ul>
+            <li><strong>"Who administers medications in your service?"</strong> → Should name specific, competency-assessed staff</li>
+            <li><strong>"How do you know they're competent?"</strong> → Should show observation records, assessment notes, competency sign-offs</li>
+            <li><strong>"What happens if errors occur?"</strong> → Manager should describe incident management, investigation, learning</li>
+            <li><strong>"How often is medication training refreshed?"</strong> → Should show annual competency checks minimum</li>
+            <li><strong>"Who oversees medication safety?"</strong> → Manager should describe oversight system, audits, staff supervision</li>
+        </ul>
+
+        <h2>Choosing the Right Level for Your Team</h2>
+        <div class="section">
+            <h3>Decision Matrix</h3>
+            <p><strong>If staff DON'T administer medications:</strong> Medication Awareness (foundational understanding)</p>
+            <p><strong>If staff DO administer medications:</strong> Medication Competency (they must be assessed as competent)</p>
+            <p><strong>If you're a manager responsible for medication safety:</strong> Medication Management (leadership oversight)</p>
+            <p><strong>If you're a senior/team leader supporting medication staff:</strong> Medication Competency + elements of Management (so you can support and supervise)</p>
+        </div>
+
+        <h2>CTA's Medication Training</h2>
+        <p>At Continuity Training Academy:</p>
+        <ul>
+            <li><strong>Medication Awareness</strong> – 2–3 hour session, scenario-based, foundational understanding</li>
+            <li><strong>Medication Competency</strong> – 1–2 day course with practical assessment, hands-on practice, real medications/equipment</li>
+            <li><strong>Medication Management</strong> – 2–3 day intensive for managers, strategic focus, incident management, policy development</li>
+        </ul>
+
+        <div class="cta-box">
+            <strong>Book Medication Training Now</strong>
+            <p>We assess competency rigorously. Your staff will be confident and compliant.</p>
+            <p><strong>Call us:</strong> 01622 587343 | <strong>Email:</strong> enquiries@continuitytrainingacademy.co.uk</p>
+        </div>
+
+        <div class="footer">
+            <p><strong>Continuity Training Academy</strong><br>Expert-led, hands-on training for care professionals<br>Maidstone, Kent | Serving the South East & Mobile Across UK<br>www.continuitytrainingacademy.co.uk</p>
+        </div>
+    </div>
+</body>
+</html>`;
+            openGuideInNewWindow(html, "Guide-3-Medication-Training.html");
+        }
+
+        function downloadGuide4() {
+            const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Care Certificate vs Adult Social Care Certificate - Continuity Training Academy</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;line-height:1.6;color:#2B1B0E;background:#f9f7f4;padding:40px 20px}.container{max-width:900px;margin:0 auto;background:white;padding:60px 50px;box-shadow:0 2px 8px rgba(0,0,0,.1)}.header{text-align:center;border-bottom:3px solid #B29456;padding-bottom:30px;margin-bottom:40px}.logo{font-size:24px;font-weight:600;color:#B29456;margin-bottom:10px}h1{font-size:32px;color:#2B1B0E;margin-bottom:10px;font-weight:700}.tagline{font-size:14px;color:#666;font-style:italic}h2{font-size:22px;color:#B29456;margin-top:40px;margin-bottom:20px;border-left:4px solid #B29456;padding-left:15px}h3{font-size:16px;color:#2B1B0E;margin-top:25px;margin-bottom:12px;font-weight:600}p{margin-bottom:15px;text-align:justify;font-size:14px;line-height:1.8}.quick-answer{background:#f9f7f4;border-left:4px solid #B29456;padding:20px;margin:30px 0;border-radius:4px}.quick-answer strong{color:#B29456;display:block;margin-bottom:8px}table{width:100%;border-collapse:collapse;margin:25px 0;font-size:13px}table thead{background:#B29456;color:white}table th{padding:12px;text-align:left;font-weight:600}table td{padding:12px;border-bottom:1px solid #e0e0e0}table tbody tr:nth-child(even){background:#faf8f5}.section{margin:30px 0;padding:20px;background:#faf8f5;border-radius:4px}.section h3{margin-top:0}ul,ol{margin-left:25px;margin-bottom:15px}ul li,ol li{margin-bottom:8px;font-size:14px}.cert-card{border:2px solid #B29456;padding:20px;margin:20px 0;border-radius:4px;background:#faf8f5}.cert-card h4{color:#B29456;font-size:16px;margin-bottom:10px}.footer{margin-top:50px;padding-top:20px;border-top:1px solid #B29456;text-align:center;font-size:12px;color:#666}.cta-box{background:#B29456;color:white;padding:25px;border-radius:4px;margin:30px 0;text-align:center}.cta-box p{margin:0;font-size:14px}.cta-box strong{display:block;font-size:16px;margin-bottom:5px}.standards-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:20px 0}.standard-item{background:#faf8f5;padding:12px;border-left:3px solid #B29456;font-size:13px}.standard-item strong{color:#B29456}@media print{.standards-grid{grid-template-columns:1fr}}@media print{body{padding:0;background:white}.container{box-shadow:none;padding:40px}h1,h2{page-break-after:avoid}table{page-break-inside:avoid}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🎓 Continuity Training Academy</div>
+            <h1>Care Certificate vs Adult Social Care Certificate</h1>
+            <p class="tagline">Understanding the Difference – Which Qualification Does Your Team Need?</p>
+        </div>
+
+        <h2>Quick Answer</h2>
+        <div class="quick-answer">
+            <strong>Care Certificate (15 Standards)</strong>
+            For: New care workers as structured induction | Duration: 1–3 months | Focus: Foundational knowledge, safe practice, values
+        </div>
+
+        <div class="quick-answer">
+            <strong>Adult Social Care Certificate (Level 3)</strong>
+            For: Career development and formal qualification | Duration: 6–12 months | Focus: In-depth knowledge, assessable competence, regulated qualification
+        </div>
+
+        <h2>What is the Care Certificate?</h2>
+        <div class="cert-card">
+            <h4>Definition</h4>
+            <p>A structured induction framework endorsed by Skills for Care and Health (England). It comprises <strong>15 standards</strong> covering essential knowledge and safe practice for care work.</p>
+            
+            <h4 style="margin-top:15px">The 15 Standards</h4>
+            <div class="standards-grid">
+                <div class="standard-item"><strong>1.</strong> Understand the principles and values of health & social care</div>
+                <div class="standard-item"><strong>2.</strong> Duty of care and understand own role</div>
+                <div class="standard-item"><strong>3.</strong> Diversity, equality and inclusion</div>
+                <div class="standard-item"><strong>4.</strong> Duty of care, safeguarding, and protecting rights</div>
+                <div class="standard-item"><strong>5.</strong> Health & safety in care settings</div>
+                <div class="standard-item"><strong>6.</strong> Assess needs and preferences</div>
+                <div class="standard-item"><strong>7.</strong> Promote dignity, independence, privacy, choice, rights, protection</div>
+                <div class="standard-item"><strong>8.</strong> Communication and professional relationships</div>
+                <div class="standard-item"><strong>9.</strong> Record-keeping and information sharing</div>
+                <div class="standard-item"><strong>10.</strong> Fluency in English (if applicable)</div>
+                <div class="standard-item"><strong>11.</strong> Understand the importance of monitoring health & wellbeing</div>
+                <div class="standard-item"><strong>12.</strong> Awareness of mental health, dementia, learning disabilities</div>
+                <div class="standard-item"><strong>13.</strong> Safeguarding adults and children</div>
+                <div class="standard-item"><strong>14.</strong> Equality in health & social care practice</div>
+                <div class="standard-item"><strong>15.</strong> Infection prevention & control</div>
+            </div>
+
+            <h4 style="margin-top:15px">Format</h4>
+            <p>Delivered as structured induction (classroom + workplace learning). Assessed through portfolio of evidence, written workbooks, witness statements, and observation. <strong>Not a regulated qualification</strong> but widely recognized across UK care sector.</p>
+
+            <h4 style="margin-top:15px">Duration & Cost</h4>
+            <p><strong>Time:</strong> 1–3 months (depending on delivery model—intensive vs part-time). <strong>Cost:</strong> £100–300 per person.</p>
+
+            <h4 style="margin-top:15px">Who Should Complete It</h4>
+            <p>New care workers, induction standard, foundation for safe care practice. Most care providers use Care Certificate as their induction programme.</p>
+        </div>
+
+        <h2>What is the Adult Social Care Certificate?</h2>
+        <div class="cert-card">
+            <h4>Definition</h4>
+            <p>A <strong>regulated, accredited Level 3 qualification</strong> in Health & Social Care (QCF/RQF). It's an NVQ-equivalent showing formal competence across care sectors.</p>
+
+            <h4 style="margin-top:15px">Content & Modules</h4>
+            <p>Broader than Care Certificate. Typically includes:</p>
+            <ul>
+                <li>Health & social care practice principles</li>
+                <li>Person-centered care and support</li>
+                <li>Safeguarding and protection</li>
+                <li>Health, safety, and wellbeing</li>
+                <li>Communication and relationships</li>
+                <li>Specialist areas: dementia, learning disability, mental health (depending on pathway)</li>
+                <li>Work experience/workplace learning (50% of time)</li>
+            </ul>
+
+            <h4 style="margin-top:15px">Format</h4>
+            <p>Classroom learning + substantial workplace assessment. Requires evidence of real-world competence (portfolio, direct observation, written assignments). Regulated awarding body oversees standards.</p>
+
+            <h4 style="margin-top:15px">Duration & Cost</h4>
+            <p><strong>Time:</strong> 6–12 months (part-time, whilst working). <strong>Cost:</strong> £400–800 per person (varies by provider; some funded via apprenticeship route).</p>
+
+            <h4 style="margin-top:15px">Who Should Complete It</h4>
+            <p>Care workers seeking <strong>formal qualification</strong>, those aiming for team leader/supervisor roles, career development, or progressing to Level 4+ (diploma, degree).</p>
+        </div>
+
+        <h2>Side-by-Side Comparison</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Care Certificate (15 Standards)</th>
+                    <th>Adult Social Care Certificate (Level 3)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Type</strong></td>
+                    <td>Induction framework (non-regulated)</td>
+                    <td><strong>Accredited qualification (RQF Level 3)</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Duration</strong></td>
+                    <td>1–3 months</td>
+                    <td>6–12 months</td>
+                </tr>
+                <tr>
+                    <td><strong>Cost</strong></td>
+                    <td>£100–300</td>
+                    <td>£400–800</td>
+                </tr>
+                <tr>
+                    <td><strong>Content Depth</strong></td>
+                    <td>Foundational (15 standards)</td>
+                    <td><strong>In-depth with specialisms</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Workplace Learning</strong></td>
+                    <td>30–50%</td>
+                    <td><strong>50–70% of learning</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Assessment</strong></td>
+                    <td>Portfolio, workbook, observation</td>
+                    <td><strong>Rigorous (unit tests, practical assessments, formal evaluation)</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Regulated?</strong></td>
+                    <td>No</td>
+                    <td><strong>Yes—Ofqual accredited</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Nationally Recognized?</strong></td>
+                    <td>Yes (widely accepted)</td>
+                    <td><strong>Yes—formal national credential</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>For role progression</strong></td>
+                    <td>Foundation only</td>
+                    <td><strong>Supports team leader/supervisor pathway</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>CQC expectation</strong></td>
+                    <td>Recommended for new staff</td>
+                    <td><strong>Expected for supervisory roles</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Career Progression</h2>
+        <p><strong>Typical pathway:</strong></p>
+        <ol>
+            <li><strong>Month 1–3:</strong> Complete Care Certificate (induction foundation)</li>
+            <li><strong>Month 3–12:</strong> Complete Adult Social Care Certificate Level 3 (formal qualification)</li>
+            <li><strong>Year 2+:</strong> Progress to Level 4 Diploma (team leader/supervisor), then Level 5 (advanced management)</li>
+        </ol>
+        <p>Many employers encourage Care Certificate completion within first 3 months, then support Level 3 in year 1–2.</p>
+
+        <h2>Real-World Scenarios</h2>
+        <div class="section">
+            <h3>Scenario 1: New Care Assistant</h3>
+            <p><strong>Situation:</strong> Just joined a care home, no prior care experience.</p>
+            <p><strong>Recommended:</strong> <strong>Care Certificate (mandatory)</strong> within first 12 weeks, then Adult Social Care Certificate Level 3 over next 9–12 months (employer-supported).</p>
+        </div>
+
+        <div class="section">
+            <h3>Scenario 2: Experienced Care Worker Seeking Progression</h3>
+            <p><strong>Situation:</strong> 2–3 years care experience; wants to move into team leader role.</p>
+            <p><strong>Recommended:</strong> <strong>Adult Social Care Certificate Level 3</strong> (if not already completed), then Level 4 Diploma in Team Leading.</p>
+        </div>
+
+        <div class="section">
+            <h3>Scenario 3: Career Changer</h3>
+            <p><strong>Situation:</strong> No care background; wants to enter care sector professionally.</p>
+            <p><strong>Recommended:</strong> <strong>Care Certificate first</strong> (1–3 months induction), then Adult Social Care Certificate Level 3 (6–12 months) to establish formal credential. May combine into apprenticeship pathway (funded).</p>
+        </div>
+
+        <h2>Cost & ROI</h2>
+        <ul>
+            <li><strong>Care Certificate:</strong> £100–300 per person (1–3 months investment) = Quick induction, foundation safe practice</li>
+            <li><strong>Adult Social Care Certificate:</strong> £400–800 per person (6–12 months) = Formal qualification, career mobility, supervisory pathway opens</li>
+            <li><strong>Combined pathway:</strong> £500–1,100 per person = Comprehensive development, strong CQC evidence, staff retention</li>
+        </ul>
+        <p><strong>Business benefit:</strong> Qualified staff = lower turnover, stronger CQC compliance, higher quality care, better reputation.</p>
+
+        <h2>CQC Reality Check</h2>
+        <p>Inspectors look for:</p>
+        <ul>
+            <li><strong>New staff:</strong> "Evidence of induction—Care Certificate or equivalent?"</li>
+            <li><strong>Supervisory staff:</strong> "Team leaders/managers—have they completed Level 3 or equivalent?"</li>
+            <li><strong>Progression:</strong> "What's your staff development pathway? Are staff supported toward qualifications?"</li>
+            <li><strong>Quality:</strong> "Are qualifications linked to care quality and outcomes?"</li>
+        </ul>
+        <p><strong>CQC expectation:</strong> Most providers should evidence that care staff complete Care Certificate as induction, and supervisory/team-leading staff hold Level 3+ qualifications.</p>
+
+        <div class="cta-box">
+            <strong>Ready to Qualify Your Team?</strong>
+            <p>We deliver both Care Certificate and Adult Social Care Certificate Level 3.</p>
+            <p><strong>Call us:</strong> 01622 587343 | <strong>Email:</strong> enquiries@continuitytrainingacademy.co.uk</p>
+        </div>
+
+        <div class="footer">
+            <p><strong>Continuity Training Academy</strong><br>Expert-led, hands-on training for care professionals<br>Maidstone, Kent | Serving the South East & Mobile Across UK<br>www.continuitytrainingacademy.co.uk</p>
+        </div>
+    </div>
+</body>
+</html>`;
+            openGuideInNewWindow(html, "Guide-4-Care-Certificates.html");
+        }
+
+        function openGuideInNewWindow(html, filename) {
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>

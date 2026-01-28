@@ -1,0 +1,939 @@
+{
+  "Adult Social Care Certificate": {
+    "title": "Adult Social Care Certificate",
+    "id": "1",
+    "level": "Level 2",
+    "hours": "24 hours",
+    "duration": "4 Days",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 879,
+    "category": "Core Care Skills",
+    "location": "Maidstone Studios",
+    "description": "Mandatory units that must be completed to achieve the qualification as well as meeting legal requirements for healthcare providers to ensure care staff are trained. Learners must complete both the theoretical and practical components for each of the standards and as well as passing assessments to be awarded the certificate.",
+    "accreditation": "Skills for care",
+    "learningOutcomes": [
+      "Understand own role and responsibilities in adult social care",
+      "Personal development in adult social care settings",
+      "Duty of care in adult social care",
+      "Equality, diversity, inclusion and human rights in adult social care",
+      "Work in a person-centred way",
+      "Communication",
+      "Privacy and dignity",
+      "Support individuals to meet nutrition and hydration needs",
+      "Awareness of mental health conditions and dementia",
+      "Safeguarding Adults & Children",
+      "Health, safety and principles of basic life support",
+      "Handling information",
+      "Infection prevention and control",
+      "Awareness of learning disability and autism"
+    ],
+    "whoShouldAttend": "A new competence-based qualification has been developed from the widely used Care Certificate standards suitable for those who work, or want to work, in social care and gain the most up to date knowledge and skills. This qualification is for individuals who are aged 19 and above working in Adult Social Care and have a responsibility for providing person-centred care and support and to provide a consistent framework for the induction and development of the non-regulated health and social care workforce and ensuring the necessary skills, knowledge, and behaviours to deliver compassionate care have been gained.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/1.webp"
+  },
+  "Basic Life Support": {
+    "title": "Basic Life Support",
+    "id": "2",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Emergency & First Aid",
+    "location": "Maidstone Studios",
+    "description": "Understand procedures for responding to accidents and sudden illness and providing basic life support and to provide essential lifesaving skills with CPR for both adults and children as well as the use of an AED. Including recovery position and choking management.",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Care Certificate - Standard 12|UK Resuscitation Guidelines Council|CQC Regulations - 10, 12, 13, 15, 20",
+    "learningOutcomes": [
+      "Gain a detailed insight into a range of techniques and strategies that are fundamental to basic life support."
+    ],
+    "whoShouldAttend": "Anyone who has a need to gain essential knowledge and administer basic life support. Complete practical basic life support training that meets the Resuscitation Council UK (RCUK) guidelines.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/2.webp"
+  },
+  "Dignity Privacy & Respect": {
+    "title": "Dignity Privacy & Respect",
+    "id": "3",
+    "level": "Level 2",
+    "hours": "2 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Core Care Skills",
+    "location": "Maidstone Studios",
+    "description": "Understand the principles that underpin privacy, dignity and respect. Maintain the privacy and dignity of the individuals supported Understand the legislation relating to Recognising the dignity factors Helping people to make choices",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Care Certificate - Standard 7|CQC Regulations - 9, 10, 11, 12, 20",
+    "learningOutcomes": [
+      "The course will give an overview and provide Health and Social Care workers with an understanding of dignity in care and how it can be promoted and maintained for the individuals they support. This course will give learners knowledge on how to support the individual to make choices and including their care needs and how to maintain the privacy and dignity of the individual, including methods of implementing changes with a goal to improve services, and the legislation which is relevant."
+    ],
+    "whoShouldAttend": "This course is for anyone who works in the health and social care sector such as care workers, health care assistants, social workers, NHS workers and is a mandatory course as part of induction training for the care sector.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/3.webp"
+  },
+  "Duty of Care": {
+    "title": "Duty of Care",
+    "id": "4",
+    "level": "Level 2",
+    "hours": "2 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Core Care Skills",
+    "location": "Maidstone Studios",
+    "description": "Understand duty of care Dealing with comments and complaints Respond to incidents, errors and near misses Deal with confrontation and difficult situations",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Care Certificate - Standard 3|CQC Regulations - 9, 10, 11, 12, 13, 14, 15, 16, 18, 20",
+    "learningOutcomes": [
+      "Understand duty of care and applying this to professional work as a healthcare worker. Know how to respond to comments and complaints in a way that complies with the law and agreed ways of working."
+    ],
+    "whoShouldAttend": "For health and social care workers to ensure there is an understanding of duty of care and how to fulfil it. It is also a mandatory requirement for anyone working with health and social care. Gaining the knowledge and skills to of your legal and ethical duty.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/4.webp"
+  },
+  "Effective Communication": {
+    "title": "Effective Communication",
+    "id": "5",
+    "level": "Level 2",
+    "hours": "2 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Communication & Workplace Culture",
+    "location": "Maidstone Studios",
+    "description": "Understand the importance of effective communication Understand how to meet the communication and language needs, wishes and preference of individuals Understand how to promote effective communication with individuals Use appropriate communication with individuals and support the safe use of communication aids",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Care Certificate - Standard 6|CQC Regulations - 9, 10, 11, 12, 13, 14, 15, 16, 18, 20",
+    "learningOutcomes": [
+      "Understand the importance of effective communication and promote effective communication with the principles and practices related to individuals needs and confidentiality."
+    ],
+    "whoShouldAttend": "(Do they need any minimum qualifications to go onto this course) Health and Social Care workers to develop knowledge and understand how to meet the communication and language needs, wishes and preferences of individuals they support and understand how to promote effective communication.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/5.webp"
+  },
+  "Equality, Diversity, Inclusion & Human Rights": {
+    "title": "Equality, Diversity, Inclusion & Human Rights",
+    "id": "6",
+    "level": "Level 2",
+    "hours": "2 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Communication & Workplace Culture",
+    "location": "Maidstone Studios",
+    "description": "Understand the importance of equality, diversity, inclusion and human rights Key legislation relating to equality, diversity, inclusion and human rights",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Care Certificate - Standard 4|CQC Regulations - 9, 10, 11, 12, 13, 14, 15, 16, 18, 20",
+    "learningOutcomes": [
+      "Understand the importance of equality, diversity, inclusion and human rights",
+      "Work in an inclusive way",
+      "Access information, advice and support about equality, diversity, inclusion and human rights",
+      "Raised awareness of the issues to understand the differences individuals may have and why everyone must be treated equally."
+    ],
+    "whoShouldAttend": "Aimed at individuals and employers alike who wish to gain further skills to develop careers and progress in the workplace. Also suitable for those interested in social awareness and looking for diversity training to introduce equality, diversity, inclusion and human rights to ensure Health and Social Care workers can promote and value individuals and to develop an understanding of the principles of equality and diversity.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/6.webp"
+  },
+  "GDPR": {
+    "title": "GDPR",
+    "id": "7",
+    "level": "Level 2",
+    "hours": "2 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Information & Data Management",
+    "location": "Maidstone Studios",
+    "description": "Be able to handle information Importance to have secure systems for recording, storing and sharing information Understand what is expected of organisations regarding data security",
+    "accreditation": "The Information Commissioner's Office (ICO)",
+    "learningOutcomes": [
+      "Understand handling information and the purpose of the UK and GDPR as well as explain the information that falls under the GDPR with the necessary knowledge to implement GDPR and knowing the expectations of organisations regarding data security."
+    ],
+    "whoShouldAttend": "For Health and Social Care workers to understand the principles of good record keeping and have a comprehensive guide to why information is so important, how to respect people's right to confidentiality, the risks to its safety and what you can do to protect it.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/7.webp"
+  },
+  "Information Handling": {
+    "title": "Information Handling",
+    "id": "8",
+    "level": "Level 2",
+    "hours": "2 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Information & Data Management",
+    "location": "Maidstone Studios",
+    "description": "Be able to handle information Importance to have secure systems for recording, storing and sharing information Understand how to keep records that are up to date, complete, accurate and legible",
+    "accreditation": "Skills for health UK Core Skills Training Framework|Care Certificate - Standard 14|CQC Regulations - 8, 16, 17",
+    "learningOutcomes": [
+      "Handling information and ensuring records are kept up-to-date."
+    ],
+    "whoShouldAttend": "For Health and Social Care workers to understand the principles of good record keeping and have a comprehensive guide to why information is so important, how to respect people's right to confidentiality, the risks to its safety and what you can do to protect it.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/8.webp"
+  },
+  "Oral Health": {
+    "title": "Oral Health",
+    "id": "9",
+    "level": "Level 2",
+    "hours": "2 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Health Conditions & Specialist Care",
+    "location": "Maidstone Studios",
+    "description": "Understand oral health care and support Promoting a person-centred approach to oral hygiene Providing oral care in a health and social care setting",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|NICE guidance for care homes|CQC",
+    "learningOutcomes": [
+      "Support an individual with their oral health. What oral health is and the importance of oral health. Understand how and when to assess oral health."
+    ],
+    "whoShouldAttend": "For Health and Social Care workers working in care settings. This oral health training course is part of the care quality commission's requirements for people living in care and nursing homes.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/9.webp"
+  },
+  "Oxygen Therapy Awareness": {
+    "title": "Oxygen Therapy Awareness",
+    "id": "10",
+    "level": "Level 2",
+    "hours": "2 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Health Conditions & Specialist Care",
+    "location": "Maidstone Studios",
+    "description": "Understand what oxygen therapy is Understand who needs oxygen therapy Understand the risks of oxygen therapy",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|HSE|CQC",
+    "learningOutcomes": [
+      "Understand oxygen therapy and the risks and to administer oxygen safely and effectively for individuals with breathing difficulties. How and when to administer oxygen to an individual and the safety with using and storing oxygen."
+    ],
+    "whoShouldAttend": "For Health and Social Care workers gain understanding of principles of oxygen therapy for anyone who may need oxygen in healthcare settings and give an awareness of the risks involved in using oxygen therapy.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/10.webp"
+  },
+  "Person-Centred Care": {
+    "title": "Person-Centred Care",
+    "id": "11",
+    "level": "Level 2",
+    "hours": "2 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Core Care Skills",
+    "location": "Maidstone Studios",
+    "description": "Understand person-centred values Understand working in a person-centred way Supporting individuals using person-centred values",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Care Certificate - Standard 5|CQC Regulations - 9, 10, 11, 12, 13, 14, 15, 16, 18, 20",
+    "learningOutcomes": [
+      "Understand working in a person-centred way and person-centred values and understand the principles behind high-quality, compassionate care with confidence."
+    ],
+    "whoShouldAttend": "For anyone who works in Health and Social Care to gain an awareness and increase knowledge of person-centred care and care plans to help provide individualised care to service users and improve their quality of life. To introduce health and social care workers to person-centred care and support with their roles in implementing person centred approaches.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/11.webp"
+  },
+  "The Role of a Care Worker & Personal Development": {
+    "title": "The Role of a Care Worker & Personal Development",
+    "id": "12",
+    "level": "Level 1",
+    "hours": "2 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 43,
+    "category": "Core Care Skills",
+    "location": "Maidstone Studios",
+    "description": "Understand own role in health and social care Work in ways that have been agreed with the employer Work in partnership with others Develop own knowledge, skills and understanding",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Care Certificate - Standards 1&2|CQC Regulations - 18",
+    "learningOutcomes": [
+      "Understand own role in health and social care and gain an understanding to job roles, rights, duties and responsibilities including the differences between personal and professional relationships, as well as being able to work in partnership with others."
+    ],
+    "whoShouldAttend": "For Health and Social Care workers to ensure they have knowledge of the subject. Provides care workers with an understanding of their roles and responsibilities and to adhere to in their daily working life, as well as strategies for personal development.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/12.webp"
+  },
+  "Basic Health & Safety": {
+    "title": "Basic Health & Safety",
+    "id": "13",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Safety & Compliance",
+    "location": "Maidstone Studios",
+    "description": "Understand responsibilities relating to health and safety in the work setting Understand risk assessment Understand secondary legislation Be able to handle hazardous substances Understand how to promote fire safety Understand how to work safely and securely",
+    "accreditation": "Skills for health UK Core Skills Training Framework|HSE|CQC",
+    "learningOutcomes": [
+      "Understand the importance of basic health and safety in the workplace as well as the responsibilities on employers, self-employed and employees. Understanding the importance of reporting accidents in the workplace."
+    ],
+    "whoShouldAttend": "For workers to gain knowledge and who require information and training for health and safety responsibilities providing an understanding of the importance of health and safety in the workplace for employees and employers under health and safety law.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/13.webp"
+  },
+  "Care Planning": {
+    "title": "Care Planning",
+    "id": "14",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Core Care Skills",
+    "location": "Maidstone Studios",
+    "description": "Understand the principles of person-centred planning and review Understand working in a person-centred way Understand how care plan should be updated or changed",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Care Certificate - Standard 5|CQC Regulations - 9, 10, 11, 12, 13, 14, 15, 16, 18, 20",
+    "learningOutcomes": [
+      "Understand what a care plan is and the importance of changes to care plan and keeping them up to date as well as creating a care plan with person-centred approaches."
+    ],
+    "whoShouldAttend": "For anyone who works in Health and Social Care to gain an understanding about their role in supporting the preferences and needs of individuals in relation to their care or support, the development and implementation of care plans and contributing to the review of these by observing, monitoring and reporting on the care activities they are responsible for.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/14.webp"
+  },
+  "Customer Service Skills": {
+    "title": "Customer Service Skills",
+    "id": "15",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith"
+    ],
+    "price": 62,
+    "category": "Communication & Workplace Culture",
+    "location": "Maidstone Studios",
+    "description": "Principles of customer service Understand how to communicate effectively Understand the importance of customer service Understand customer service skills Understand how to handle customer complaints",
+    "accreditation": "None",
+    "learningOutcomes": [
+      "This course is designed for anyone who works with members of the public either face-to-face, over the phone, email or social media and will enable them to maintain high levels of customer service and ensure customers have the best experience as well as handling complaints."
+    ],
+    "whoShouldAttend": "For anyone working in a customer service role or who works with members of the public either face-to-face, over the phone or email.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/15.webp"
+  },
+  "Dementia Awareness": {
+    "title": "Dementia Awareness",
+    "id": "16",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Health Conditions & Specialist Care",
+    "location": "Maidstone Studios",
+    "description": "Understand dementia Understand working in a person-centred way to support individuals with dementia Understand how to communicate and interact with individuals who have dementia",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Care Certificate|CQC Regulations - 9, 10, 11, 12, 13, 14, 15, 16, 18, 20",
+    "learningOutcomes": [
+      "Designed to develop the knowledge and feel more confident about caring for people who are living with dementia"
+    ],
+    "whoShouldAttend": "This course is for anyone who works with, or supports someone with the condition, designed to develop the knowledge and feel more confident about caring for people who are living with dementia.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/16.webp"
+  },
+  "Diabetes Awareness": {
+    "title": "Diabetes Awareness",
+    "id": "17",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Health Conditions & Specialist Care",
+    "location": "Maidstone Studios",
+    "description": "Understand diabetes Understand how to identify and manage episodes of hypoglycaemia and hyperglycaemia Identify and explain the signs and symptoms of diabetes",
+    "accreditation": "NICE guidance|Diabetes UK|CQC",
+    "learningOutcomes": [
+      "Raised awareness of diabetes and to support people to understand diabetes so they can live healthier and avoid serious health issues."
+    ],
+    "whoShouldAttend": "For anyone who works in Health and Social Care to gain an awareness and knowledge associated with best practice for the safe and effective care of people with diabetes. the course promotes the safety and well-being of patients who have or who are at risk of having diabetes.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/17.webp"
+  },
+  "End of Life Care": {
+    "title": "End of Life Care",
+    "id": "18",
+    "level": "Level 2",
+    "hours": "2 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Health Conditions & Specialist Care",
+    "location": "Maidstone Studios",
+    "description": "Understand how to provide support to manage pain and discomfort Understand how to work in end-of-life care Understand how to maintain comfort and dignity during end-of-life care",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Gold Standard Framework|CQC",
+    "learningOutcomes": [
+      "Be able to support with end-of-life care will gain the skills to provide compassionate care, manage symptoms, and offer emotional support to both patients and their families."
+    ],
+    "whoShouldAttend": "For anyone who works in Health and Social Care to confidently deliver high-quality care to those coming to their end of life with compassion, competency and respect.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/18.webp"
+  },
+  "Equal Opportunities": {
+    "title": "Equal Opportunities",
+    "id": "19",
+    "level": "Level 2",
+    "hours": "2 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith"
+    ],
+    "price": 43,
+    "category": "Communication & Workplace Culture",
+    "location": "Maidstone Studios",
+    "description": "Understand equal opportunities Understand the Equality Act 2010 How to promote equality and diversity in the workplace",
+    "accreditation": "None",
+    "learningOutcomes": [
+      "Understand Equal opportunities and to create fairer workplaces with a respectful workplace environment."
+    ],
+    "whoShouldAttend": "This course is for anyone who wants to establish and maintain a workplace culture that embraces equal opportunities and inclusion. Providing the knowledge and skills necessary to create a fair and inclusive work environment where everyone feels valued, respected, and treated fairly, regardless of their background or personal characteristic.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/19.webp"
+  },
+  "Fire Safety Awareness": {
+    "title": "Fire Safety Awareness",
+    "id": "20",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Safety & Compliance",
+    "location": "Maidstone Studios",
+    "description": "Understand responsibilities relating to health and safety in the work setting Understand risk assessment Be able to handle hazardous substances Understand how to promote fire safety Understand how to work safely and securely",
+    "accreditation": "The Regulatory Reform (Fire Safety) Order 2005|HSE|CQC",
+    "learningOutcomes": [
+      "Have knowledge of basic fire safety and have the confidence in recognising risks, preventing hazards, and responding appropriately in a fire situation."
+    ],
+    "whoShouldAttend": "This course is for all employees and designed to help people learn new skills and knowledge to refresh existing fire safety skills and understand the fire risks in work premises and what safety measures should be in place to control them and the importance of following emergency procedures.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/20.webp"
+  },
+  "Food Safety Awareness": {
+    "title": "Food Safety Awareness",
+    "id": "21",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Nutrition & Hygiene",
+    "location": "Maidstone Studios",
+    "description": "Understand the principles of food safety Understand the principles food handlers Understand food safety hazards Understand correct procedures for storing foods Understand HACCP",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|HSE|CQC Regulations",
+    "learningOutcomes": [
+      "Have knowledge of basic food safety with a general understanding of good food safety practices. The principal symptoms & causes of food-borne illness as well as describing poor food safety practices."
+    ],
+    "whoShouldAttend": "This course is ideal for staff involved with handling food. This course covers all the essential topics related to food safety and ensures the necessary knowledge and skills gained to handle food safely and hygienically.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/21.webp"
+  },
+  "Infection Prevention and Control": {
+    "title": "Infection Prevention and Control",
+    "id": "22",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Safety & Compliance",
+    "location": "Maidstone Studios",
+    "description": "Be able to prevent the spread of infection Importance of effective hand hygiene Understand how own health or hygiene might pose a risk to the individuals supported",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Care Certificate - Standard 15|CQC Regulations - 9, 10, 11, 12, 13",
+    "learningOutcomes": [
+      "Understand the principles of infection prevention and control as well as understand personal protective equipment, hand hygiene, management of body fluids, the environment, and care equipment can help prevent the spread of infection. Understand the consequences of infection and how infections are spread in a healthcare setting."
+    ],
+    "whoShouldAttend": "For Health and Social Care workers to understand how to prevent and control infection with an overview of the topic. To practice safely and to protect individuals being supported from infection and the impact these infections have on individuals and your duty of care.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/22.webp"
+  },
+  "Insulin Awareness": {
+    "title": "Insulin Awareness",
+    "id": "23",
+    "level": "Level 2",
+    "hours": "2 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Sharon Cudlip",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Health Conditions & Specialist Care",
+    "location": "Maidstone Studios",
+    "description": "Understand diabetes and insulin Understand how to identify and manage episodes of hypoglycaemia and hyperglycaemia Identify and explain the signs and symptoms of diabetes",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Diabetes UK|CQC",
+    "learningOutcomes": [
+      "Understand the different types of insulin and how it works, and diabetes causes as well as the complications and impact of diabetes with effective ways to manage the condition."
+    ],
+    "whoShouldAttend": "For anyone who works in Health and Social Care to gain an awareness and knowledge associated with best practice for the safe and effective care of people with diabetes. the course promotes the safety and well-being of patients who have or who are at risk of having diabetes.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/23.webp"
+  },
+  "Learning Disabilities & Autism": {
+    "title": "Learning Disabilities & Autism",
+    "id": "24",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Sharon Cudlip",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Health Conditions & Specialist Care",
+    "location": "Maidstone Studios",
+    "description": "Understand the needs and experiences of people living with learning disabilities or autism Understand the importance of early identification of learning disabilities and autism Understand how legal frameworks and guidelines support individuals living with learning disabilities and autism",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Care Certificate - Standard 9|CQC Regulations - 9, 10, 11, 12, 14, 20",
+    "learningOutcomes": [
+      "Understand relevant legislation and being able to apply person-centred thinking towards supporting individuals with learning disabilities and autism as well as identifying reasonable adjustments."
+    ],
+    "whoShouldAttend": "To provide Health and Social Care workers with an understanding and awareness of mental health, dementia and learning disabilities and ensuring compassionate and competent care is provided.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/24.webp"
+  },
+  "Management & Leadership Skills (Level 2)": {
+    "title": "Management & Leadership Skills (Level 2)",
+    "id": "25",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith"
+    ],
+    "price": 62,
+    "category": "Leadership & Professional Development",
+    "location": "Maidstone Studios",
+    "description": "Understand management and leadership skills Understand different management and leadership styles",
+    "accreditation": "None",
+    "learningOutcomes": [
+      "Understand management and leadership skills and to help you to develop your knowledge and understanding of a range of management and leadership styles and techniques."
+    ],
+    "whoShouldAttend": "This Management and Leadership course is ideal if you have management responsibilities but no formal training. It will give you a wide range of skills and knowledge to organise and motivate teams that are essential for professional success.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/25.webp"
+  },
+  "Mental Capacity Act & DoLS": {
+    "title": "Mental Capacity Act & DoLS",
+    "id": "26",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Sharon Cudlip",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Health Conditions & Specialist Care",
+    "location": "Maidstone Studios",
+    "description": "Understand the Mental Capacity Act Understand capacity Understand the key principles of the Mental Capacity Act Understand the Deprivation of Liberty Safeguards Understand how mental capacity is assessed",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Care Certificate - Standard 5|CQC Regulations - 9, 10, 11, 12, 13, 14, 15, 16, 18, 20",
+    "learningOutcomes": [
+      "Understand the mental capacity act and dols including what mental capacity means and how it affects decision-making as well as knowing what Deprivation of Liberty means and the importance."
+    ],
+    "whoShouldAttend": "For anyone who works in Health and Social Care to gain the skills and knowledge to protect the welfare and rights of individuals who lack mental capacity. This course is aimed at people who have a duty of care towards vulnerable adults and is vital in ensuring all those in your care are treated with dignity.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/26.webp"
+  },
+  "Medication Awareness": {
+    "title": "Medication Awareness",
+    "id": "27",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Medication Management",
+    "location": "Maidstone Studios",
+    "description": "The principles of safe and appropriate handling of medicines The importance of good record-keeping Medication for people who lack capacity Medication storage and disposal Administering medication, including supporting self-administration Privacy and confidentiality",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Care Certificate - Standard 13|CQC Regulations - 9, 10, 11, 12, 13",
+    "learningOutcomes": [
+      "Understand the principles of safe and appropriate handling of medicines as well as administering medication, including supporting self-administration, and the importance of good record-keeping."
+    ],
+    "whoShouldAttend": "For people involved in looking after medication for anyone including carers in domiciliary settings, carers in care homes, managers of care providers, family members who want to understand more about safe handling of medication or anyone interested in a safe handling of medication course.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/27.webp"
+  },
+  "Moving & Positioning Theory": {
+    "title": "Moving & Positioning Theory",
+    "id": "28",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Safety & Compliance",
+    "location": "Maidstone Studios",
+    "description": "Understand responsibilities relating to health and safety in the work setting Understand risk assessment Be able to move and assist safely Understand how to work safely and securely",
+    "accreditation": "Skills for health UK Core Skills Training Framework|Care Certificate - Standard 13|CQC Regulations - 12, 13, 15, 18, 19, 20",
+    "learningOutcomes": [
+      "Understand the theory of moving and positioning correctly and understand own responsibilities for safe moving and handling as well as knowledge of key pieces of legislation that relate to moving and handling."
+    ],
+    "whoShouldAttend": "Health and Social Care workers to gain knowledge and who require information and training for health and safety responsibilities providing an understanding of the importance of health and safety in the workplace for employees and employers under health and safety law.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/28.webp"
+  },
+  "Nutrition and Hydration": {
+    "title": "Nutrition and Hydration",
+    "id": "29",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Nutrition & Hygiene",
+    "location": "Maidstone Studios",
+    "description": "Understand the principles of food safety Understand the principles of fluids and nutrition Support individuals with nutrition and hydration",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Care Certificate - Standard 8|NICE|CQC Regulations - 9, 10, 11, 12, 14, 20",
+    "learningOutcomes": [
+      "Have an understanding of nutrition and hydration and be able to give support as well as risk assessment tools such as the Malnutrition Universal Screening Tool (MUST). The importance of nutritional management within a care environment."
+    ],
+    "whoShouldAttend": "To provide Health and Social Care workers with an understanding of the importance of food safety, including hygiene, and the importance of nutrition and hydration in maintaining health and wellbeing for individuals being supported.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/29.webp"
+  },
+  "Positive Behaviour Support": {
+    "title": "Positive Behaviour Support",
+    "id": "30",
+    "level": "Level 2",
+    "hours": "2 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Communication & Workplace Culture",
+    "location": "Maidstone Studios",
+    "description": "Understand what positive behavioural support is Describe why and how positive behavioural support is used Developing and maintaining PBS plans",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|CQC Regulations",
+    "learningOutcomes": [
+      "Understand the principles of positive behaviour support as well as the key components required to create a personalised, proactive, and positive culture of care and support with the emphasis on person-centred approaches."
+    ],
+    "whoShouldAttend": "For anyone who works in Health and Social Care to gain knowledge in positive behaviour support and to help to identify use in practice. To support positive behavioural change to improve the lives of individuals being supported.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/30.webp"
+  },
+  "Safeguarding": {
+    "title": "Safeguarding",
+    "id": "31",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Safety & Compliance",
+    "location": "Maidstone Studios",
+    "description": "Understand the principles of safeguarding Know how to reduce the likelihood of abuse Know how to respond to suspected or disclosed abuse Protect people from harm and abuse Understand restrictive practice",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Care Certificate - Standards 10 & 11|CQC Regulations - 9, 10, 11, 12, 13, 20",
+    "learningOutcomes": [
+      "Have an awareness and understanding of safeguarding including recognising the signs and symptoms of abuse are as well as how the risk of abuse can be reduced. Be able to respond appropriately to suspected or alleged abuse including how to recognise and report unsafe practices."
+    ],
+    "whoShouldAttend": "Raises awareness of safeguarding and the key responsibilities of Health and Social Care workers that work with individuals, or their families. Health and Social Care workers to have a knowledge of the requirements around safeguarding, identifying abuse and being able to respond to abuse with the importance of reporting.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/31.webp"
+  },
+  "Tissue Viability": {
+    "title": "Tissue Viability",
+    "id": "32",
+    "level": "Level 2",
+    "hours": "2 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 62,
+    "category": "Health Conditions & Specialist Care",
+    "location": "Maidstone Studios",
+    "description": "Understand tissue viability Understand the structure and function of the skin Understand SSKING Understand how tissue damage can be categorised",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|NICE guidance|CQC Regulations",
+    "learningOutcomes": [
+      "Have an awareness of tissue viability and will understand the anatomy and physiology of the skin and the elements of effective skin care routine to develop an understanding of how to manage and prevent skin breakdown, including pressure ulcers, in line with safeguarding principles."
+    ],
+    "whoShouldAttend": "This course is for Health and Social Care staff and provides staff with standard principles and best practice guidelines in relation to wound care and tissue viability and to gain skills required to enable appropriate wound care. Ideal for staff seeking to strengthen clinical awareness and best practice in tissue viability.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/32.webp"
+  },
+  "Emergency First Aid at Work": {
+    "title": "Emergency First Aid at Work",
+    "id": "33",
+    "level": "Level 3",
+    "hours": "6 hours",
+    "duration": "1 Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 165,
+    "category": "Emergency & First Aid",
+    "location": "Maidstone Studios",
+    "description": "Managing a responsive and an unresponsive casualty Roles and responsibilities of a first aider Primary Survey CPR Recovery Position Choking, shock, wounds and bleeding and minor injuries Seizures",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Health and Safety Executives requirements for first aid in the workplace|The Health and Safety (First Aid) Regulations 1981",
+    "learningOutcomes": [
+      "Understand how to handle emergency first aid at work and be able to demonstrate the correct procedure for CPR and the safe use of an AED. Apply appropriate first aid techniques to manage an unconscious casualty, including minor injuries as well as infection control."
+    ],
+    "whoShouldAttend": "Ideal for workers who need to be certified to be a first aider in lower-risk working environments. Designed to provide first aiders with the knowledge and skills they need to respond effectively to emergency situations.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/33.webp"
+  },
+  "Epilepsy & Emergency Medication": {
+    "title": "Epilepsy & Emergency Medication",
+    "id": "34",
+    "level": "Level 2",
+    "hours": "3 hours",
+    "duration": "½ Day",
+    "trainers": [
+      "Adele Smith",
+      "Sharon Cudlip"
+    ],
+    "price": 62,
+    "category": "Health Conditions & Specialist Care",
+    "location": "Maidstone Studios",
+    "description": "Understand epilepsy and seizures Understand seizure management plans Buccal Midazolam medication Administering medication, including storage and disposal Privacy and confidentiality",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|NICE Guidance|CQC Regulations",
+    "learningOutcomes": [
+      "Understand the different types of seizures, how to administer first aid for a seizure, how to recognise and handle an epileptic emergency and how to support an individual with epilepsy after a seizure."
+    ],
+    "whoShouldAttend": "For Health and Social Care staff responsible for caring and supporting individuals with epilepsy, particularly in handling their medication. Learners will now how to manage epilepsy with medication, recognise different types of seizures, administer emergency medicines, and provide the right care and support for people with epilepsy.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/34.webp"
+  },
+  "First Aid at Work": {
+    "title": "First Aid at Work",
+    "id": "35",
+    "level": "Level 3",
+    "hours": "18 hours",
+    "duration": "3 Days",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 330,
+    "category": "Emergency & First Aid",
+    "location": "Maidstone Studios",
+    "description": "Role of the first aider (including knowledge of health and safety regulations) CPR, Choking, Shock and Imbalance of heat Allergic reaction and asthma, Bone, muscle and joint injuries Burns and scalds, Angina and heart attack Eye injuries, head injuries, fainting Diabetes, epilepsy, Minor and severe bleeding, Poisoning",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Health and Safety Executive guidance|The Health and Safety (First Aid) Regulations 1981",
+    "learningOutcomes": [
+      "Understand how to carry out primary and secondary surveys, CPR and AED, minor injuries, manage emergency situations, first aiders roles and responsibilities."
+    ],
+    "whoShouldAttend": "Ideal for first aiders in higher risk working environments, such as building sites, manufacturing and construction, warehouses and some healthcare settings. Skills included in this course will give first aiders the knowledge they need to respond quickly and confidently if someone becomes ill or is injured in the workplace.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/35.webp"
+  },
+  "Management & Leadership Skills (Level 3)": {
+    "title": "Management & Leadership Skills (Level 3)",
+    "id": "36",
+    "level": "Level 3",
+    "hours": "6 hours",
+    "duration": "1 Day",
+    "trainers": [
+      "Adele Smith",
+      "Sharon Cudlip",
+      "Jennifer Boorman"
+    ],
+    "price": 165,
+    "category": "Leadership & Professional Development",
+    "location": "Maidstone Studios",
+    "description": "Understand management and leadership skills Understand different management and leadership styles Understand different personalities in a team Understand teams and teamwork",
+    "accreditation": "None",
+    "learningOutcomes": [
+      "Understand your leadership and management styles by understanding yourself, improved skills when managing teams, how to communicate with your team, including the importance of good communication."
+    ],
+    "whoShouldAttend": "This management and leadership course is ideal if you have management responsibilities but no formal training. It will give you a wide range of skills and knowledge to organise and motivate teams that are essential for professional success.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/36.webp"
+  },
+  "Medication Competency & Management": {
+    "title": "Medication Competency & Management",
+    "id": "37",
+    "level": "Level 3",
+    "hours": "6 hours",
+    "duration": "1 Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 165,
+    "category": "Medication Management",
+    "location": "Maidstone Studios",
+    "description": "The principles of safe and appropriate handling of medicines The importance of good record-keeping, privacy & confidentiality Medication for people who lack capacity Medication storage and disposal Administering medication, including supporting self-administration",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|NICE Guidance|CQC Regulations - 9, 10, 11, 12, 13, 18, 20",
+    "learningOutcomes": [
+      "Understand medication management and administration with the knowledge and skills necessary with the complexities of medication in the healthcare sector."
+    ],
+    "whoShouldAttend": "For Health and Social Care managers and senior workers to gain an understanding of the legislation of medication as well as being able to follow procedures set for the safe handling of medication. Gaining an understanding of the importance of confidentiality and security in all procedures of drug administration. Under-pinning knowledge and being able to put this into practice in line with the national minimum standards requirements and CQC guidelines.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/37.webp"
+  },
+  "Moving & Positioning inc. Hoist": {
+    "title": "Moving & Positioning inc. Hoist",
+    "id": "38",
+    "level": "Level 3",
+    "hours": "6 hours",
+    "duration": "1 Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 165,
+    "category": "Safety & Compliance",
+    "location": "Maidstone Studios",
+    "description": "Understand responsibilities relating to health and safety in the work setting Understand risk assessment Be able to move and assist safely Be able to handle hazardous substances Understand how to promote fire safety Understand how to work safely and securely",
+    "accreditation": "Skills for Health UK Core Skills Training Framework|Care Certificate - Standard 13|CQC Regulations - 12, 13, 15, 18, 19, 20",
+    "learningOutcomes": [
+      "Understand moving and positioning of people correctly and understand own responsibilities for safe moving and handling as well as knowledge of key pieces of legislation that relate to moving and handling. Safely demonstrate moving and positioning techniques that are current and up to date."
+    ],
+    "whoShouldAttend": "Health and Social Care workers to gain knowledge and who require information and training for health and safety responsibilities providing an understanding of the importance of health and safety in the workplace for employees and employers under health and safety law.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/38.webp"
+  },
+  "Paediatric First Aid": {
+    "title": "Paediatric First Aid",
+    "id": "39",
+    "level": "Level 3",
+    "hours": "12 hours",
+    "duration": "2 Days",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 330,
+    "category": "Emergency & First Aid",
+    "location": "Maidstone Studios",
+    "description": "Managing a responsive and an unresponsive casualty CPR, Managing a situation, Epilepsy & Seizures Roles and responsibilities of a first aider Choking, shock, wounds and bleeding, and minor injuries Anaphylaxis Asthma Fainting Poisons Bites and stings Extreme Temperatures",
+    "accreditation": "EYFS/DfE and Ofsted criteria|Health and Safety (First Aid) Regulations 1981|UK Resuscitation Council guidelines|Health and Safety Executive guidance",
+    "learningOutcomes": [
+      "Carry out the survey of an infant or child using DRABC as well as how to carry out a secondary survey and full body examination of an infant or child. Handle a variety of injuries, including choking, asthma, wounds, shock, burns and scalds, electrical injuries, eye and head injuries, nosebleeds, fractures, sprains and strains, dislocations, spinal injuries, hypothermia."
+    ],
+    "whoShouldAttend": "Suitable for parents/grandparents or those working with children who do not require Ofsted registration. This course will help to understand the role and responsibilities of the emergency paediatric first aider as well as the ability to assess emergency situations.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning.",
+    "image": "assets/img/stock_photos/39.webp"
+  },
+  "Emergency Paediatric First Aid": {
+    "title": "Emergency Paediatric First Aid",
+    "id": "40",
+    "level": "Level 3",
+    "hours": "6 hours",
+    "duration": "1 Day",
+    "trainers": [
+      "Adele Smith",
+      "Jennifer Boorman"
+    ],
+    "price": 165,
+    "category": "Emergency & First Aid",
+    "location": "Maidstone Studios",
+    "description": "Managing a responsive and an unresponsive casualty, CPR Roles and responsibilities of a first aider Choking, shock, wounds and bleeding Anaphylaxis Fainting Managing a situation Seizures and epilepsy",
+    "accreditation": "EYFS/DfE and Ofsted criteria|Health and Safety (First Aid) Regulations 1981|UK Resuscitation Council guidelines|Health and Safety Executive guidance",
+    "learningOutcomes": [
+      "Carry out the survey of an infant or child using DRABC as well as how to carry out a secondary survey and full body examination of an infant or child. Handle a variety of injuries, including choking, asthma, wounds, shock, burns and scalds, electrical injuries, eye and head injuries, fractures, sprains and strains."
+    ],
+    "whoShouldAttend": "Suitable for parents/grandparents or those working with children who do not require Ofsted registration. This course will help to understand the role and responsibilities of the emergency paediatric first aider as well as the ability to assess emergency situations.",
+    "requirements": "Pen and paper. For the face-to-face sessions we will provide you with the resources if applicable, but you are welcome to bring additional items.",
+    "accessibilityInfo": "Yes, we will carry out an initial assessment which will enable us to support you through your learning. --- **END OF COURSE DATABASE**",
+    "image": "assets/img/stock_photos/40.webp"
+  }
+}

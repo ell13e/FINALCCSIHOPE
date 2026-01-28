@@ -1,0 +1,49 @@
+{
+  "intelephense.stubs": [
+    "apache",
+    "bcmath",
+    "Core",
+    "ctype",
+    "curl",
+    "date",
+    "dom",
+    "fileinfo",
+    "filter",
+    "ftp",
+    "gd",
+    "hash",
+    "iconv",
+    "json",
+    "libxml",
+    "mbstring",
+    "mysqli",
+    "mysqlnd",
+    "openssl",
+    "pcre",
+    "PDO",
+    "pdo_mysql",
+    "Phar",
+    "SimpleXML",
+    "sockets",
+    "SPL",
+    "standard",
+    "tokenizer",
+    "xml",
+    "xmlreader",
+    "xmlwriter",
+    "zip",
+    "zlib",
+    "wordpress",
+    "wordpress-globals",
+    "wp-cli"
+  ],
+  "intelephense.files.associations": [
+    "*.php",
+    "*.phtml"
+  ],
+  "intelephense.environment.includePaths": [
+    "${workspaceFolder}/cta-wp-theme/.stubs",
+    "${workspaceFolder}/cta-wp-theme/vendor"
+  ],
+  "intelephense.diagnostics.undefinedVariables": false
+}
