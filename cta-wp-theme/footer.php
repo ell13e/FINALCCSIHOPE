@@ -635,8 +635,10 @@ if (is_singular('course') || is_singular('course_event') || is_post_type_archive
   get_template_part('template-parts/booking-modal');
 }
 
-// Resource download lead-capture modal (used by Downloadable Resources page/buttons)
-get_template_part('template-parts/resource-download-modal');
+// Resource download lead-capture modal (only on Downloadable Resources page)
+if (is_page_template('page-templates/page-downloadable-resources.php')) {
+    get_template_part('template-parts/resource-download-modal');
+}
 ?>
 
 <?php 
