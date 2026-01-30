@@ -1281,6 +1281,17 @@ function cta_import_admin_page_content() {
         $imported = true;
     }
     
+    // Handle course events import only
+    $events_import_result = null;
+    if (isset($_POST['cta_import_events_only']) && check_admin_referer('cta_import_events_nonce')) {
+        $events_imported = cta_import_scheduled_events();
+        $last_result = get_option('cta_events_import_last_result');
+        $events_import_result = [
+            'imported' => $events_imported,
+            'details' => $last_result,
+        ];
+    }
+    
     // Handle bulk image matching
     if (isset($_POST['cta_bulk_match']) && check_admin_referer('cta_bulk_match_nonce')) {
         $matched = cta_bulk_match_images();
@@ -1395,6 +1406,34 @@ function cta_import_admin_page_content() {
             <div class="inside">
         <p>Use this to re-import course data. Existing courses with the same title will be skipped.</p>
         
+        <?php
+        // Display last import results for course events
+        $last_result = get_option('cta_events_import_last_result');
+        if ($last_result && !empty($last_result['timestamp'])) {
+            echo '<div class="notice notice-info" style="margin-bottom: 15px;">';
+            echo '<p><strong>Last Event Import Results (' . esc_html($last_result['timestamp']) . '):</strong></p>';
+            echo '<ul style="margin-left: 20px;">';
+            echo '<li>Imported: ' . intval($last_result['imported']) . ' events</li>';
+            echo '<li>Skipped (course not found): ' . intval($last_result['skipped_no_course']) . '</li>';
+            echo '<li>Skipped (date parse failed): ' . intval($last_result['skipped_no_date']) . '</li>';
+            echo '<li>Skipped (already exists): ' . intval($last_result['skipped_exists']) . '</li>';
+            echo '</ul>';
+            
+            if (!empty($last_result['errors']) && count($last_result['errors']) > 0) {
+                echo '<details style="margin-top: 10px;"><summary style="cursor: pointer; font-weight: bold;">View errors (' . count($last_result['errors']) . ')</summary>';
+                echo '<ul style="margin-top: 10px; margin-left: 20px;">';
+                foreach (array_slice($last_result['errors'], 0, 20) as $error) { // Show first 20 errors
+                    echo '<li style="color: #d63638;">' . esc_html($error) . '</li>';
+                }
+                if (count($last_result['errors']) > 20) {
+                    echo '<li><em>... and ' . (count($last_result['errors']) - 20) . ' more errors</em></li>';
+                }
+                echo '</ul></details>';
+            }
+            echo '</div>';
+        }
+        ?>
+        
         <form method="post">
             <?php wp_nonce_field('cta_reimport_nonce'); ?>
             <p>
@@ -1402,6 +1441,49 @@ function cta_import_admin_page_content() {
                         <span class="dashicons dashicons-update" style="vertical-align: middle; margin-right: 5px;"></span>
                         Re-import Course Data
                     </button>
+            </p>
+        </form>
+        
+        <hr style="margin: 20px 0;">
+        
+        <h3>Import Course Events Only</h3>
+        <p>Use this to import only course events from <code>scheduled-courses.json</code> without re-importing all data.</p>
+        
+        <?php
+        if ($events_import_result !== null) {
+            echo '<div class="notice notice-' . ($events_import_result['imported'] > 0 ? 'success' : 'warning') . '" style="margin-top: 15px;">';
+            echo '<p><strong>Event Import Results:</strong></p>';
+            echo '<ul style="margin-left: 20px;">';
+            echo '<li>Imported: ' . intval($events_import_result['imported']) . ' events</li>';
+            if ($events_import_result['details']) {
+                echo '<li>Skipped (course not found): ' . intval($events_import_result['details']['skipped_no_course']) . '</li>';
+                echo '<li>Skipped (date parse failed): ' . intval($events_import_result['details']['skipped_no_date']) . '</li>';
+                echo '<li>Skipped (already exists): ' . intval($events_import_result['details']['skipped_exists']) . '</li>';
+            }
+            echo '</ul>';
+            
+            if ($events_import_result['details'] && !empty($events_import_result['details']['errors'])) {
+                echo '<details style="margin-top: 10px;"><summary style="cursor: pointer; font-weight: bold;">View errors (' . count($events_import_result['details']['errors']) . ')</summary>';
+                echo '<ul style="margin-top: 10px; margin-left: 20px; max-height: 300px; overflow-y: auto;">';
+                foreach (array_slice($events_import_result['details']['errors'], 0, 30) as $error) {
+                    echo '<li style="color: #d63638;">' . esc_html($error) . '</li>';
+                }
+                if (count($events_import_result['details']['errors']) > 30) {
+                    echo '<li><em>... and ' . (count($events_import_result['details']['errors']) - 30) . ' more errors</em></li>';
+                }
+                echo '</ul></details>';
+            }
+            echo '</div>';
+        }
+        ?>
+        
+        <form method="post" style="margin-top: 15px;">
+            <?php wp_nonce_field('cta_import_events_nonce'); ?>
+            <p>
+                <button type="submit" name="cta_import_events_only" class="button button-secondary">
+                    <span class="dashicons dashicons-calendar-alt" style="vertical-align: middle; margin-right: 5px;"></span>
+                    Import Course Events Only
+                </button>
             </p>
         </form>
             </div>
