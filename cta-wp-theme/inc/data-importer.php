@@ -534,12 +534,65 @@ function cta_import_scheduled_events() {
     }
     
     $imported = 0;
+    $skipped_no_course = 0;
+    $skipped_no_date = 0;
+    $skipped_exists = 0;
+    $errors = [];
     
     foreach ($events_data as $event) {
-        // Find the linked course
+        // Find the linked course - try exact match first, then fuzzy match
         $course = get_page_by_title($event['title'], OBJECT, 'course');
         
+        // If exact match fails, try fuzzy matching (handles variations like "&" vs "and")
+        if (!$course && function_exists('cta_find_course_by_name')) {
+            $course_id = cta_find_course_by_name($event['title']);
+            if ($course_id) {
+                $course = get_post($course_id);
+            }
+        }
+        
+        // Last resort: search by title substring
         if (!$course) {
+            $courses = get_posts([
+                'post_type' => 'course',
+                'post_status' => 'publish',
+                'posts_per_page' => -1,
+                's' => $event['title'],
+            ]);
+            
+            if (!empty($courses)) {
+                // Find best match by normalizing titles
+                $normalize = function($str) {
+                    return strtoupper(preg_replace('/[-_\s&]+/', '', $str));
+                };
+                
+                $normalized_search = $normalize($event['title']);
+                $best_match = null;
+                $best_score = 0;
+                
+                foreach ($courses as $c) {
+                    $normalized_title = $normalize($c->post_title);
+                    if ($normalized_title === $normalized_search) {
+                        $course = $c;
+                        break;
+                    }
+                    // Calculate similarity score
+                    similar_text($normalized_search, $normalized_title, $score);
+                    if ($score > $best_score && $score > 80) { // 80% similarity threshold
+                        $best_score = $score;
+                        $best_match = $c;
+                    }
+                }
+                
+                if (!$course && $best_match) {
+                    $course = $best_match;
+                }
+            }
+        }
+        
+        if (!$course) {
+            $skipped_no_course++;
+            $errors[] = "Skipped '{$event['title']}' - course not found";
             continue; // Skip if course doesn't exist
         }
         
@@ -547,6 +600,8 @@ function cta_import_scheduled_events() {
         $date = cta_parse_event_date($event['date']);
         
         if (!$date) {
+            $skipped_no_date++;
+            $errors[] = "Skipped '{$event['title']}' - could not parse date: {$event['date']}";
             continue;
         }
         
@@ -558,6 +613,7 @@ function cta_import_scheduled_events() {
         
         if ($existing) {
             // SAFETY: Skip if already exists - preserve all existing data
+            $skipped_exists++;
             continue;
         }
         
@@ -619,6 +675,16 @@ function cta_import_scheduled_events() {
         
         $imported++;
     }
+    
+    // Store import results for admin display
+    update_option('cta_events_import_last_result', [
+        'imported' => $imported,
+        'skipped_no_course' => $skipped_no_course,
+        'skipped_no_date' => $skipped_no_date,
+        'skipped_exists' => $skipped_exists,
+        'errors' => $errors,
+        'timestamp' => current_time('mysql'),
+    ]);
     
     return $imported;
 }
