@@ -2711,94 +2711,6 @@ function cta_seo_tools_admin_page() {
         </div>
         
         <div class="card" style="max-width: 1200px; margin-top: 20px;">
-            <h2>Broken Link Detection</h2>
-            
-            <?php
-            // Check for known broken links
-            $broken_links = [];
-            
-            // Check award post
-            $award_post = get_page_by_path('maidstone-national-award-first-dec21', OBJECT, 'post');
-            if ($award_post) {
-                $content = $award_post->post_content;
-                // Look for links
-                preg_match_all('/<a[^>]+href=["\']([^"\']+)["\'][^>]*>/i', $content, $matches);
-                if (!empty($matches[1])) {
-                    foreach ($matches[1] as $url) {
-                        $parsed = wp_parse_url($url);
-                        if ($parsed && isset($parsed['host'])) {
-                            // External link - would need to check if it's broken
-                            $broken_links[] = [
-                                'post' => $award_post->post_title,
-                                'url' => $url,
-                                'type' => 'external',
-                                'edit_link' => get_edit_post_link($award_post->ID)
-                            ];
-                        } else {
-                            // Internal link
-                            $post_id = url_to_postid($url);
-                            if (!$post_id) {
-                                $broken_links[] = [
-                                    'post' => $award_post->post_title,
-                                    'url' => $url,
-                                    'type' => 'internal',
-                                    'edit_link' => get_edit_post_link($award_post->ID)
-                                ];
-                            }
-                        }
-                    }
-                }
-            }
-            
-            // Check moving & handling post
-            $moving_post = get_page_by_path('moving-handling-reducing-workplace-jan25', OBJECT, 'post');
-            if ($moving_post) {
-                $content = $moving_post->post_content;
-                preg_match_all('/<a[^>]+href=["\']([^"\']+)["\'][^>]*>/i', $content, $matches);
-                if (!empty($matches[1])) {
-                    foreach ($matches[1] as $url) {
-                        $parsed = wp_parse_url($url);
-                        if ($parsed && isset($parsed['host']) && $parsed['host'] !== $_SERVER['HTTP_HOST']) {
-                            // External link - mark as potentially broken (needs manual verification)
-                            $broken_links[] = [
-                                'post' => $moving_post->post_title,
-                                'url' => $url,
-                                'type' => 'external',
-                                'edit_link' => get_edit_post_link($moving_post->ID)
-                            ];
-                        }
-                    }
-                }
-            }
-            ?>
-            
-            <?php if (!empty($broken_links)) : ?>
-                <div class="notice notice-warning" style="margin-top: 15px;">
-                    <p><strong>Potential broken links found:</strong></p>
-                    <ul>
-                        <?php foreach ($broken_links as $link) : ?>
-                            <li>
-                                <strong><?php echo esc_html($link['post']); ?></strong>: 
-                                <a href="<?php echo esc_url($link['url']); ?>" target="_blank"><?php echo esc_html($link['url']); ?></a>
-                                (<?php echo esc_html($link['type']); ?>)
-                                <a href="<?php echo esc_url($link['edit_link']); ?>" class="button button-small" style="margin-left: 10px;">Edit Post</a>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                    <p class="description">Please verify these links manually and update or remove them if they are broken.</p>
-                </div>
-            <?php else : ?>
-                <p>No broken links detected in the specified posts. Note: This is a basic check. External links should be verified manually.</p>
-            <?php endif; ?>
-            
-            <p class="description" style="margin-top: 15px;">
-                <strong>Known issues to check:</strong><br>
-                - <code>maidstone-national-award-first-dec21</code>: Check for broken internal links<br>
-                - <code>moving-handling-reducing-workplace-jan25</code>: Check for broken external links
-            </p>
-        </div>
-        
-        <div class="card" style="max-width: 1200px; margin-top: 20px;">
             <h2>Orphan Pages Detection</h2>
             
             <?php
@@ -3772,15 +3684,15 @@ function cta_import_meta_descriptions_from_csv() {
         // Clean URL - remove domain, get path
         $url = trim($url);
         $parsed = wp_parse_url($url);
-        if (!$parsed || !isset($parsed['path'])) {
-            $failed++;
-            $errors[] = "Row " . ($row_num + 2) . ": Invalid URL format: " . $url;
-            continue;
-        }
         
-        $path = rtrim($parsed['path'], '/');
-        if (empty($path)) {
+        // Handle URLs without path (homepage)
+        if (!$parsed || !isset($parsed['path']) || $parsed['path'] === '') {
             $path = '/';
+        } else {
+            $path = rtrim($parsed['path'], '/');
+            if (empty($path)) {
+                $path = '/';
+            }
         }
         
         $post_id = 0;
@@ -3804,9 +3716,112 @@ function cta_import_meta_descriptions_from_csv() {
         // Handle courses (/courses/slug/)
         elseif (preg_match('#^/courses/([^/]+)/?$#', $path, $matches)) {
             $course_slug = $matches[1];
+            
+            // Extract level from CSV slug if present (e.g., "-l2", "-l3", "-level-2", "-level-3")
+            $csv_level = null;
+            if (preg_match('/-(l[123]|level[_-]?[123])$/i', $course_slug, $level_matches)) {
+                $csv_level = strtoupper(preg_replace('/[^0-9]/', '', $level_matches[1]));
+                $csv_base_slug = preg_replace('/-(l[123]|level[_-]?[123])$/i', '', $course_slug);
+            } else {
+                $csv_base_slug = $course_slug;
+            }
+            
+            // Try exact match first
             $course = get_page_by_path($course_slug, OBJECT, 'course');
             if ($course) {
                 $post_id = $course->ID;
+            } else {
+                // Get all courses for matching
+                $all_courses = get_posts([
+                    'post_type' => 'course',
+                    'post_status' => 'publish',
+                    'posts_per_page' => -1,
+                ]);
+                
+                $matches = [];
+                foreach ($all_courses as $c) {
+                    $course_slug_full = $c->post_name;
+                    
+                    // Extract level from course slug if present
+                    $course_level = null;
+                    if (preg_match('/-(l[123]|level[_-]?[123])$/i', $course_slug_full, $course_level_matches)) {
+                        $course_level = strtoupper(preg_replace('/[^0-9]/', '', $course_level_matches[1]));
+                    }
+                    
+                    // Remove common suffixes to get base slug
+                    $course_base_slug = preg_replace('/-(3d|2d|1d|hd)-(l[123]|level[_-]?[123])$/i', '', $course_slug_full);
+                    $course_base_slug = preg_replace('/-(l[123]|level[_-]?[123])$/i', '', $course_base_slug);
+                    
+                    $match_score = 0;
+                    
+                    // Exact match on full slug (highest priority)
+                    if ($course_slug_full === $course_slug) {
+                        $match_score = 100;
+                    }
+                    // CSV base matches course base
+                    elseif ($course_base_slug === $csv_base_slug) {
+                        $match_score = 50;
+                        // Bonus if levels match
+                        if ($csv_level && $course_level && $csv_level === $course_level) {
+                            $match_score = 75;
+                        }
+                        // Penalty if levels don't match (but both exist)
+                        elseif ($csv_level && $course_level && $csv_level !== $course_level) {
+                            $match_score = 25;
+                        }
+                    }
+                    // Course slug starts with CSV slug (e.g., CSV: "adult-social-care-certificate", Course: "adult-social-care-certificate-3d-l2")
+                    elseif (strpos($course_slug_full, $course_slug . '-') === 0) {
+                        $match_score = 40;
+                        // Bonus if CSV has level and it matches
+                        if ($csv_level && $course_level && $csv_level === $course_level) {
+                            $match_score = 60;
+                        }
+                    }
+                    // CSV slug starts with course base (e.g., CSV: "medication-competency-management", Course: "medication-competency-management-1d-l3")
+                    elseif (strpos($course_slug, $course_base_slug . '-') === 0 || $course_base_slug === $course_slug) {
+                        $match_score = 30;
+                        // Bonus if levels match
+                        if ($csv_level && $course_level && $csv_level === $course_level) {
+                            $match_score = 55;
+                        }
+                    }
+                    
+                    if ($match_score > 0) {
+                        $matches[] = [
+                            'post_id' => $c->ID,
+                            'score' => $match_score,
+                            'slug' => $course_slug_full,
+                            'level' => $course_level
+                        ];
+                    }
+                }
+                
+                // Sort by score (highest first), then prefer exact level match
+                if (!empty($matches)) {
+                    usort($matches, function($a, $b) use ($csv_level) {
+                        if ($a['score'] !== $b['score']) {
+                            return $b['score'] - $a['score'];
+                        }
+                        // If scores are equal, prefer level match
+                        if ($csv_level) {
+                            $a_level_match = ($a['level'] === $csv_level) ? 1 : 0;
+                            $b_level_match = ($b['level'] === $csv_level) ? 1 : 0;
+                            return $b_level_match - $a_level_match;
+                        }
+                        return 0;
+                    });
+                    
+                    $post_id = $matches[0]['post_id'];
+                }
+            }
+        }
+        // Handle redirect URLs (e.g., /contact-us/ → /contact/)
+        elseif ($path === '/contact-us') {
+            $path = '/contact';
+            $page = get_page_by_path('contact', OBJECT, 'page');
+            if ($page) {
+                $post_id = $page->ID;
             }
         }
         // Handle other URLs (pages, posts, etc.)
@@ -3818,15 +3833,21 @@ function cta_import_meta_descriptions_from_csv() {
             if (!$post_id) {
                 $slug = basename($path);
                 if ($slug) {
-                    // Try pages first
-                    $page = get_page_by_path($slug, OBJECT, 'page');
+                    // Try pages first (with full path matching)
+                    $page = get_page_by_path(trim($path, '/'), OBJECT, 'page');
                     if ($page) {
                         $post_id = $page->ID;
                     } else {
-                        // Try posts
-                        $post = get_page_by_path($slug, OBJECT, 'post');
-                        if ($post) {
-                            $post_id = $post->ID;
+                        // Try by slug only
+                        $page = get_page_by_path($slug, OBJECT, 'page');
+                        if ($page) {
+                            $post_id = $page->ID;
+                        } else {
+                            // Try posts
+                            $post = get_page_by_path($slug, OBJECT, 'post');
+                            if ($post) {
+                                $post_id = $post->ID;
+                            }
                         }
                     }
                 }
