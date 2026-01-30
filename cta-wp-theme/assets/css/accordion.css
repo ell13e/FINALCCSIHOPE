@@ -210,6 +210,42 @@
   margin-bottom: 0;
 }
 
+/* FAQ Answer Lists - Enhanced formatting for structured lists */
+.accordion-content .faq-answer-list {
+  margin: 20px 0;
+  padding-left: 24px;
+  list-style: none;
+}
+
+.accordion-content .faq-answer-list li {
+  margin-bottom: 12px;
+  padding-left: 0;
+  line-height: 1.7;
+  color: #5a4a3a;
+}
+
+.accordion-content .faq-answer-list li:last-child {
+  margin-bottom: 0;
+}
+
+.accordion-content .faq-answer-list li strong {
+  color: #4A3A2A;
+  font-weight: 600;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+@media (min-width: 768px) {
+  .accordion-content .faq-answer-list {
+    padding-left: 28px;
+    margin: 24px 0;
+  }
+  
+  .accordion-content .faq-answer-list li {
+    margin-bottom: 14px;
+  }
+}
+
 /* Better formatting for nested content */
 .accordion-content .course-detail-description,
 .accordion-content .course-detail-text {

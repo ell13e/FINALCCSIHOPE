@@ -1088,6 +1088,117 @@ add_action('admin_head-post.php', 'cta_improve_post_editor_ux');
 add_action('admin_head-post-new.php', 'cta_improve_post_editor_ux');
 
 /**
+ * Improve FAQ page editor UX with similar styling to blog posts
+ */
+function cta_improve_faq_editor_ux() {
+    global $post;
+    
+    if (!$post) {
+        return;
+    }
+    
+    // Check if this is a page using FAQ template
+    $template = get_page_template_slug($post->ID);
+    $is_faq_page = ($template === 'page-templates/page-faqs.php' || 
+                    $template === 'page-templates/page-cqc-hub.php' ||
+                    strpos($template, 'faq') !== false);
+    
+    if (!$is_faq_page && get_post_type() !== 'page') {
+        return;
+    }
+    
+    // Only apply if page has FAQ fields
+    if (!function_exists('get_field')) {
+        return;
+    }
+    
+    ?>
+    <style>
+        /* Improve ACF field descriptions */
+        .acf-field .acf-label label {
+            font-weight: 600;
+            color: #1d2327;
+        }
+        
+        .acf-field .acf-label .description {
+            font-size: 13px;
+            color: #646970;
+            margin-top: 4px;
+            line-height: 1.5;
+        }
+        
+        /* Make FAQ sections more prominent */
+        .acf-field-group[data-key="group_resources_faqs_page"],
+        .acf-field-group[data-key="group_resources_cqc_hub"] {
+            border-top: 2px solid #2271b1;
+        }
+        
+        .acf-field-group[data-key="group_resources_faqs_page"] .acf-label,
+        .acf-field-group[data-key="group_resources_cqc_hub"] .acf-label {
+            font-size: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 16px;
+        }
+        
+        /* Improve FAQ repeater UI - similar to blog sections */
+        .acf-repeater[data-name="faqs"] .acf-row,
+        .acf-repeater[data-name="faqs"] .acf-row {
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            background: #fff;
+            padding: 16px;
+        }
+        
+        .acf-repeater[data-name="faqs"] .acf-row-handle {
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 16px;
+        }
+        
+        /* Better styling for FAQ question field */
+        .acf-repeater[data-name="faqs"] .acf-field[data-name="question"] {
+            margin-bottom: 16px;
+        }
+        
+        .acf-repeater[data-name="faqs"] .acf-field[data-name="question"] .acf-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        /* Better styling for FAQ answer WYSIWYG */
+        .acf-repeater[data-name="faqs"] .acf-field[data-name="answer"] {
+            margin-top: 16px;
+        }
+        
+        .acf-repeater[data-name="faqs"] .acf-field[data-name="answer"] .acf-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        /* Improve WYSIWYG editor appearance */
+        .acf-repeater[data-name="faqs"] .acf-field[data-name="answer"] .wp-editor-container {
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+        }
+        
+        /* Better spacing in editor */
+        #post-body-content {
+            padding-top: 0;
+        }
+        
+        /* Category field styling */
+        .acf-repeater[data-name="faqs"] .acf-field[data-name="category"] {
+            margin-bottom: 12px;
+        }
+    </style>
+    <?php
+}
+add_action('admin_head-post.php', 'cta_improve_faq_editor_ux');
+add_action('admin_head-post-new.php', 'cta_improve_faq_editor_ux');
+
+/**
  * Enqueue admin media library scripts
  */
 function cta_enqueue_admin_media_library() {
@@ -1158,6 +1269,47 @@ function cta_enqueue_admin_media_library() {
     ');
 }
 add_action('admin_enqueue_scripts', 'cta_enqueue_admin_media_library');
+
+/**
+ * Enqueue review picker scripts and styles for course editor
+ */
+function cta_enqueue_review_picker($hook) {
+    // Only load on course edit pages
+    if ($hook !== 'post.php' && $hook !== 'post-new.php') {
+        return;
+    }
+    
+    global $post;
+    if (!$post || $post->post_type !== 'course') {
+        return;
+    }
+    
+    // Enqueue CSS
+    wp_enqueue_style(
+        'cta-admin-review-picker',
+        get_template_directory_uri() . '/assets/css/admin-review-picker.css',
+        [],
+        CTA_THEME_VERSION
+    );
+    
+    // Enqueue JavaScript
+    wp_enqueue_script(
+        'cta-admin-review-picker',
+        get_template_directory_uri() . '/assets/js/admin-review-picker.js',
+        ['jquery'],
+        CTA_THEME_VERSION,
+        true
+    );
+    
+    // Localize script with reviews data
+    $all_reviews = get_option('cta_all_reviews', []);
+    wp_localize_script(
+        'cta-admin-review-picker',
+        'ctaAllReviews',
+        $all_reviews
+    );
+}
+add_action('admin_enqueue_scripts', 'cta_enqueue_review_picker');
 
 /**
  * AJAX handler to save image for course or course event

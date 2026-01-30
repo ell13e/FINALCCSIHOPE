@@ -1,7 +1,8 @@
 /**
  * Location Maps Integration
  * 
- * Handles Google Maps or other map service integration for location pages
+ * SECURITY: Uses Google Maps iframe embeds (no API key required)
+ * This is the secure approach - API keys should never be exposed in frontend code
  *
  * @package CTA_Theme
  */
@@ -9,44 +10,49 @@
 (function() {
     'use strict';
 
-    // Location data
+    // Location data with embed URLs
     const locations = {
         maidstone: {
             name: 'The Maidstone Studios',
             lat: 51.264494,
             lng: 0.545844,
             address: 'The Maidstone Studios, New Cut Road, Maidstone, Kent ME14 5NZ',
-            phone: '01622 587343'
+            phone: '01622 587343',
+            // Google Maps embed URL (no API key needed)
+            embedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2495.717049057254!2d0.546680377251131!3d51.27952727176235!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47df3394790a6a17%3A0x6bb94452df2da3f5!2sContinuity%20Training%20Academy!5e0!3m2!1sen!2suk!4v1766494532400!5m2!1sen!2suk'
         },
         medway: {
             name: 'Medway Training Area',
             lat: 51.4044,
             lng: 0.5269,
-            area: 'Chatham, Gillingham, Rochester, Strood'
+            area: 'Chatham, Gillingham, Rochester, Strood',
+            embedUrl: `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2495.717049057254!2d0.5269!3d51.4044!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47df3394790a6a17%3A0x6bb94452df2da3f5!2sMedway!5e0!3m2!1sen!2suk!4v1766494532400!5m2!1sen!2suk`
         },
         canterbury: {
             name: 'Canterbury Training Area',
             lat: 51.2802,
             lng: 1.0789,
-            area: 'Canterbury, Whitstable, Herne Bay, Margate'
+            area: 'Canterbury, Whitstable, Herne Bay, Margate',
+            embedUrl: `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2495.717049057254!2d1.0789!3d51.2802!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47df3394790a6a17%3A0x6bb94452df2da3f5!2sCanterbury!5e0!3m2!1sen!2suk!4v1766494532400!5m2!1sen!2suk`
         },
         ashford: {
             name: 'Ashford Training Area',
             lat: 51.1465,
             lng: 0.8735,
-            area: 'Ashford, Tenterden, New Romney, Folkestone'
+            area: 'Ashford, Tenterden, New Romney, Folkestone',
+            embedUrl: `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2495.717049057254!2d0.8735!3d51.1465!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47df3394790a6a17%3A0x6bb94452df2da3f5!2sAshford!5e0!3m2!1sen!2suk!4v1766494532400!5m2!1sen!2suk`
         },
         tunbridgeWells: {
             name: 'Tunbridge Wells Training Area',
             lat: 51.1322,
             lng: 0.2630,
-            area: 'Tunbridge Wells, Southborough, Tonbridge, Sevenoaks'
+            area: 'Tunbridge Wells, Southborough, Tonbridge, Sevenoaks',
+            embedUrl: `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2495.717049057254!2d0.2630!3d51.1322!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47df3394790a6a17%3A0x6bb94452df2da3f5!2sTunbridge%20Wells!5e0!3m2!1sen!2suk!4v1766494532400!5m2!1sen!2suk`
         }
     };
 
     /**
-     * Initialize map for a location
-     * Integrates with Google Maps API using key from WordPress admin settings
+     * Initialize map for a location using iframe embed (secure, no API key)
      */
     function initLocationMap(containerId, locationKey) {
         const container = document.getElementById(containerId);
@@ -55,97 +61,22 @@
         const location = locations[locationKey];
         if (!location) return;
 
-        // Check if Google Maps API is loaded
-        if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
-            // Fallback to link if API not loaded
-            container.innerHTML = `
-                <div class="location-map-placeholder">
-                    <div style="text-align: center; padding: 20px;">
-                        <i class="fas fa-map-marked-alt" style="font-size: 3rem; color: var(--green-primary); margin-bottom: 16px;"></i>
-                        <h3 style="margin: 0 0 8px 0;">${location.name}</h3>
-                        <p style="margin: 0; color: var(--brown-medium);">${location.address || location.area}</p>
-                        <a href="https://www.google.com/maps/search/?api=1&query=${location.lat},${location.lng}" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="btn btn-secondary" 
-                           style="margin-top: 16px; display: inline-block;">
-                            Open in Google Maps
-                        </a>
-                    </div>
-                </div>
-            `;
-            return;
-        }
-
-        // Custom map styling
-        const mapStyles = [
-            {
-                featureType: 'poi',
-                elementType: 'labels',
-                stylers: [{ visibility: 'off' }]
-            },
-            {
-                featureType: 'transit',
-                elementType: 'labels.icon',
-                stylers: [{ visibility: 'off' }]
-            }
-        ];
-
-        // Initialize Google Map
-        const map = new google.maps.Map(container, {
-            center: { lat: location.lat, lng: location.lng },
-            zoom: 14,
-            styles: mapStyles,
-            mapTypeControl: false,
-            streetViewControl: true,
-            fullscreenControl: true
-        });
-
-        // Add marker
-        const marker = new google.maps.Marker({
-            position: { lat: location.lat, lng: location.lng },
-            map: map,
-            title: location.name,
-            animation: google.maps.Animation.DROP
-        });
-
-        // Info window content
-        const infoWindowContent = `
-            <div style="padding: 12px; max-width: 250px;">
-                <h3 style="margin: 0 0 8px 0; color: #2B1B0E; font-size: 1.1rem;">${location.name}</h3>
-                <p style="margin: 0 0 8px 0; color: #5C4A3A; font-size: 0.9rem;">${location.address || location.area}</p>
-                ${location.phone ? `<p style="margin: 0; font-size: 0.9rem;"><strong>Phone:</strong> <a href="tel:${location.phone.replace(/\s/g, '')}" style="color: #4A7C59;">${location.phone}</a></p>` : ''}
-                <a href="https://www.google.com/maps/dir/?api=1&destination=${location.lat},${location.lng}" 
-                   target="_blank" 
-                   rel="noopener noreferrer" 
-                   style="display: inline-block; margin-top: 8px; color: #4A7C59; text-decoration: underline;">
-                    Get Directions
-                </a>
+        // Use iframe embed (no API key required, secure)
+        container.innerHTML = `
+            <div class="location-map-wrapper" style="position: relative; width: 100%; height: 100%; min-height: 400px;">
+                <iframe
+                    src="${location.embedUrl || `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2495.717049057254!2d${location.lng}!3d${location.lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47df3394790a6a17%3A0x6bb94452df2da3f5!2s${encodeURIComponent(location.name)}!5e0!3m2!1sen!2suk!4v1766494532400!5m2!1sen!2suk`}"
+                    width="100%"
+                    height="100%"
+                    style="border:0; min-height: 400px;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="${location.name} Location Map"
+                    aria-label="Map showing ${location.name} location${location.address ? ' at ' + location.address : ''}"
+                ></iframe>
             </div>
         `;
-
-        const infoWindow = new google.maps.InfoWindow({
-            content: infoWindowContent
-        });
-
-        // Show info window on marker click
-        marker.addListener('click', function() {
-            infoWindow.open(map, marker);
-        });
-
-        // Open info window by default for main location
-        if (locationKey === 'maidstone') {
-            infoWindow.open(map, marker);
-        }
-    }
-
-    /**
-     * Calculate and display travel time (placeholder)
-     */
-    function displayTravelTime(fromLocation, toLocation) {
-        // This would integrate with Google Maps Distance Matrix API
-        // For now, it's a placeholder
-        console.log(`Travel time from ${fromLocation} to ${toLocation}: Use Distance Matrix API`);
     }
 
     /**

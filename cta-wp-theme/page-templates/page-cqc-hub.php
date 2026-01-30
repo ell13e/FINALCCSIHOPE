@@ -9,20 +9,6 @@
 
 get_header();
 
-// SEO Meta Tags
-$meta_title = 'CQC Compliance Hub | Training & Resources for Care Providers';
-$meta_description = 'Complete CQC compliance guide for care providers. Mandatory training requirements, inspection preparation, and regulatory updates for domiciliary and residential care.';
-?>
-<meta name="description" content="<?php echo esc_attr($meta_description); ?>">
-<meta property="og:title" content="<?php echo esc_attr($meta_title); ?>">
-<meta property="og:description" content="<?php echo esc_attr($meta_description); ?>">
-<meta property="og:type" content="website">
-<meta property="og:url" content="<?php echo esc_url(get_permalink()); ?>">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<?php echo esc_attr($meta_title); ?>">
-<meta name="twitter:description" content="<?php echo esc_attr($meta_description); ?>">
-<?php
-
 $contact = cta_get_contact_info();
 
 // ACF fields
@@ -198,12 +184,12 @@ $collection_schema = [
       </div>
       
       <div class="cqc-accordion-wrapper">
-        <div class="group-faq-item">
-          <button type="button" class="group-faq-question" aria-expanded="false" aria-controls="cqc-setting-domiciliary">
+        <div class="accordion" data-accordion-group="cqc-settings">
+          <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="cqc-setting-domiciliary">
             <span>Domiciliary Care</span>
-            <span class="group-faq-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true"></span>
           </button>
-          <div id="cqc-setting-domiciliary" class="group-faq-answer" role="region" aria-hidden="true">
+          <div id="cqc-setting-domiciliary" class="accordion-content" role="region" aria-hidden="true">
             <p><strong>Required courses:</strong></p>
             <ul>
               <li>Care Certificate</li>
@@ -220,12 +206,12 @@ $collection_schema = [
           </div>
         </div>
 
-        <div class="group-faq-item">
-          <button type="button" class="group-faq-question" aria-expanded="false" aria-controls="cqc-setting-residential">
+        <div class="accordion" data-accordion-group="cqc-settings">
+          <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="cqc-setting-residential">
             <span>Residential Care Home</span>
-            <span class="group-faq-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true"></span>
           </button>
-          <div id="cqc-setting-residential" class="group-faq-answer" role="region" aria-hidden="true">
+          <div id="cqc-setting-residential" class="accordion-content" role="region" aria-hidden="true">
             <p><strong>Required courses:</strong></p>
             <ul>
               <li>Care Certificate</li>
@@ -243,12 +229,12 @@ $collection_schema = [
           </div>
         </div>
 
-        <div class="group-faq-item">
-          <button type="button" class="group-faq-question" aria-expanded="false" aria-controls="cqc-setting-nursing">
+        <div class="accordion" data-accordion-group="cqc-settings">
+          <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="cqc-setting-nursing">
             <span>Nursing Home</span>
-            <span class="group-faq-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true"></span>
           </button>
-          <div id="cqc-setting-nursing" class="group-faq-answer" role="region" aria-hidden="true">
+          <div id="cqc-setting-nursing" class="accordion-content" role="region" aria-hidden="true">
             <p><strong>Required courses:</strong></p>
             <p>All residential care requirements plus:</p>
             <ul>
@@ -263,12 +249,12 @@ $collection_schema = [
           </div>
         </div>
 
-        <div class="group-faq-item">
-          <button type="button" class="group-faq-question" aria-expanded="false" aria-controls="cqc-setting-supported-living">
+        <div class="accordion" data-accordion-group="cqc-settings">
+          <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="cqc-setting-supported-living">
             <span>Supported Living</span>
-            <span class="group-faq-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true"></span>
           </button>
-          <div id="cqc-setting-supported-living" class="group-faq-answer" role="region" aria-hidden="true">
+          <div id="cqc-setting-supported-living" class="accordion-content" role="region" aria-hidden="true">
             <p><strong>Required courses:</strong></p>
             <ul>
               <li>Care Certificate</li>
@@ -285,12 +271,12 @@ $collection_schema = [
           </div>
         </div>
 
-        <div class="group-faq-item">
-          <button type="button" class="group-faq-question" aria-expanded="false" aria-controls="cqc-setting-complex-care">
+        <div class="accordion" data-accordion-group="cqc-settings">
+          <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="cqc-setting-complex-care">
             <span>Complex Care</span>
-            <span class="group-faq-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true"></span>
           </button>
-          <div id="cqc-setting-complex-care" class="group-faq-answer" role="region" aria-hidden="true">
+          <div id="cqc-setting-complex-care" class="accordion-content" role="region" aria-hidden="true">
             <p><strong>Required courses:</strong></p>
             <p>All core care training plus:</p>
             <ul>
@@ -333,15 +319,15 @@ $collection_schema = [
       <!-- Accordion Sections -->
       <div class="cqc-inspection-accordions">
         <!-- What Inspectors Look For -->
-        <div class="group-faq-item">
-          <button type="button" class="group-faq-question" aria-expanded="true" aria-controls="inspection-look-for">
+        <div class="accordion" data-accordion-group="cqc-inspection">
+          <button type="button" class="accordion-trigger" aria-expanded="true" aria-controls="inspection-look-for">
             <span>
               <i class="fas fa-search" aria-hidden="true" style="margin-right: 12px; color: #35938d;"></i>
               What Inspectors Look For in Training Records
             </span>
-            <span class="group-faq-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true"></span>
           </button>
-          <div id="inspection-look-for" class="group-faq-answer" role="region" aria-hidden="false">
+          <div id="inspection-look-for" class="accordion-content" role="region" aria-hidden="false">
             <div class="cqc-checklist-grid">
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
@@ -368,15 +354,15 @@ $collection_schema = [
         </div>
 
         <!-- How to Organize -->
-        <div class="group-faq-item">
-          <button type="button" class="group-faq-question" aria-expanded="false" aria-controls="inspection-organize">
+        <div class="accordion" data-accordion-group="cqc-inspection">
+          <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="inspection-organize">
             <span>
               <i class="fas fa-folder-open" aria-hidden="true" style="margin-right: 12px; color: #35938d;"></i>
               How to Organize Your Training Evidence
             </span>
-            <span class="group-faq-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true"></span>
           </button>
-          <div id="inspection-organize" class="group-faq-answer" role="region" aria-hidden="true">
+          <div id="inspection-organize" class="accordion-content" role="region" aria-hidden="true">
             <div class="cqc-checklist-grid">
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
@@ -403,15 +389,15 @@ $collection_schema = [
         </div>
 
         <!-- Common Inadequate Ratings -->
-        <div class="group-faq-item cqc-warning-item">
-          <button type="button" class="group-faq-question" aria-expanded="false" aria-controls="inspection-inadequate">
+        <div class="accordion cqc-warning-item" data-accordion-group="cqc-inspection">
+          <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="inspection-inadequate">
             <span>
               <i class="fas fa-exclamation-triangle" aria-hidden="true" style="margin-right: 12px; color: #d97706;"></i>
               Common Training-Related Inadequate Ratings
             </span>
-            <span class="group-faq-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true"></span>
           </button>
-          <div id="inspection-inadequate" class="group-faq-answer" role="region" aria-hidden="true">
+          <div id="inspection-inadequate" class="accordion-content" role="region" aria-hidden="true">
             <div class="cqc-checklist-grid">
               <div class="cqc-checklist-item cqc-warning">
                 <i class="fas fa-times-circle" aria-hidden="true"></i>
@@ -438,15 +424,15 @@ $collection_schema = [
         </div>
 
         <!-- Best Practice -->
-        <div class="group-faq-item cqc-featured-item">
-          <button type="button" class="group-faq-question" aria-expanded="false" aria-controls="inspection-best-practice">
+        <div class="accordion cqc-featured-item" data-accordion-group="cqc-inspection">
+          <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="inspection-best-practice">
             <span>
               <i class="fas fa-star" aria-hidden="true" style="margin-right: 12px; color: #9b8560;"></i>
               Best Practice Documentation
             </span>
-            <span class="group-faq-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true"></span>
           </button>
-          <div id="inspection-best-practice" class="group-faq-answer" role="region" aria-hidden="true">
+          <div id="inspection-best-practice" class="accordion-content" role="region" aria-hidden="true">
             <div class="cqc-checklist-grid">
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
@@ -710,13 +696,13 @@ $collection_schema = [
             continue;
           }
         ?>
-        <div class="group-faq-item">
-          <button type="button" class="group-faq-question" aria-expanded="false" aria-controls="cqc-faq-<?php echo (int) $index; ?>">
+        <div class="accordion" data-accordion-group="cqc-faq">
+          <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="cqc-faq-<?php echo (int) $index; ?>">
             <span><?php echo esc_html($faq['question']); ?></span>
-            <span class="group-faq-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true"></span>
           </button>
-          <div id="cqc-faq-<?php echo (int) $index; ?>" class="group-faq-answer" role="region" aria-hidden="true">
-            <p><?php echo esc_html($faq['answer']); ?></p>
+          <div id="cqc-faq-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
+            <?php echo wpautop(wp_kses_post($faq['answer'])); ?>
           </div>
         </div>
         <?php endforeach; ?>

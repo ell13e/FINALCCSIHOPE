@@ -1335,6 +1335,13 @@ function cta_save_form_submission($data, $form_type, $email_sent = false, $email
     // Log successful creation (ID and type only for privacy)
     error_log('CTA Form Submission: Created submission post ID ' . $post_id . ' (Type: ' . $form_type . ')');
     
+    // Add activity log entry for submission creation
+    if (function_exists('cta_add_activity_log')) {
+        $form_type_label = $form_type ? ucfirst(str_replace('-', ' ', $form_type)) : 'Form';
+        $submission_date = get_the_date('j M Y, g:i a', $post_id);
+        cta_add_activity_log($post_id, 'created', 'submission created', "Type: {$form_type_label} | Submitted: {$submission_date}");
+    }
+    
     // Set form type taxonomy
     if ($form_type) {
         $term = get_term_by('slug', $form_type, 'form_type');

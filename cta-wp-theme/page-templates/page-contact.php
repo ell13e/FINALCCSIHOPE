@@ -7,20 +7,6 @@
 
 get_header();
 
-// SEO Meta Tags
-$meta_title = 'Contact Us | Care Training Enquiries & Course Bookings';
-$meta_description = 'Get in touch about care training courses. Book training, request group quotes, or ask about CQC compliance. Call 01622 587343 or use our contact form.';
-?>
-<meta name="description" content="<?php echo esc_attr($meta_description); ?>">
-<meta property="og:title" content="<?php echo esc_attr($meta_title); ?>">
-<meta property="og:description" content="<?php echo esc_attr($meta_description); ?>">
-<meta property="og:type" content="website">
-<meta property="og:url" content="<?php echo esc_url(get_permalink()); ?>">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<?php echo esc_attr($meta_title); ?>">
-<meta name="twitter:description" content="<?php echo esc_attr($meta_description); ?>">
-<?php
-
 $contact = cta_get_contact_info();
 
 // ACF fields

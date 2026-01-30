@@ -389,3 +389,387 @@ function cta_schema_customizer_settings($wp_customize) {
     ]);
 }
 add_action('customize_register', 'cta_schema_customizer_settings');
+
+/**
+ * =========================================
+ * PERMANENT PAGE SCHEMA FUNCTIONS
+ * =========================================
+ */
+
+/**
+ * Get Homepage schema (WebSite + Organization + BreadcrumbList)
+ */
+function cta_get_homepage_schema() {
+    $site_url = home_url();
+    $site_name = get_bloginfo('name');
+    $site_description = get_bloginfo('description') ?: 'CQC-compliant care training in Kent since 2020. CPD-accredited courses for care workers, first aid, medication management, safeguarding, and more.';
+    
+    $schema_graph = [];
+    
+    // WebSite schema
+    $schema_graph[] = [
+        '@type' => 'WebSite',
+        '@id' => $site_url . '/#website',
+        'url' => $site_url . '/',
+        'name' => $site_name,
+        'description' => $site_description,
+        'inLanguage' => 'en-GB',
+        'publisher' => ['@id' => $site_url . '/#organization'],
+    ];
+    
+    // Organization schema
+    $schema_graph[] = cta_get_organization_schema();
+    
+    // BreadcrumbList for homepage
+    $schema_graph[] = cta_get_breadcrumb_schema([
+        ['name' => 'Home', 'url' => $site_url . '/'],
+    ]);
+    
+    return $schema_graph;
+}
+
+/**
+ * Get AboutPage schema
+ */
+function cta_get_about_page_schema() {
+    $site_url = home_url();
+    $page_url = get_permalink();
+    $page_title = get_the_title();
+    $page_description = cta_get_meta_description();
+    
+    $schema_graph = [];
+    
+    // AboutPage schema
+    $schema_graph[] = [
+        '@type' => 'AboutPage',
+        '@id' => $page_url . '#webpage',
+        'url' => $page_url,
+        'name' => $page_title,
+        'description' => $page_description,
+        'isPartOf' => ['@id' => $site_url . '/#website'],
+        'about' => ['@id' => $site_url . '/#organization'],
+        'breadcrumb' => ['@id' => $page_url . '#breadcrumb'],
+    ];
+    
+    // Organization schema
+    $schema_graph[] = cta_get_organization_schema();
+    
+    // BreadcrumbList
+    $schema_graph[] = cta_get_breadcrumb_schema([
+        ['name' => 'Home', 'url' => $site_url . '/'],
+        ['name' => $page_title, 'url' => $page_url],
+    ]);
+    
+    // Add primary image if available
+    $image_url = cta_get_page_schema_image();
+    if ($image_url) {
+        $schema_graph[0]['primaryImageOfPage'] = [
+            '@type' => 'ImageObject',
+            'url' => $image_url,
+        ];
+    }
+    
+    return $schema_graph;
+}
+
+/**
+ * Get ContactPage schema
+ */
+function cta_get_contact_page_schema() {
+    $site_url = home_url();
+    $page_url = get_permalink();
+    $page_title = get_the_title();
+    $page_description = cta_get_meta_description();
+    $contact = cta_get_contact_info();
+    
+    $schema_graph = [];
+    
+    // ContactPage schema
+    $schema_graph[] = [
+        '@type' => 'ContactPage',
+        '@id' => $page_url . '#webpage',
+        'url' => $page_url,
+        'name' => $page_title,
+        'description' => $page_description,
+        'isPartOf' => ['@id' => $site_url . '/#website'],
+        'about' => ['@id' => $site_url . '/#organization'],
+        'breadcrumb' => ['@id' => $page_url . '#breadcrumb'],
+    ];
+    
+    // Organization schema (includes contact info)
+    $schema_graph[] = cta_get_organization_schema();
+    
+    // BreadcrumbList
+    $schema_graph[] = cta_get_breadcrumb_schema([
+        ['name' => 'Home', 'url' => $site_url . '/'],
+        ['name' => $page_title, 'url' => $page_url],
+    ]);
+    
+    // Add primary image if available
+    $image_url = cta_get_page_schema_image();
+    if ($image_url) {
+        $schema_graph[0]['primaryImageOfPage'] = [
+            '@type' => 'ImageObject',
+            'url' => $image_url,
+        ];
+    }
+    
+    return $schema_graph;
+}
+
+/**
+ * Get CollectionPage schema for resource pages
+ */
+function cta_get_collection_page_schema($page_slug = '') {
+    $site_url = home_url();
+    $page_url = get_permalink();
+    $page_title = get_the_title();
+    $page_description = cta_get_meta_description();
+    
+    $schema_graph = [];
+    
+    // CollectionPage schema
+    $schema_graph[] = [
+        '@type' => 'CollectionPage',
+        '@id' => $page_url . '#webpage',
+        'url' => $page_url,
+        'name' => $page_title,
+        'description' => $page_description,
+        'isPartOf' => ['@id' => $site_url . '/#website'],
+        'about' => ['@id' => $site_url . '/#organization'],
+        'breadcrumb' => ['@id' => $page_url . '#breadcrumb'],
+    ];
+    
+    // Organization schema
+    $schema_graph[] = cta_get_organization_schema();
+    
+    // BreadcrumbList
+    $schema_graph[] = cta_get_breadcrumb_schema([
+        ['name' => 'Home', 'url' => $site_url . '/'],
+        ['name' => $page_title, 'url' => $page_url],
+    ]);
+    
+    // Add primary image if available
+    $image_url = cta_get_page_schema_image();
+    if ($image_url) {
+        $schema_graph[0]['primaryImageOfPage'] = [
+            '@type' => 'ImageObject',
+            'url' => $image_url,
+        ];
+    }
+    
+    return $schema_graph;
+}
+
+/**
+ * Get FAQPage schema
+ */
+function cta_get_faq_page_schema() {
+    $site_url = home_url();
+    $page_url = get_permalink();
+    $page_title = get_the_title();
+    $page_description = cta_get_meta_description();
+    
+    $schema_graph = [];
+    
+    // FAQPage schema
+    $faq_schema = [
+        '@type' => 'FAQPage',
+        '@id' => $page_url . '#webpage',
+        'url' => $page_url,
+        'name' => $page_title,
+        'description' => $page_description,
+        'isPartOf' => ['@id' => $site_url . '/#website'],
+        'about' => ['@id' => $site_url . '/#organization'],
+        'breadcrumb' => ['@id' => $page_url . '#breadcrumb'],
+    ];
+    
+    // Try to extract FAQ items from page content
+    // This is a basic implementation - can be enhanced to parse actual FAQ structure
+    $mainEntity = [];
+    $content = get_the_content();
+    
+    // Look for FAQ patterns in content (can be enhanced based on actual FAQ structure)
+    // For now, we'll just add the basic FAQPage schema
+    if (!empty($mainEntity)) {
+        $faq_schema['mainEntity'] = $mainEntity;
+    }
+    
+    $schema_graph[] = $faq_schema;
+    
+    // Organization schema
+    $schema_graph[] = cta_get_organization_schema();
+    
+    // BreadcrumbList
+    $schema_graph[] = cta_get_breadcrumb_schema([
+        ['name' => 'Home', 'url' => $site_url . '/'],
+        ['name' => $page_title, 'url' => $page_url],
+    ]);
+    
+    // Add primary image if available
+    $image_url = cta_get_page_schema_image();
+    if ($image_url) {
+        $schema_graph[0]['primaryImageOfPage'] = [
+            '@type' => 'ImageObject',
+            'url' => $image_url,
+        ];
+    }
+    
+    return $schema_graph;
+}
+
+/**
+ * Get Group Training page schema (WebPage + Service with OfferCatalog)
+ */
+function cta_get_group_training_page_schema() {
+    $site_url = home_url();
+    $page_url = get_permalink();
+    $page_title = get_the_title();
+    $page_description = cta_get_meta_description();
+    
+    $schema_graph = [];
+    
+    // WebPage schema
+    $schema_graph[] = [
+        '@type' => 'WebPage',
+        '@id' => $page_url . '#webpage',
+        'url' => $page_url,
+        'name' => $page_title,
+        'description' => $page_description,
+        'isPartOf' => ['@id' => $site_url . '/#website'],
+        'about' => ['@id' => $site_url . '/#organization'],
+        'breadcrumb' => ['@id' => $page_url . '#breadcrumb'],
+    ];
+    
+    // Service schema with OfferCatalog
+    $schema_graph[] = [
+        '@type' => 'Service',
+        '@id' => $page_url . '#service',
+        'name' => 'Group Training Services',
+        'description' => 'On-site group training for care teams across the UK. Flexible scheduling, CPD-accredited certificates, and group rates.',
+        'provider' => ['@id' => $site_url . '/#organization'],
+        'areaServed' => [
+            '@type' => 'Country',
+            'name' => 'United Kingdom',
+        ],
+        'hasOfferCatalog' => [
+            '@type' => 'OfferCatalog',
+            'name' => 'Group Training Courses',
+            'itemListElement' => [
+                [
+                    '@type' => 'Offer',
+                    'itemOffered' => [
+                        '@type' => 'Service',
+                        'name' => 'Group Training',
+                    ],
+                ],
+            ],
+        ],
+    ];
+    
+    // Organization schema
+    $schema_graph[] = cta_get_organization_schema();
+    
+    // BreadcrumbList
+    $schema_graph[] = cta_get_breadcrumb_schema([
+        ['name' => 'Home', 'url' => $site_url . '/'],
+        ['name' => $page_title, 'url' => $page_url],
+    ]);
+    
+    // Add primary image if available
+    $image_url = cta_get_page_schema_image();
+    if ($image_url) {
+        $schema_graph[0]['primaryImageOfPage'] = [
+            '@type' => 'ImageObject',
+            'url' => $image_url,
+        ];
+    }
+    
+    return $schema_graph;
+}
+
+/**
+ * Output permanent page schema based on page type
+ */
+function cta_output_permanent_page_schema() {
+    // Only on pages
+    if (!is_page()) {
+        return;
+    }
+    
+    // Check if it's a permanent page
+    if (!function_exists('cta_is_permanent_page')) {
+        return;
+    }
+    
+    if (!cta_is_permanent_page()) {
+        return;
+    }
+    
+    $page_slug = get_post()->post_name;
+    $schema_type = cta_safe_get_field('page_schema_type', get_the_ID(), '');
+    
+    $schema_graph = [];
+    
+    // Determine schema type based on page slug or ACF field
+    if (is_front_page() || $page_slug === 'home') {
+        $schema_graph = cta_get_homepage_schema();
+    } elseif ($page_slug === 'about' || $page_slug === 'about-us') {
+        $schema_graph = cta_get_about_page_schema();
+    } elseif ($page_slug === 'contact') {
+        $schema_graph = cta_get_contact_page_schema();
+    } elseif ($page_slug === 'group-training') {
+        $schema_graph = cta_get_group_training_page_schema();
+    } elseif ($page_slug === 'faqs') {
+        $schema_graph = cta_get_faq_page_schema();
+    } elseif (in_array($page_slug, ['cqc-compliance-hub', 'training-guides', 'training-guides-tools', 'downloadable-resources', 'news'], true)) {
+        $schema_graph = cta_get_collection_page_schema($page_slug);
+    } else {
+        // Fallback to WebPage schema
+        $schema_graph = [
+            cta_get_webpage_schema([
+                'name' => get_the_title(),
+                'description' => cta_get_meta_description(),
+            ]),
+            cta_get_organization_schema(),
+            cta_get_breadcrumb_schema(),
+        ];
+    }
+    
+    // Override with ACF schema type if set
+    if (!empty($schema_type) && $schema_type !== 'WebPage') {
+        // If custom schema type is set, use generic WebPage but with custom type
+        // This allows flexibility for custom pages
+        $page_url = get_permalink();
+        $site_url = home_url();
+        
+        $schema_graph = [
+            [
+                '@type' => $schema_type,
+                '@id' => $page_url . '#webpage',
+                'url' => $page_url,
+                'name' => get_the_title(),
+                'description' => cta_get_meta_description(),
+                'isPartOf' => ['@id' => $site_url . '/#website'],
+                'about' => ['@id' => $site_url . '/#organization'],
+                'breadcrumb' => ['@id' => $page_url . '#breadcrumb'],
+            ],
+            cta_get_organization_schema(),
+            cta_get_breadcrumb_schema(),
+        ];
+        
+        $image_url = cta_get_page_schema_image();
+        if ($image_url) {
+            $schema_graph[0]['primaryImageOfPage'] = [
+                '@type' => 'ImageObject',
+                'url' => $image_url,
+            ];
+        }
+    }
+    
+    // Output schema
+    if (!empty($schema_graph)) {
+        cta_output_schema_json($schema_graph);
+    }
+}
+add_action('wp_head', 'cta_output_permanent_page_schema', 10);

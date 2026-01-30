@@ -7,21 +7,82 @@
 
 get_header();
 
-// SEO Meta Tags
-$meta_title = 'Care Training FAQs | Common Questions About Our Courses';
-$meta_description = 'Frequently asked questions about care training courses. Booking, certificates, CQC compliance, group training, and course content explained.';
-?>
-<meta name="description" content="<?php echo esc_attr($meta_description); ?>">
-<meta property="og:title" content="<?php echo esc_attr($meta_title); ?>">
-<meta property="og:description" content="<?php echo esc_attr($meta_description); ?>">
-<meta property="og:type" content="website">
-<meta property="og:url" content="<?php echo esc_url(get_permalink()); ?>">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<?php echo esc_attr($meta_title); ?>">
-<meta name="twitter:description" content="<?php echo esc_attr($meta_description); ?>">
-<?php
-
 $contact = cta_get_contact_info();
+
+/**
+ * Format FAQ answer text, converting semicolon-separated lists to HTML lists
+ * 
+ * @param string $text The FAQ answer text
+ * @return string Formatted HTML
+ */
+function cta_format_faq_answer($text) {
+    if (empty($text)) {
+        return '';
+    }
+    
+    // Look for patterns like: "intro text: Item : Description; Item : Description; closing text"
+    // Pattern: Find sequences where we have "Item : Description;" repeated 2+ times
+    
+    // Match pattern: "Item : Description;" where Item starts with capital and has reasonable length
+    // Description should be substantial (at least 15 chars)
+    $pattern = '/([A-Z][^:;]{4,}?)\s*:\s*([^;]{15,}?)(?:;\s*(?=[A-Z])|;\s*$|$)/';
+    
+    $matches = [];
+    if (preg_match_all($pattern, $text, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
+        // Need at least 2 consecutive items to format as list
+        if (count($matches) >= 2) {
+            $first_pos = $matches[0][0][1];
+            $last_end = $matches[count($matches) - 1][0][1] + strlen($matches[count($matches) - 1][0][0]);
+            $list_span = $last_end - $first_pos;
+            $text_length = strlen($text);
+            
+            // If list spans at least 25% of text, format as list
+            if ($list_span >= $text_length * 0.25) {
+                $before_text = trim(substr($text, 0, $first_pos));
+                $after_text = trim(substr($text, $last_end));
+                
+                $list_items = [];
+                foreach ($matches as $match) {
+                    $title = trim($match[1][0]);
+                    $description = trim($match[2][0]);
+                    $description = rtrim($description, '; ');
+                    
+                    // Validate item
+                    if (!empty($title) && !empty($description) && 
+                        strlen($title) >= 4 && strlen($description) >= 15) {
+                        $list_items[] = ['title' => $title, 'description' => $description];
+                    }
+                }
+                
+                // Format as list if we have 2+ valid items
+                if (count($list_items) >= 2) {
+                    $output = '';
+                    
+                    if (!empty($before_text)) {
+                        // Remove trailing colon/space
+                        $before_text = preg_replace('/:\s*$/', '', trim($before_text));
+                        $output .= wpautop(wp_kses_post($before_text));
+                    }
+                    
+                    $output .= '<ul class="faq-answer-list">';
+                    foreach ($list_items as $item) {
+                        $output .= '<li><strong>' . esc_html($item['title']) . ':</strong> ' . esc_html($item['description']) . '</li>';
+                    }
+                    $output .= '</ul>';
+                    
+                    if (!empty($after_text)) {
+                        $output .= wpautop(wp_kses_post($after_text));
+                    }
+                    
+                    return $output;
+                }
+            }
+        }
+    }
+    
+    // Default: standard formatting
+    return wpautop(wp_kses_post($text));
+}
 
 // ACF fields
 $hero_title = function_exists('get_field') ? get_field('hero_title') : '';
@@ -218,7 +279,7 @@ foreach ($faqs as $faq) {
               <span class="accordion-icon" aria-hidden="true"></span>
             </button>
             <div id="faq-general-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
-              <?php echo wpautop(wp_kses_post($faq['answer'])); ?>
+              <?php echo cta_format_faq_answer($faq['answer']); ?>
             </div>
           </div>
           <?php endforeach; ?>
@@ -241,7 +302,7 @@ foreach ($faqs as $faq) {
               <span class="accordion-icon" aria-hidden="true"></span>
             </button>
             <div id="faq-booking-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
-              <?php echo wpautop(wp_kses_post($faq['answer'])); ?>
+              <?php echo cta_format_faq_answer($faq['answer']); ?>
             </div>
           </div>
           <?php endforeach; ?>
@@ -264,7 +325,7 @@ foreach ($faqs as $faq) {
               <span class="accordion-icon" aria-hidden="true"></span>
             </button>
             <div id="faq-certification-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
-              <?php echo wpautop(wp_kses_post($faq['answer'])); ?>
+              <?php echo cta_format_faq_answer($faq['answer']); ?>
             </div>
           </div>
           <?php endforeach; ?>
@@ -287,7 +348,7 @@ foreach ($faqs as $faq) {
               <span class="accordion-icon" aria-hidden="true"></span>
             </button>
             <div id="faq-course-specific-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
-              <?php echo wpautop(wp_kses_post($faq['answer'])); ?>
+              <?php echo cta_format_faq_answer($faq['answer']); ?>
             </div>
           </div>
           <?php endforeach; ?>
@@ -310,7 +371,7 @@ foreach ($faqs as $faq) {
               <span class="accordion-icon" aria-hidden="true"></span>
             </button>
             <div id="faq-payment-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
-              <?php echo wpautop(wp_kses_post($faq['answer'])); ?>
+              <?php echo cta_format_faq_answer($faq['answer']); ?>
             </div>
           </div>
           <?php endforeach; ?>
@@ -333,7 +394,7 @@ foreach ($faqs as $faq) {
               <span class="accordion-icon" aria-hidden="true"></span>
             </button>
             <div id="faq-group-training-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
-              <?php echo wpautop(wp_kses_post($faq['answer'])); ?>
+              <?php echo cta_format_faq_answer($faq['answer']); ?>
             </div>
           </div>
           <?php endforeach; ?>

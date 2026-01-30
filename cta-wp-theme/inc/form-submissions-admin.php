@@ -252,6 +252,13 @@ function cta_handle_add_single_submission_admin_post() {
         exit;
     }
 
+    // Add activity log entry for submission creation
+    if (function_exists('cta_add_activity_log')) {
+        $form_type_label = $form_type ? ucfirst(str_replace('-', ' ', $form_type)) : 'Form';
+        $submission_date = $submitted_dt ? $submitted_dt->format('j M Y, g:i a') : current_time('j M Y, g:i a');
+        cta_add_activity_log($post_id, 'created', 'submission created', "Type: {$form_type_label} | Submitted: {$submission_date}");
+    }
+
     // Save meta data (align with import + admin UI expectations)
     if ($name) update_post_meta($post_id, '_submission_name', $name);
     if ($email) update_post_meta($post_id, '_submission_email', $email);
@@ -3546,6 +3553,14 @@ function cta_form_submission_followup_wp_callback($post) {
     echo '</select>';
 
     echo '<p style="margin-top: 12px;"><label for="followup_notes"><strong>Notes</strong></label></p>';
+    
+    // Check if we should clear the notes field (after a save)
+    $should_clear_notes = get_transient('cta_clear_notes_' . $post->ID);
+    if ($should_clear_notes) {
+        delete_transient('cta_clear_notes_' . $post->ID);
+        $followup_notes = ''; // Clear the field value
+    }
+    
     echo '<textarea name="followup_notes" id="followup_notes" class="widefat" rows="5">' . esc_textarea($followup_notes) . '</textarea>';
     echo '<p class="description">Use the "Update" button to save changes.</p>';
     
@@ -3799,6 +3814,9 @@ function cta_form_submission_save_followup($post_id) {
                 } else {
                     cta_add_activity_log($post_id, 'note_updated', 'updated notes', wp_trim_words($new_notes, 20));
                 }
+                
+                // Set flag to clear notes field after page reload
+                set_transient('cta_clear_notes_' . $post_id, '1', 30);
             } else {
                 delete_post_meta($post_id, '_submission_followup_notes');
             }
@@ -3834,18 +3852,28 @@ function cta_form_submission_save_followup($post_id) {
             if ($new_assigned) {
                 update_post_meta($post_id, '_submission_assigned_to', $new_assigned);
                 
-                // Log assignment
+                // Log assignment change
                 $assignee_names = [
                     'AS' => 'Adele',
                     'ES' => 'Ellie',
                     'VW' => 'Victoria',
                     'CR' => 'Chloe',
                 ];
-                $assignee_name = $assignee_names[$new_assigned] ?? $new_assigned;
-                cta_add_activity_log($post_id, 'assigned', 'assigned to ' . $assignee_name);
+                $old_name = $old_assigned ? ($assignee_names[$old_assigned] ?? $old_assigned) : 'Unassigned';
+                $new_name = $assignee_names[$new_assigned] ?? $new_assigned;
+                cta_add_activity_log($post_id, 'assigned', 'assigned submission', "From: {$old_name} → To: {$new_name}");
             } else {
                 delete_post_meta($post_id, '_submission_assigned_to');
-                cta_add_activity_log($post_id, 'assigned', 'unassigned from lead');
+                
+                // Log unassignment
+                $assignee_names = [
+                    'AS' => 'Adele',
+                    'ES' => 'Ellie',
+                    'VW' => 'Victoria',
+                    'CR' => 'Chloe',
+                ];
+                $old_name = $old_assigned ? ($assignee_names[$old_assigned] ?? $old_assigned) : 'Unassigned';
+                cta_add_activity_log($post_id, 'assigned', 'unassigned submission', "From: {$old_name} → To: Unassigned");
             }
         }
     }
@@ -3907,6 +3935,45 @@ function cta_form_submission_enqueue_scripts($hook) {
                 padding: 12px 10px;
             }
         ');
+    }
+    
+    // Add script to clear notes field after update on post edit page
+    if ($typenow === 'form_submission' && ($hook === 'post.php' || $hook === 'post-new.php')) {
+        // Check if notes were just saved (via URL parameter or by checking if we have a saved note in activity log)
+        $just_saved_notes = false;
+        if (isset($_GET['message']) && $_GET['message'] == '1') {
+            // Check if followup_notes was in the POST data (meaning user just saved notes)
+            $just_saved_notes = isset($_POST['followup_notes']) && !empty($_POST['followup_notes']);
+        }
+        
+        wp_add_inline_script('jquery', "
+        jQuery(document).ready(function($) {
+            var notesField = $('#followup_notes');
+            if (notesField.length) {
+                // Clear notes field if we just saved (page reloaded after save)
+                // Check URL for message parameter indicating successful save
+                var urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('message') === '1') {
+                    // Clear the field after a short delay to ensure it's visible briefly
+                    setTimeout(function() {
+                        notesField.val('');
+                    }, 500);
+                }
+                
+                // Also clear immediately when form is submitted (before page reload)
+                $('#post').on('submit', function(e) {
+                    var notesValue = notesField.val();
+                    if (notesValue && notesValue.trim() !== '') {
+                        // Clear the field immediately (will be saved via POST before this)
+                        // The value is already in the form data, so clearing the field won't affect the save
+                        setTimeout(function() {
+                            notesField.val('');
+                        }, 50);
+                    }
+                });
+            }
+        });
+        ");
     }
     
     if ($typenow === 'form_submission' && $hook === 'edit.php') {

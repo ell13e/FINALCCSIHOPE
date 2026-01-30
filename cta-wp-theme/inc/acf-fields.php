@@ -85,6 +85,32 @@ function cta_register_acf_fields() {
                 'min' => 0,
                 'step' => 0.01,
             ],
+            [
+                'key' => 'field_course_is_mandatory',
+                'label' => 'Mandatory Training',
+                'name' => 'course_is_mandatory',
+                'type' => 'true_false',
+                'instructions' => 'Enable if this is mandatory CQC training',
+                'default_value' => 0,
+                'ui' => 1,
+            ],
+            [
+                'key' => 'field_course_mandatory_note',
+                'label' => 'Mandatory Training Message',
+                'name' => 'course_mandatory_note',
+                'type' => 'textarea',
+                'instructions' => 'Custom message to display in the mandatory badge (optional)',
+                'rows' => 3,
+                'conditional_logic' => [
+                    [
+                        [
+                            'field' => 'field_course_is_mandatory',
+                            'operator' => '==',
+                            'value' => '1',
+                        ],
+                    ],
+                ],
+            ],
         ],
         'location' => [
             [
@@ -192,7 +218,305 @@ function cta_register_acf_fields() {
         'label_placement' => 'top',
     ]);
 
-    // Course Learning Outcomes - NOW A TEXTAREA (one outcome per line)
+    // =========================================
+    // COURSE FIELDS - FAQs
+    // =========================================
+    acf_add_local_field_group([
+        'key' => 'group_course_faqs',
+        'title' => 'Course FAQs',
+        'fields' => [
+            [
+                'key' => 'field_generate_course_faqs',
+                'label' => '',
+                'name' => 'generate_course_faqs',
+                'type' => 'message',
+                'message' => '<button type="button" id="cta-generate-course-faqs" class="button button-small" style="margin-bottom: 12px;">✨ Generate FAQs with AI</button> <span id="cta-generate-faqs-status" style="margin-left: 10px; font-size: 12px;"></span>',
+            ],
+            [
+                'key' => 'field_course_faqs',
+                'label' => 'Frequently Asked Questions',
+                'name' => 'course_faqs',
+                'type' => 'repeater',
+                'instructions' => 'Add course-specific FAQs. These will appear on the course detail page between the course content and related courses sections.',
+                'layout' => 'block',
+                'button_label' => 'Add FAQ',
+                'min' => 0,
+                'sub_fields' => [
+                    [
+                        'key' => 'field_course_faq_question',
+                        'label' => 'Question',
+                        'name' => 'question',
+                        'type' => 'text',
+                        'required' => 1,
+                        'placeholder' => 'e.g., What is included in this course?',
+                    ],
+                    [
+                        'key' => 'field_course_faq_answer',
+                        'label' => 'Answer',
+                        'name' => 'answer',
+                        'type' => 'wysiwyg',
+                        'instructions' => 'Write a clear, helpful answer. Use formatting tools to add emphasis, lists, or links.',
+                        'tabs' => 'all',
+                        'toolbar' => 'full',
+                        'media_upload' => 1,
+                        'delay' => 0,
+                        'required' => 1,
+                    ],
+                ],
+            ],
+            [
+                'key' => 'field_course_selected_reviews',
+                'label' => 'Select Testimonials',
+                'name' => 'course_selected_reviews',
+                'type' => 'select',
+                'instructions' => 'Select up to 3 testimonials to feature on this course page. Use the visual picker below to browse and select reviews.',
+                'choices' => [],
+                'default_value' => [],
+                'allow_null' => 1,
+                'multiple' => 1,
+                'ui' => 1,
+                'ajax' => 0,
+                'return_format' => 'value',
+                'wrapper' => [
+                    'width' => '',
+                    'class' => 'cta-review-picker-field',
+                    'id' => 'cta-review-picker-wrapper',
+                ],
+            ],
+        ],
+        'location' => [
+            [
+                [
+                    'param' => 'post_type',
+                    'operator' => '==',
+                    'value' => 'course',
+                ],
+            ],
+        ],
+        'menu_order' => 5,
+        'position' => 'normal',
+        'style' => 'default',
+        'label_placement' => 'top',
+        'instruction_placement' => 'field',
+    ]);
+
+    // =========================================
+    // COURSE FIELDS - Expanded Content
+    // =========================================
+    acf_add_local_field_group([
+        'key' => 'group_course_expanded_content',
+        'title' => 'Expanded Course Content',
+        'fields' => [
+            [
+                'key' => 'field_course_expanded_tabs',
+                'label' => '',
+                'name' => '',
+                'type' => 'tab',
+                'placement' => 'top',
+                'endpoint' => 0,
+            ],
+            // Introduction Tab
+            [
+                'key' => 'field_course_intro_tab',
+                'label' => 'Introduction',
+                'name' => '',
+                'type' => 'tab',
+                'placement' => 'top',
+            ],
+            [
+                'key' => 'field_course_intro_paragraph',
+                'label' => 'Opening Paragraph',
+                'name' => 'course_intro_paragraph',
+                'type' => 'wysiwyg',
+                'instructions' => 'Engaging opening paragraph (100-120 words). This appears above the accordions. If left empty, will auto-populate from course description.',
+                'tabs' => 'all',
+                'toolbar' => 'full',
+                'media_upload' => 1,
+                'delay' => 0,
+            ],
+            [
+                'key' => 'field_generate_course_intro',
+                'label' => '',
+                'name' => 'generate_course_intro',
+                'type' => 'message',
+                'message' => '<button type="button" id="cta-generate-course-intro" class="button button-small" style="margin-top: 6px;">✨ Generate with AI</button> <span id="cta-generate-intro-status" style="margin-left: 10px; font-size: 12px;"></span>',
+            ],
+            [
+                'key' => 'field_course_why_matters',
+                'label' => 'Why This Course Matters',
+                'name' => 'course_why_matters',
+                'type' => 'wysiwyg',
+                'instructions' => 'Callout explaining why this training is important (150-180 words). Covers CQC requirements, legal context, importance.',
+                'tabs' => 'all',
+                'toolbar' => 'full',
+                'media_upload' => 1,
+                'delay' => 0,
+            ],
+            [
+                'key' => 'field_generate_course_why_matters',
+                'label' => '',
+                'name' => 'generate_course_why_matters',
+                'type' => 'message',
+                'message' => '<button type="button" id="cta-generate-course-why-matters" class="button button-small" style="margin-top: 6px;">✨ Generate with AI</button> <span id="cta-generate-why-matters-status" style="margin-left: 10px; font-size: 12px;"></span>',
+            ],
+            // What's Covered Tab
+            [
+                'key' => 'field_course_covered_tab',
+                'label' => 'What\'s Covered',
+                'name' => '',
+                'type' => 'tab',
+                'placement' => 'top',
+            ],
+            [
+                'key' => 'field_course_covered_items',
+                'label' => 'Covered Topics',
+                'name' => 'course_covered_items',
+                'type' => 'repeater',
+                'instructions' => 'Add topics covered in this course. These will display in a grid layout.',
+                'layout' => 'block',
+                'button_label' => 'Add Topic',
+                'min' => 0,
+                'sub_fields' => [
+                    [
+                        'key' => 'field_course_covered_title',
+                        'label' => 'Topic Title',
+                        'name' => 'title',
+                        'type' => 'text',
+                        'required' => 1,
+                        'placeholder' => 'e.g., Safeguarding Principles',
+                    ],
+                    [
+                        'key' => 'field_course_covered_description',
+                        'label' => 'Description',
+                        'name' => 'description',
+                        'type' => 'textarea',
+                        'required' => 1,
+                        'rows' => 3,
+                        'placeholder' => 'Brief description of what this topic covers...',
+                    ],
+                ],
+            ],
+            // Course Format Tab
+            [
+                'key' => 'field_course_format_tab',
+                'label' => 'Course Format',
+                'name' => '',
+                'type' => 'tab',
+                'placement' => 'top',
+            ],
+            [
+                'key' => 'field_course_format_details',
+                'label' => 'Format Details',
+                'name' => 'course_format_details',
+                'type' => 'wysiwyg',
+                'instructions' => 'Additional information about course format, delivery method, etc.',
+                'tabs' => 'all',
+                'toolbar' => 'full',
+                'media_upload' => 1,
+                'delay' => 0,
+            ],
+            // Key Features Tab
+            [
+                'key' => 'field_course_features_tab',
+                'label' => 'Key Features',
+                'name' => '',
+                'type' => 'tab',
+                'placement' => 'top',
+            ],
+            [
+                'key' => 'field_course_key_features',
+                'label' => 'What Makes Our Training Different',
+                'name' => 'course_key_features',
+                'type' => 'repeater',
+                'instructions' => 'Add features that make this training unique.',
+                'layout' => 'block',
+                'button_label' => 'Add Feature',
+                'min' => 0,
+                'sub_fields' => [
+                    [
+                        'key' => 'field_course_feature_icon',
+                        'label' => 'Icon Class',
+                        'name' => 'icon',
+                        'type' => 'text',
+                        'instructions' => 'Font Awesome class (e.g., "fas fa-users")',
+                        'default_value' => 'fas fa-check-circle',
+                    ],
+                    [
+                        'key' => 'field_course_feature_title',
+                        'label' => 'Feature Title',
+                        'name' => 'title',
+                        'type' => 'text',
+                        'required' => 1,
+                        'placeholder' => 'e.g., Expert Trainers',
+                    ],
+                    [
+                        'key' => 'field_course_feature_description',
+                        'label' => 'Description',
+                        'name' => 'description',
+                        'type' => 'textarea',
+                        'required' => 1,
+                        'rows' => 2,
+                        'placeholder' => 'Brief description...',
+                    ],
+                ],
+            ],
+            // After the Course Tab
+            [
+                'key' => 'field_course_after_tab',
+                'label' => 'After the Course',
+                'name' => '',
+                'type' => 'tab',
+                'placement' => 'top',
+            ],
+            [
+                'key' => 'field_course_benefits',
+                'label' => 'Benefits',
+                'name' => 'course_benefits',
+                'type' => 'repeater',
+                'instructions' => 'List of benefits after completing the course. If left empty, will auto-populate from certificate/accreditation fields.',
+                'layout' => 'table',
+                'button_label' => 'Add Benefit',
+                'min' => 0,
+                'sub_fields' => [
+                    [
+                        'key' => 'field_course_benefit_text',
+                        'label' => 'Benefit',
+                        'name' => 'benefit',
+                        'type' => 'text',
+                        'required' => 1,
+                        'placeholder' => 'e.g., Digital certificate provided',
+                    ],
+                ],
+            ],
+            [
+                'key' => 'field_course_after_note',
+                'label' => 'Additional Note',
+                'name' => 'course_after_note',
+                'type' => 'wysiwyg',
+                'instructions' => 'Additional note about certificates, records, etc.',
+                'tabs' => 'all',
+                'toolbar' => 'basic',
+                'media_upload' => 0,
+                'delay' => 0,
+            ],
+        ],
+        'location' => [
+            [
+                [
+                    'param' => 'post_type',
+                    'operator' => '==',
+                    'value' => 'course',
+                ],
+            ],
+        ],
+        'menu_order' => 6,
+        'position' => 'normal',
+        'style' => 'default',
+        'label_placement' => 'top',
+        'instruction_placement' => 'field',
+    ]);
+  
+      // Course Learning Outcomes - NOW A TEXTAREA (one outcome per line)
     acf_add_local_field_group([
         'key' => 'group_course_outcomes',
         'title' => 'Learning Outcomes',
@@ -1356,9 +1680,13 @@ function cta_register_acf_fields() {
                         'key' => 'field_page_faq_answer',
                         'label' => 'Answer',
                         'name' => 'answer',
-                        'type' => 'textarea',
+                        'type' => 'wysiwyg',
+                        'instructions' => 'Write a clear, helpful answer. Use formatting tools to add emphasis, lists, or links.',
+                        'tabs' => 'all',
+                        'toolbar' => 'full',
+                        'media_upload' => 1,
+                        'delay' => 0,
                         'required' => 1,
-                        'rows' => 3,
                     ],
                 ],
             ],
@@ -1529,8 +1857,12 @@ function cta_register_acf_fields() {
                         'key' => 'field_resources_faqs_item_answer',
                         'label' => 'Answer',
                         'name' => 'answer',
-                        'type' => 'textarea',
-                        'rows' => 4,
+                        'type' => 'wysiwyg',
+                        'instructions' => 'Write a clear, helpful answer. Use formatting tools to add emphasis, lists, or links. The answer will be displayed in the FAQ accordion.',
+                        'tabs' => 'all',
+                        'toolbar' => 'full',
+                        'media_upload' => 1,
+                        'delay' => 0,
                         'required' => 1,
                     ],
                 ],
@@ -1646,7 +1978,12 @@ function cta_register_acf_fields() {
                         'key' => 'field_resources_cqc_faq_answer',
                         'label' => 'Answer',
                         'name' => 'answer',
-                        'type' => 'textarea',
+                        'type' => 'wysiwyg',
+                        'instructions' => 'Write a clear, helpful answer. Use formatting tools to add emphasis, lists, or links.',
+                        'tabs' => 'all',
+                        'toolbar' => 'full',
+                        'media_upload' => 1,
+                        'delay' => 0,
                         'rows' => 4,
                         'required' => 1,
                     ],
@@ -2061,6 +2398,64 @@ function cta_register_acf_fields() {
                     'param' => 'post_type',
                     'operator' => '==',
                     'value' => 'post',
+                ],
+            ],
+        ],
+        'menu_order' => 1,
+        'position' => 'side',
+        'style' => 'default',
+        'label_placement' => 'top',
+    ]);
+
+    // Page SEO Fields - For permanent pages (Home, About, Contact, etc.)
+    acf_add_local_field_group([
+        'key' => 'group_page_seo',
+        'title' => 'SEO Settings (Permanent Pages)',
+        'fields' => [
+            [
+                'key' => 'field_page_seo_meta_title',
+                'label' => 'Meta Title (SEO)',
+                'name' => 'page_seo_meta_title',
+                'type' => 'text',
+                'instructions' => 'Custom meta title for search engines. 50-60 characters recommended. Leave blank to use page title.',
+                'placeholder' => 'e.g., Care Training in Kent | CQC-Compliant | CTA',
+                'maxlength' => 60,
+            ],
+            [
+                'key' => 'field_page_seo_meta_description',
+                'label' => 'Meta Description (SEO)',
+                'name' => 'page_seo_meta_description',
+                'type' => 'textarea',
+                'instructions' => 'Custom description for search engines. 150-160 characters recommended. Leave blank to use excerpt or auto-generate.',
+                'rows' => 3,
+                'maxlength' => 160,
+                'placeholder' => 'e.g., Professional care sector training in Maidstone, Kent. CQC-compliant, CPD-accredited courses since 2020.',
+            ],
+            [
+                'key' => 'field_page_schema_type',
+                'label' => 'Schema Type',
+                'name' => 'page_schema_type',
+                'type' => 'select',
+                'instructions' => 'Select the schema.org type for this page. Auto-detected for permanent pages.',
+                'choices' => [
+                    'WebPage' => 'WebPage (Generic)',
+                    'HomePage' => 'HomePage',
+                    'AboutPage' => 'AboutPage',
+                    'ContactPage' => 'ContactPage',
+                    'CollectionPage' => 'CollectionPage',
+                    'FAQPage' => 'FAQPage',
+                ],
+                'default_value' => 'WebPage',
+                'allow_null' => 0,
+                'multiple' => 0,
+            ],
+        ],
+        'location' => [
+            [
+                [
+                    'param' => 'post_type',
+                    'operator' => '==',
+                    'value' => 'page',
                 ],
             ],
         ],
@@ -2517,6 +2912,276 @@ function cta_populate_page_faqs($value, $post_id, $field) {
 add_filter('acf/load_value/name=faqs', 'cta_populate_page_faqs', 10, 3);
 
 /**
+ * Auto-populate course_intro_paragraph from course_description if empty
+ */
+function cta_populate_course_intro($value, $post_id, $field) {
+    if ($value !== null && $value !== false && !empty($value)) {
+        return $value;
+    }
+    
+    if ($field['name'] === 'course_intro_paragraph') {
+        $description = get_field('course_description', $post_id);
+        if (!empty($description)) {
+            // Take first 120 words from description
+            $words = explode(' ', strip_tags($description));
+            $intro = implode(' ', array_slice($words, 0, 120));
+            return $intro . (count($words) > 120 ? '...' : '');
+        }
+    }
+    
+    return $value;
+}
+add_filter('acf/load_value/name=course_intro_paragraph', 'cta_populate_course_intro', 10, 3);
+
+/**
+ * Auto-populate course_benefits from certificate/accreditation if empty
+ */
+function cta_populate_course_benefits($value, $post_id, $field) {
+    if ($value !== null && $value !== false && !empty($value)) {
+        return $value;
+    }
+    
+    if ($field['name'] === 'course_benefits') {
+        $benefits = [];
+        $certificate = get_field('course_certificate', $post_id);
+        $accreditation = get_field('course_accreditation', $post_id);
+        
+        if ($certificate) {
+            $benefits[] = ['benefit' => $certificate];
+        }
+        if ($accreditation && strtolower(trim($accreditation)) !== 'none') {
+            $benefits[] = ['benefit' => $accreditation . ' accredited'];
+        }
+        $benefits[] = ['benefit' => 'Digital certificate provided'];
+        $benefits[] = ['benefit' => 'Training records for CQC evidence'];
+        
+        return !empty($benefits) ? $benefits : $value;
+    }
+    
+    return $value;
+}
+add_filter('acf/load_value/name=course_benefits', 'cta_populate_course_benefits', 10, 3);
+
+/**
+ * Populate FAQs for all relevant pages on theme activation/update
+ * This ensures FAQs are saved to ACF fields, not just loaded dynamically
+ */
+function cta_populate_faqs_on_activation() {
+    if (!function_exists('get_field') || !function_exists('update_field')) {
+        return;
+    }
+    
+    // Get all pages that might need FAQs
+    $pages_to_check = get_posts([
+        'post_type' => 'page',
+        'posts_per_page' => -1,
+        'post_status' => ['publish', 'draft', 'private'],
+        'meta_query' => [
+            'relation' => 'OR',
+            [
+                'key' => '_wp_page_template',
+                'value' => 'page-templates/page-faqs.php',
+            ],
+            [
+                'key' => '_wp_page_template',
+                'value' => 'page-templates/page-cqc-hub.php',
+            ],
+            [
+                'key' => '_wp_page_template',
+                'value' => 'page-templates/page-group-training.php',
+            ],
+            [
+                'key' => '_wp_page_template',
+                'value' => 'page-templates/page-location.php',
+            ],
+        ],
+    ]);
+    
+    // Also check by slug for pages that might not have template set
+    $slug_pages = get_posts([
+        'post_type' => 'page',
+        'posts_per_page' => -1,
+        'post_status' => ['publish', 'draft', 'private'],
+        'post_name__in' => ['faqs', 'group-training', 'cqc-hub', 'cqc-compliance'],
+    ]);
+    
+    $all_pages = array_merge($pages_to_check, $slug_pages);
+    $all_pages = array_unique(array_column($all_pages, 'ID'));
+    
+    $faqs_populated = 0;
+    
+    foreach ($all_pages as $page_id) {
+        $page = get_post($page_id);
+        if (!$page) {
+            continue;
+        }
+        
+        // Check if FAQs field already has content
+        $existing_faqs = get_field('faqs', $page_id);
+        if (!empty($existing_faqs) && is_array($existing_faqs) && count($existing_faqs) > 0) {
+            // Already has FAQs, skip
+            continue;
+        }
+        
+        // Get default FAQs for this page
+        $default_faqs = cta_get_page_faqs($page_id);
+        
+        if (!empty($default_faqs) && is_array($default_faqs)) {
+            // Ensure all FAQs have required fields (category, question, answer)
+            $validated_faqs = [];
+            foreach ($default_faqs as $faq) {
+                if (isset($faq['category']) && isset($faq['question']) && isset($faq['answer'])) {
+                    // Ensure answer is a string (WYSIWYG fields accept plain text)
+                    $validated_faqs[] = [
+                        'category' => sanitize_text_field($faq['category']),
+                        'question' => sanitize_text_field($faq['question']),
+                        'answer' => wp_kses_post($faq['answer']), // Sanitize for WYSIWYG field
+                    ];
+                }
+            }
+            
+            if (!empty($validated_faqs)) {
+                // Save FAQs to ACF field (repeater with WYSIWYG sub-field)
+                update_field('faqs', $validated_faqs, $page_id);
+                $faqs_populated++;
+            }
+        }
+    }
+    
+    // Handle FAQs page specifically (has default FAQs in template)
+    $faqs_page = get_page_by_path('faqs');
+    if ($faqs_page) {
+        $existing_faqs = get_field('faqs', $faqs_page->ID);
+        if (empty($existing_faqs) || !is_array($existing_faqs) || count($existing_faqs) === 0) {
+            // Get default FAQs from template (42 FAQs)
+            $default_faqs = [
+                // General Training Questions (8 FAQs)
+                ['category' => 'general', 'question' => 'What training is mandatory for care workers?', 'answer' => 'Mandatory training is the essential foundation every care worker needs. At CTA, we ensure care workers complete: Health and Safety Awareness : Understanding workplace hazards and your responsibilities; Infection Prevention and Control : Current practices for safe, hygienic care; Fire Safety : Evacuating safely and protecting people in your care; Moving and Handling : Safe techniques to protect yourself and those you support; Safeguarding Adults : Recognising and reporting abuse or neglect; Learning Disability and Autism Awareness (Oliver McGowan training) : Required by law since July 2022; Safeguarding Children : Essential for roles involving contact with under:18s. For roles involving medication, Medication Competency is non:negotiable. All of these are CQC expectations, and gaps in mandatory training are red flags during inspection. CTA Reality Check: Just because you\'ve done the online module doesn\'t mean you\'re competent. Our hands:on approach ensures your team can actually do these things under pressure:not just pass a quiz.'],
+                ['category' => 'general', 'question' => 'How often does training need to be renewed?', 'answer' => 'The short answer: Every three years minimum for most mandatory training, unless the content is included in a recognised adult social care qualification within that three:year window. However, some topics need refreshing sooner if: new risks are introduced (new equipment, new care tasks); legislation changes (happens regularly in care); an incident or near:miss highlights gaps; individual competency assessments show decline. Medication training is more frequent:usually annual refreshers are expected because this is high:risk, high:compliance work. CTA Advice: Don\'t wait until certificates expire. Build a renewal calendar now and book courses 2:3 months in advance:our courses fill up fast, and compliance deadlines sneak up.'],
+                ['category' => 'general', 'question' => 'What\'s the difference between CPD and accredited training?', 'answer' => 'CPD (Continuing Professional Development) is ongoing learning:it can be formal or informal, and it\'s flexible. Reading a safeguarding update article, shadowing a colleague on medication rounds, attending a webinar:that\'s all CPD. Accredited training is formal, assessed learning leading to a recognised qualification or certificate. It\'s governed by awarding bodies like TQUK, NCFE CACHE, or HSE (for First Aid). Accredited courses have standards, quality checks, and carry more weight. Why it matters for you: CQC expects some accredited training, but they also recognise CPD. A good training strategy mixes both:accredited courses for core mandatory training, CPD for specialisms and ongoing development. CTA Mix: We deliver HSE:approved First Aid (accredited), CQC:compliant courses (accredited), and we support your CPD through coaching, on:site training tailored to your policies, and scenario:based learning.'],
+                ['category' => 'general', 'question' => 'Do online courses meet CQC requirements?', 'answer' => 'Short answer: It depends, but CQC is increasingly sceptical about online:only training. The CQC Inspection Framework values competence. For practical, high:stakes care skills (First Aid, medication administration, moving and handling), online modules don\'t build muscle memory or real:world confidence. Staff can\'t practice CPR on a dummy via Zoom. For theory:heavy topics (e.g., GDPR, understanding dementia), online can work as part of a blended approach. But even then, interaction and assessment matter. CQC Reality: Inspectors ask, "Can your staff actually do this if a crisis happened?" Online certificates often can\'t answer that confidently. CTA Stance: We\'re in:person, hands:on, and practical. No "click and certificate" shortcuts. Real people, real scenarios, real confidence.'],
+                ['category' => 'general', 'question' => 'What is the Care Certificate and who needs it?', 'answer' => 'The Care Certificate is a nationally recognised qualification covering 15 standards for adult social care workers. It\'s not legally mandatory, but it\'s a gold standard:hugely respected by employers, CQC, and Skills for Care. Who benefits most: New care workers entering the industry; Care assistants progressing toward team leader roles; Anyone without formal social care qualifications; Roles involving domiciliary or residential care. What it covers: Communication, person:centred care, duty of care, safeguarding, equality, health and safety, infection control, medication awareness, mental health, dementia, nutrition, hydration, privacy, and dignity. Reality: The Care Certificate isn\'t mandatory, but if a CQC inspector sees staff without it and without equivalent qualifications, they ask why. It\'s the industry\'s signal of competence. CTA Offer: We deliver Care Certificate:aligned training and can support your team\'s progression pathway.'],
+                ['category' => 'general', 'question' => 'How long are training certificates valid?', 'answer' => 'Most certificates are valid for three years, after which refresher training is required. This applies to: Safeguarding (all levels); Health and Safety; Fire Safety; Infection Control; Learning Disability and Autism Awareness. First Aid certificates (EFAW/Paediatric): Valid for three years. After that, you need a refresher course (not a full retraining). Medication and moving/handling: Often require annual refreshers or competency reassessment depending on your policy and the risks in your setting. Specialist certificates (e.g., dementia, end:of:life care) vary by awarding body:typically 3:5 years. CQC Inspection Tip: Inspectors will check your training evidence. Expired certificates are a compliance gap. Use our Training Renewal Tracker template to stay ahead.'],
+                ['category' => 'general', 'question' => 'What happens if training expires?', 'answer' => 'Short answer: Your staff are no longer deemed competent for those duties, and you\'re in breach of CQC regulation. Practically, this means: That team member can\'t be rostered for duties requiring that training; You have a compliance gap in your inspection file; If an incident occurs and training is expired, liability falls on the organisation; Insurance may not cover incidents involving untrained staff. It\'s not a small issue. CQC explicitly checks training records for expiry dates. If you have expired Fire Safety training but an evacuation was needed, that\'s a serious finding. CTA Prevention: We help you build a training calendar and send renewal reminders. Spaces fill up:booking 2:3 months early keeps compliance on track.'],
+                ['category' => 'general', 'question' => 'Can training be completed during probation?', 'answer' => 'Yes:and it should be. In fact, mandatory training is part of a proper induction. Best practice: Probation periods should include: Weeks 1:2: Emergency First Aid, Fire Safety, Health & Safety basics, safeguarding intro; Weeks 2:4: Moving and handling, infection control, role:specific training; Weeks 4:8: Deeper competency building, shadow rounds, assessments. CQC Expectation: Providers should evidence that staff are trained before they work unsupervised. Waiting until probation ends to train them is risky. CTA Approach: We offer fast:track, intensive courses that fit probation timelines. New starters can complete core training within their first two weeks, building confidence and competence from day one.'],
+                // Booking & Scheduling (8 FAQs)
+                ['category' => 'booking', 'question' => 'How do I book training for my team?', 'answer' => 'Three easy ways to book with CTA: 1. Eventbrite (Individual or small groups) : Visit our Eventbrite page, browse upcoming courses, select date, number of delegates, and book online. Payment and confirmation immediate. Perfect for quick bookings. 2. Direct Phone : Call 01622 587 343. Speak to our team about your specific needs. Discuss group discounts, dates, on:site options. Fast:track booking for employers. 3. Bespoke Group Training (Best for care providers) : Email enquiries@continuitytrainingacademy.co.uk. Discuss your team\'s training plan for the year. We tailor dates, venues, and course content. Often the most cost:effective for larger teams. Pro tip: Larger bookings (8+ delegates) get group discounts and flexible scheduling.'],
+                ['category' => 'booking', 'question' => 'What\'s your cancellation policy?', 'answer' => 'For individual bookings (Eventbrite): More than 14 days before the course: Full refund; 7:14 days before: 75% refund; Less than 7 days: No refund (we can sometimes offer place transfer). For group/bespoke training: Cancellations made 30+ days in advance: Full refund (minus admin); 14:30 days: 50% refund; Less than 14 days: No refund. Delegate swaps (much easier): Can\'t make the date? Swap your spot with another team member anytime, free of charge. Just let us know in advance. CTA Philosophy: We build relationships, not rigid policies. If something\'s genuinely difficult, talk to us:we\'ll usually find a solution.'],
+                ['category' => 'booking', 'question' => 'Can you deliver training at our location?', 'answer' => 'Absolutely:this is one of our strengths. We deliver on:site training at: Care homes; Supported living services; Domiciliary care provider offices; Health services; Nurseries and childcare. Why on:site training works: No travel time for your team; Training tailored to your policies and environment; Scenarios using your equipment, your settings, your processes; More cost:effective for large teams (often cheaper than public courses); Flexible scheduling (evenings/weekends available). What we need: Appropriate room (tables, chairs, privacy); Access to your equipment (mannequins for First Aid, moving equipment for M&H, etc.); 2:3 weeks\' notice for booking. CTA Mobile Reach: We serve Maidstone, Kent, and the wider South East. No travel is too far:we come to you.'],
+                ['category' => 'booking', 'question' => 'What are your group booking discounts?', 'answer' => 'The more you book, the more you save. We offer tiered discounts based on group size, with even better rates for annual contracts. If you commit to regular training (e.g., quarterly refreshers, new starter inductions), we offer bespoke packages with deeper discounts. Contact us to discuss your specific needs and we\'ll provide a tailored quote. CTA Reality: Bulk training is our sweet spot. You get better pricing, we build a long:term relationship, and your compliance is sorted.'],
+                ['category' => 'booking', 'question' => 'How far in advance should I book?', 'answer' => 'Ideal timeline: 8:12 weeks before you need training. Here\'s why: 8:10 weeks: Guarantees your preferred date and trainer; 4:8 weeks: Still good availability, but less flexibility; 2:4 weeks: Possible, but dates may be limited; Less than 2 weeks: Only book if you\'re flexible on dates. Seasonal peaks: January, April, September, and November are busy (new year resolutions, inspection prep, team changes). Book early if you target these months. Emergency training: Sometimes you need urgent refreshers (inspection notice, staff absence, incident). Call us:we\'ll do our best to squeeze you in, but can\'t promise preferred dates. CTA Tip: Plan your year\'s training calendar now. Block out dates in January, April, September, and November. This keeps compliance on track and can offer better rates through advance planning:contact us to discuss.'],
+                ['category' => 'booking', 'question' => 'Do you offer weekend or evening training?', 'answer' => 'Yes:we\'re flexible. Evening courses (after 16:30): Available by request for groups of 8+; Perfect for teams with shift patterns; Usually 1:2 nights depending on the course. Weekend courses: Saturday courses available (9 AM : 4 PM); Ideal for care homes with limited weekday staff availability; Popular for roles requiring EFAW/Paeds before employment starts. Book ahead: Weekend and evening slots fill quickly. Give us 4:6 weeks\' notice for these. Not every course suits evening/weekend: Some hands:on courses (e.g., advanced moving and handling) work better during regular hours. We\'ll advise what\'s possible when you call.'],
+                ['category' => 'booking', 'question' => 'What happens if staff can\'t attend on the day?', 'answer' => 'If a delegate can\'t make it: 1. More than 7 days before: Free transfer to another date (no charge, no refund); 2. Less than 7 days: Same policy applies (we operate on goodwill, not penalties); 3. Last:minute emergency: Contact us ASAP. We\'ll try to reschedule or find a replacement from your team. Why we\'re flexible: We know care is unpredictable. Unplanned absences happen. Swapping delegates is often the easiest solution. What we ask: Just give us notice so we can update the register and ensure the right people are trained.'],
+                ['category' => 'booking', 'question' => 'Can I change training dates after booking?', 'answer' => 'Yes, with flexibility depending on timing: 8+ weeks before: Free date change, no questions; 4:8 weeks before: Free change if we have availability; 2:4 weeks before: Possible, but limited slots:ask first; Less than 2 weeks: Difficult, but we\'ll try. Delegate swaps: Super easy. If Person A can\'t make 15 March but Person B can, just tell us. No charge. Group courses: If you\'ve booked a bespoke on:site course and need to reschedule, we\'ll work with your calendar. Usually 2:3 weeks\' notice keeps things smooth. Bottom line: We work around your needs. Life in care is busy:we get it.'],
+                // Certification & Accreditation (8 FAQs)
+                ['category' => 'certification', 'question' => 'Are your courses CQC:compliant?', 'answer' => 'Yes:100%. Every course we deliver aligns with: CQC Regulation 18 (Training requirements); CQC Inspection Framework (Key Lines of Enquiry for training and competence); Skills for Care standards (statutory and mandatory training guide); HSE requirements (for First Aid and Health & Safety courses). What this means practically: Our content covers what CQC inspectors expect to see; We provide evidence (certificates, attendance records, competency sign:offs); Our courses bridge the gap between "completed training" and "can actually do the job"; If inspectors ask, "Can you evidence competence?":we help you answer confidently. CTA Commitment: We don\'t just deliver courses. We help you build a training portfolio that stands up to CQC scrutiny.'],
+                ['category' => 'certification', 'question' => 'What accreditations do you have?', 'answer' => 'CTA holds: Advantage Accreditation : Centre of the Year 2021; HSE Approval : For Emergency First Aid at Work (Level 3); CPD Accreditation : All our courses are CPD:registered; Skills for Care alignment : Our content matches their statutory and mandatory training standards; Ofsted compliance : For childcare:related courses (Paediatric First Aid). Quality Assurance: Trainers are industry:experienced (not just certified); Annual quality reviews and updates; Feedback:driven course design; Scenario:based, practical assessment. CTA Transparency: We\'re happy to share accreditation documents. Ask when you enquire.'],
+                ['category' => 'certification', 'question' => 'Who accredits your certificates?', 'answer' => 'Depends on the course: First Aid (EFAW/Paediatric): HSE:approved via our accreditation body; Medication Competency: CQC:compliant, Skills for Care:aligned assessment; Safeguarding, Moving & Handling, etc.: CPD:accredited and Skills for Care:referenced; Care Certificate: Aligned with Skills for Care standards (if relevant to your pathway). What this means: Your certificates carry weight nationally. Employers, CQC, and other providers recognise them. Not a franchise course list? No. We deliver tailored, CQC:compliant training. Certificates are evidence of your competence, assessed by our expert trainers in real:world scenarios.'],
+                ['category' => 'certification', 'question' => 'Are your certificates accepted nationally?', 'answer' => 'Yes. Our certificates are: Recognised by CQC; Accepted by employers across the UK; Valid for roles in care homes, domiciliary care, nursing, supported living, and specialist services; Transferable if staff move between employers. The only exception: Some roles (e.g., registered nurse, specific clinical roles) may require additional qualifications or registration. We\'ll advise on this during booking. Pro tip: Your training records (ours + any others) build a portfolio showing ongoing competence development. This is gold for CQC and for staff morale.'],
+                ['category' => 'certification', 'question' => 'Do you provide digital certificates?', 'answer' => 'Yes:instant digital delivery after course completion. After your course ends: Digital certificate sent to your email same day (or next business day); PDF format:easy to print, share, or store; Includes attendee name, course name, date, trainer name, and validity period; Registrar\'s signature and CTA accreditation details. Physical copies: Available on request:contact us for details. Storing certificates: We recommend: Digital backup (secure shared drive); Staff personnel files; Training management system (if you use one). CQC Inspection: Have these ready. Inspectors will ask to see evidence. Digital + physical copies = fully prepared.'],
+                ['category' => 'certification', 'question' => 'How quickly do we receive certificates?', 'answer' => 'Typically within 24 hours of course completion. For courses ending in the afternoon, digital certificates are sent by end of business. For courses ending mid:day, you usually have them by email within 2 hours. Urgent timescales? If you need evidence before a specific date (e.g., CQC inspection notice), let us know when booking. We can often expedite. No waiting games: This is one advantage of in:person training:you know immediately if staff are competent, and you get proof fast.'],
+                ['category' => 'certification', 'question' => 'What if a certificate is lost?', 'answer' => 'No problem:we hold records. Email us with attendee name and course date; We\'ll provide a replacement digital certificate (free); Physical copy available if needed:contact us for details; Process usually takes 2:3 working days. Backup strategy: Keep digital copies of all certificates in a secure shared folder (Google Drive, OneDrive, etc.). This prevents loss and makes CQC inspections stress:free.'],
+                ['category' => 'certification', 'question' => 'Do your courses meet Skills for Care standards?', 'answer' => 'Completely. All our content aligns with: Skills for Care Statutory and Mandatory Training Guide (August 2024 update); Care Certificate standards (15 standards for adult social care workers); Oliver McGowan Training on Learning Disability and Autism; Leadership and management frameworks (for manager:level courses). Why this matters: If you\'re applying for Workforce Development Fund (LDSS) grants, our courses are eligible; Staff trained with us have a recognised, national qualification; CQC sees Skills for Care alignment as best practice. CTA + Skills for Care: We stay updated on changes and refresh our content annually. You\'re always current.'],
+                // Course-Specific Questions (6 FAQs)
+                ['category' => 'course-specific', 'question' => 'What\'s included in the Care Certificate?', 'answer' => 'The Care Certificate covers 15 standards: 1. Understanding your role : Knowing your responsibilities and accountabilities; 2. Your health, safety and wellbeing : Protecting yourself while at work; 3. Duty of care : Understanding safeguarding and your legal obligations; 4. Equality and inclusion : Treating people fairly and respecting diversity; 5. Working in a person:centred way : Putting the individual at the centre; 6. Communication : Listening, speaking, and understanding diverse needs; 7. Privacy and dignity : Respecting confidentiality and personal space; 8. Fluids and nutrition : Supporting healthy eating and drinking; 9. Awareness of mental health, dementia and learning disabilities; 10. Safeguarding adults; 11. Safeguarding children; 12. Basic life support and First Aid; 13. Health and safety in care settings; 14. Handling information and keeping it confidential; 15. Infection prevention and control. Format: Mix of taught sessions, practice scenarios, and practical assessment. Time: Usually 8:10 days (depending on delivery method). CTA Approach: We deliver Care Certificate content in real:world scenarios using your setting. Staff leave not just "trained" but confident.'],
+                ['category' => 'course-specific', 'question' => 'Which first aid course do childcare staff need?', 'answer' => 'Childcare staff require: Emergency Paediatric First Aid (Level 3), OFSTED:approved. This covers: CPR on infants and children; Choking (different techniques for kids); Common paediatric emergencies (febrile convulsions, allergic reactions, etc.); Recovery position for children; Assessment and reassurance in a crisis. Why separate from adult EFAW? Anatomy differs (tiny airways, different compression depths), and early childhood scenarios are unique. Both courses matter: Some roles (e.g., managers in nurseries) benefit from both Adult EFAW and Paediatric EFAW:for comprehensive coverage. CTA Delivery: One:day, practical course. Small groups, lots of mannequin practice. Staff leave confident they could handle a real paediatric emergency. Regulatory note: OFSTED expects evidence of Paediatric First Aid. It\'s not optional in childcare.'],
+                ['category' => 'course-specific', 'question' => 'What\'s the difference between medication awareness and competency?', 'answer' => 'Medication Awareness: Understand what medications are, why people take them, side effects; Know how to store and handle medications safely; Understand why accurate records matter; Can explain but not administer. Medication Competency: Can administer medications correctly (oral, topical, injected:depending on role); Understands the "5 Rights" (right person, drug, dose, route, time); Can assess when to withhold medication; Assessed as competent by a trainer/assessor. When Awareness enough? Roles where staff handle meds but don\'t administer (e.g., care assistants, domiciliary support). When Competency needed? Direct administration:care workers giving tablets, nurses giving injections, anyone signing off medication administration. CQC Reality: Inspectors ask, "Who can administer medications?" Your answer must be specific and evidenced. Awareness ≠ Competency. CTA Approach: We assess actual competence. No guessing on the day:we verify you can do it safely.'],
+                ['category' => 'course-specific', 'question' => 'Do I need moving & handling theory AND practical?', 'answer' => 'Yes:both are essential. They\'re not separate. Theory (classroom): Understanding biomechanics, spine health, loads; Legislation (Health & Safety at Work Act, MHOR); Risk assessment approach; Communication and consent. Practical (hands:on): Transferring using equipment (slide sheets, hoists, turntables); Manual handling techniques (where absolutely necessary); Adaptive methods for different conditions (stroke, arthritis, dementia); Real equipment your service uses. Why both? You can\'t safely move someone without understanding why you\'re doing it that way. Theory informs practice. Duration: Usually 1:2 days depending on role complexity. CTA Difference: We bring your actual equipment. Training happens in your care environment (if on:site), not a sterile classroom.'],
+                ['category' => 'course-specific', 'question' => 'Is safeguarding training different for managers?', 'answer' => 'Yes:significantly. Safeguarding Level 1 (for all care workers): Recognising signs of abuse/neglect; Knowing who to report to; Understanding your role; Basic case scenarios. Safeguarding Level 2 (for supervisory/team roles): More detailed abuse types (including institutional, self:neglect); Recording and evidence gathering; Supporting victims and witnesses; Creating a safeguarding culture; Policy and procedure implementation. Safeguarding Level 3 (for managers/registered managers): Safeguarding strategy and policy development; Managing allegations; Multi:agency working (police, social care investigations); Creating systems and oversight; Legal responsibilities and accountability. CQC Inspection: Inspectors specifically check that managers have Level 2 or 3 evidence. If you don\'t, that\'s a compliance gap. CTA Delivery: Role:specific, scenario:based. Managers leave with confidence in handling real safeguarding issues.'],
+                ['category' => 'course-specific', 'question' => 'What level of dementia training do we need?', 'answer' => 'Depends on your role and service type: Level 1 (Awareness:for all staff): What dementia is, types (Alzheimer\'s, vascular, etc.); Progression and symptoms; Communicating with someone with dementia; Reducing triggers for distress; Basic person:centred approaches. Who needs it? Everyone in care. Level 2 (Principles:for care and supervisory roles): Deeper understanding of dementia care; Understanding behaviour as communication; Environmental design for dementia support; Working with families; Managing complex behaviours. Who needs it? Care workers, team leaders, activity coordinators. Level 3 (Advanced:for managers, specialists): Dementia care strategy; Staff training and supervision; Complex presentations (advanced dementia, co:morbidities); End:of:life care in dementia. Who needs it? Registered managers, clinical leads. CQC Expectation: All staff should have at least Level 1. If your service specialises in dementia, Level 2+ is standard. CTA Reality: Dementia care isn\'t a checkbox. It\'s a way of thinking. We train for genuine understanding, not just certificate collection.'],
+                // Payment & Funding (6 FAQs)
+                ['category' => 'payment', 'question' => 'What payment methods do you accept?', 'answer' => 'We accept: Debit and credit cards (Visa, Mastercard, American Express); Bank transfer (BACS); Cheque (with advance notice). Eventbrite bookings: Payment taken online (card only) at booking. Large group/invoice:based bookings: Bank transfer often preferred. We\'ll invoice after confirming course details. No payment issues: CTA is transparent on pricing. No hidden fees, no surprise charges. Payment timing: Invoiced courses typically due within 30 days. Eventbrite bookings are immediate.'],
+                ['category' => 'payment', 'question' => 'Do you offer payment plans?', 'answer' => 'For larger group training commitments, yes. If you\'re investing in an annual training plan (e.g., quarterly mandatory updates for a care home), we can discuss: Staged payments across the year; Deposit + final payment structure; Monthly training packages with set costs. Small individual courses: Fixed pricing, payment upfront (Eventbrite) or via invoice. How to arrange: Email enquiries@continuitytrainingacademy.co.uk with your training needs. We\'ll discuss options. CTA Philosophy: We partner with you for the long term. If payment structure is the barrier, let\'s solve it.'],
+                ['category' => 'payment', 'question' => 'Can we use Workforce Development Fund?', 'answer' => 'Short answer: Yes, but it\'s now called LDSS (Learning and Development Support Scheme). What changed: The Workforce Development Fund (WDF) was replaced by the Adult Social Care Learning and Development Support Scheme (LDSS) from April 2025. How it works: 1. Check the eligible course list on gov.uk (our courses are listed); 2. Book and pay for training upfront; 3. Claim reimbursement from LDSS (up to the stated maximum per course). Eligible courses include: The Oliver McGowan Training (Tier 1 & 2); Leadership and management programmes; Specialist qualifications (dementia, autism, end:of:life care); Some diploma:level adult care qualifications. What\'s NOT covered: General awareness training, First Aid, moving & handling (unless part of a larger qualification). CTA Support: When you book, tell us you\'re using LDSS. We\'ll provide invoices and documentation to support your claim. Important: Check the eligible course list and reimbursement rates annually. LDSS changes quarterly.'],
+                ['category' => 'payment', 'question' => 'Do you provide training invoices for our records?', 'answer' => 'Absolutely. We provide: Itemised invoices (course name, date, attendee list, cost); Attendance certificates for all participants; Training records showing competency sign:off; Digital copies of all documents. Invoice timing: Sent within 2 working days of course completion. For LDSS claims: We provide all documentation needed to submit your reimbursement claim. Compliance ready: Everything is formatted for audit and CQC inspection.'],
+                ['category' => 'payment', 'question' => 'Are there discounts for multiple courses?', 'answer' => 'Yes:our group discount structure includes volume savings based on the number of delegates and courses booked. Multiple courses over a year? Even better. Annual packages offer significant savings compared to ad:hoc bookings. Contact us with your annual training plan and we\'ll provide a bespoke quote tailored to your needs. How to arrange: Email enquiries@continuitytrainingacademy.co.uk with your annual training plan. We\'ll quote a bespoke package.'],
+                ['category' => 'payment', 'question' => 'Can we pay per delegate or per course?', 'answer' => 'Both options available, depending on structure: Per delegate (most common for groups): You pay for each person attending; Useful if team numbers fluctuate. Per course (block booking): You book a course for a specific date; One price, regardless of final headcount (within limits); Useful for annual planning. Flexible approach: If some staff might not attend, per:delegate pricing reduces financial risk. If you\'re certain of headcount, per:course is often cheaper. When booking: We\'ll ask about your preference and recommend the most cost:effective option. Contact us to discuss pricing for your specific needs.'],
+                // Group Training & Employers (6 FAQs)
+                ['category' => 'group-training', 'question' => 'What\'s the minimum group size for on:site training?', 'answer' => 'Minimum: 6 people for on:site courses (to make travel worthwhile for our trainer). Smaller groups (1:5 people): Can usually attend a public course instead, often at similar or better cost. Larger groups (8:25 people): Often more cost:effective on:site with group discounts. Contact us to discuss pricing for your group size and we\'ll recommend the most cost:effective option. Talk to us: If you have 4:5 people, email enquiries@continuitytrainingacademy.co.uk. We might combine them with another organisation\'s group or suggest public course dates.'],
+                ['category' => 'group-training', 'question' => 'Can you tailor training to our policies?', 'answer' => 'Completely:that\'s what we do. When we deliver on:site training, we: Review your policies and procedures beforehand; Tailor scenarios to your care environment; Use your equipment (hoists, moving aids, medication charts); Address your specific risks and challenges; Train your staff in your context, not generic care theory. Examples: A domiciliary care agency: We focus on home safety, lone working, medication in non:clinical settings; A care home: We include your facilities, your resident needs, your escalation procedures; A nursing home: We address clinical protocols, medication administration, delegation. CQC Reality: Inspectors often ask, "Is your training tailored to your service?" Bespoke training shows yes. CTA Commitment: No off:the:shelf courses. Your training, your setting, your standards.'],
+                ['category' => 'group-training', 'question' => 'Do you provide training matrices for your staff?', 'answer' => 'Yes:in multiple formats. What we provide: Role:based training matrices (care worker, team leader, manager, clinical staff, specialists); Mapped against CQC Key Lines of Enquiry; Showing mandatory, recommended, and specialist training; Frequency and refresher timelines; Eligibility criteria for each role. Formats: Excel (editable:you can adapt to your specific structure); PDF (for sharing with staff, managers); Printable or digital storage. How it works: You use the matrix to plan training for each team member, identify gaps, and schedule refreshers. It becomes your annual training plan. CTA Support: We help populate the matrix during your first year, then you own it.'],
+                ['category' => 'group-training', 'question' => 'Can you track training for multiple sites?', 'answer' => 'For group training contracts, yes. If you operate multiple care homes, domiciliary services, or nursing facilities, we: Maintain separate attendance and competency records per site; Provide aggregate reports showing compliance across all locations; Help you identify organisation:wide training gaps; Support your quality assurance and CQC preparation. How it works: Provide us with a list of sites and roles; We schedule training across all locations; We send site:specific and consolidated reports; You have a complete training audit trail. Size: Works well for organisations with 2:5 locations. Larger networks? Discuss your reporting needs when you call. We may recommend a training management system.'],
+                ['category' => 'group-training', 'question' => 'Do you offer annual training contracts?', 'answer' => 'Yes:our preferred model for care providers. An annual training contract typically includes: Quarterly mandatory refreshers for all staff; New starter induction training; Role:specific development (team leader, manager, clinical); Specialist courses (dementia, end:of:life, safeguarding advanced); On:site delivery where possible; Priority booking and reserved dates; Discounted rates compared to ad:hoc bookings; Annual training calendar and planning support. Cost varies depending on staff size and course mix:contact us for a tailored quote. Benefit: Compliance is sorted. You\'re not scrambling to book last:minute courses or facing expired certificates. How to arrange: 1. Email enquiries@continuitytrainingacademy.co.uk; 2. Describe your team size, roles, and compliance needs; 3. We\'ll build a bespoke annual plan and quote. CTA Reality: This is where we excel:long:term partnerships, strategic training planning, embedded quality.'],
+                ['category' => 'group-training', 'question' => 'Can trainers visit multiple locations?', 'answer' => 'Absolutely:we\'re mobile. If you operate multiple sites across Kent and the South East: Our trainer can visit Site A, Site B, Site C on consecutive days; Cost:effective (one trainer deployment vs. three separate bookings); Consistent messaging across locations; Easier compliance tracking. What we need: 2:3 weeks\' notice for a multi:site tour; Clear list of dates, locations, and participant numbers; Appropriate training space at each location; Same course (easier to coordinate) or closely related courses. Example: A domiciliary care provider with 3 office locations books Emergency First Aid at all three on Mon/Tues/Weds. One trainer, one week, significant savings. Logistics: We handle travel. You just confirm locations and dates. CTA Advantage: Mobile, flexible, organised. Your training fits your geography, not the other way around.'],
+            ];
+            
+            // Validate and sanitize FAQs before saving
+            $validated_faqs = [];
+            foreach ($default_faqs as $faq) {
+                if (isset($faq['category']) && isset($faq['question']) && isset($faq['answer'])) {
+                    $validated_faqs[] = [
+                        'category' => sanitize_text_field($faq['category']),
+                        'question' => sanitize_text_field($faq['question']),
+                        'answer' => wp_kses_post($faq['answer']), // Sanitize for WYSIWYG field
+                    ];
+                }
+            }
+            
+            if (!empty($validated_faqs)) {
+                update_field('faqs', $validated_faqs, $faqs_page->ID);
+                $faqs_populated++;
+            }
+        }
+    }
+    
+    // Handle CQC Hub page specifically
+    $cqc_page = get_page_by_path('cqc-hub');
+    if (!$cqc_page) {
+        $cqc_page = get_page_by_path('cqc-compliance');
+    }
+    if ($cqc_page) {
+        $existing_faqs = get_field('faqs', $cqc_page->ID);
+        if (empty($existing_faqs) || !is_array($existing_faqs) || count($existing_faqs) === 0) {
+            $default_faqs = [
+                [
+                    'category' => 'general',
+                    'question' => 'What training do care homes need for CQC compliance?',
+                    'answer' => 'Care homes need mandatory training including: Safeguarding, Health & Safety, Fire Safety, Manual Handling, First Aid, Food Hygiene, Infection Control, and Medication Management. All staff must complete the Care Certificate within 12 weeks of starting.',
+                ],
+                [
+                    'category' => 'general',
+                    'question' => 'How do I prepare staff for a CQC inspection?',
+                    'answer' => 'Ensure all staff have completed mandatory training, training records are up to date, policies and procedures are current, and staff understand their roles. Our CQC Inspection Preparation course covers everything you need to know.',
+                ],
+                [
+                    'category' => 'training',
+                    'question' => 'How often does CQC training need to be refreshed?',
+                    'answer' => 'Most CQC mandatory training should be refreshed annually. First Aid certificates typically last 3 years. Safeguarding training should be refreshed every 2-3 years. Check specific course requirements for exact refresh periods.',
+                ],
+                [
+                    'category' => 'training',
+                    'question' => 'Is online training accepted by CQC?',
+                    'answer' => 'CQC accepts a mix of online and face-to-face training, but some topics (like practical first aid) require hands-on training. Our face-to-face courses ensure all practical elements are covered to CQC standards.',
+                ],
+            ];
+            
+            // Validate and sanitize FAQs before saving
+            $validated_faqs = [];
+            foreach ($default_faqs as $faq) {
+                if (isset($faq['category']) && isset($faq['question']) && isset($faq['answer'])) {
+                    $validated_faqs[] = [
+                        'category' => sanitize_text_field($faq['category']),
+                        'question' => sanitize_text_field($faq['question']),
+                        'answer' => wp_kses_post($faq['answer']), // Sanitize for WYSIWYG field
+                    ];
+                }
+            }
+            
+            if (!empty($validated_faqs)) {
+                update_field('faqs', $validated_faqs, $cqc_page->ID);
+                $faqs_populated++;
+            }
+        }
+    }
+    
+    // Store count for admin notice
+    if ($faqs_populated > 0) {
+        update_option('cta_faqs_populated_count', $faqs_populated);
+    }
+}
+add_action('after_switch_theme', 'cta_populate_faqs_on_activation', 25);
+
+/**
  * Helper function to safely get ACF field with fallback
  */
 function cta_get_field($field_name, $post_id = false, $default = '') {
@@ -2747,8 +3412,12 @@ function cta_add_eventbrite_acf_fields() {
                         'key' => 'field_eventbrite_faq_answer',
                         'label' => 'Answer',
                         'name' => 'answer',
-                        'type' => 'textarea',
-                        'rows' => 3,
+                        'type' => 'wysiwyg',
+                        'instructions' => 'Write a clear, concise answer for Eventbrite listing.',
+                        'tabs' => 'visual',
+                        'toolbar' => 'basic',
+                        'media_upload' => 0,
+                        'delay' => 0,
                         'required' => 1,
                     ],
                 ],

@@ -7,20 +7,6 @@
 
 get_header();
 
-// SEO Meta Tags
-$meta_title = 'Group Training for Care Teams | On-Site & Centre-Based Courses';
-$meta_description = 'Cost-effective group training for care teams. On-site delivery across the UK or at our Maidstone centre. Flexible scheduling, instant certificates, group rates.';
-?>
-<meta name="description" content="<?php echo esc_attr($meta_description); ?>">
-<meta property="og:title" content="<?php echo esc_attr($meta_title); ?>">
-<meta property="og:description" content="<?php echo esc_attr($meta_description); ?>">
-<meta property="og:type" content="website">
-<meta property="og:url" content="<?php echo esc_url(get_permalink()); ?>">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<?php echo esc_attr($meta_title); ?>">
-<meta name="twitter:description" content="<?php echo esc_attr($meta_description); ?>">
-<?php
-
 $contact = cta_get_contact_info();
 
 // ACF fields
@@ -444,7 +430,7 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
                 <span class="accordion-icon" aria-hidden="true"></span>
               </button>
               <div id="faq-answer-<?php echo $index + 1; ?>" class="accordion-content" role="region" aria-hidden="<?php echo $is_first ? 'false' : 'true'; ?>">
-                <p><?php echo esc_html($faq['answer']); ?></p>
+                <?php echo wpautop(wp_kses_post($faq['answer'])); ?>
               </div>
             </div>
             <?php endforeach; ?>

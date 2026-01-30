@@ -196,7 +196,10 @@ function cta_enqueue_assets() {
         true
     );
 
-    // Enqueue Google Maps and location scripts on location pages
+    // SECURITY: Google Maps API key removed from frontend
+    // We now use iframe embeds which don't require an API key
+    // The API key setting is kept for potential future server-side use only
+    // See: https://developers.google.com/maps/documentation/embed/get-started
     if (is_page_template('page-templates/locations/locations-index.php') || 
         is_page_template('page-templates/locations/location-maidstone.php') ||
         is_page_template('page-templates/locations/location-medway.php') ||
@@ -204,25 +207,14 @@ function cta_enqueue_assets() {
         is_page_template('page-templates/locations/location-ashford.php') ||
         is_page_template('page-templates/locations/location-tunbridge-wells.php')) {
         
-        $google_maps_key = get_option('cta_google_maps_api_key', '');
-        
-        if (!empty($google_maps_key)) {
-            wp_enqueue_script(
-                'google-maps',
-                'https://maps.googleapis.com/maps/api/js?key=' . esc_attr($google_maps_key),
-                [],
-                null,
-                true
-            );
-            
-            wp_enqueue_script(
-                'cta-location-maps',
-                CTA_THEME_URI . '/assets/js/locations/location-maps.js',
-                ['google-maps'],
-                CTA_THEME_VERSION,
-                true
-            );
-        }
+        // Enqueue location maps script (uses iframe embeds, no API key needed)
+        wp_enqueue_script(
+            'cta-location-maps',
+            CTA_THEME_URI . '/assets/js/locations/location-maps.js',
+            [],
+            CTA_THEME_VERSION,
+            true
+        );
     }
 
     $site_wide_discount = cta_get_site_wide_discount();

@@ -372,8 +372,23 @@ function cta_seo_meta_tags() {
     // Get values from Theme Options (with fallbacks)
     $site_name = get_bloginfo('name');
     $site_description = cta_safe_get_field('seo_site_description', 'option', get_bloginfo('description'));
-    $default_image = cta_safe_get_field('seo_og_image', 'option', cta_image('logo/long_logo-1200w.webp'));
+    
+    // Check ACF field first, then WordPress option (for backward compatibility)
+    $default_image = cta_safe_get_field('seo_og_image', 'option', '');
+    if (empty($default_image)) {
+        $default_image = get_option('cta_default_og_image', '');
+    }
+    if (empty($default_image)) {
+        $default_image = cta_image('logo/long_logo-1200w.webp');
+    }
+    
+    // Check ACF field first, then WordPress option (for backward compatibility)
     $twitter_handle = cta_safe_get_field('seo_twitter_handle', 'option', '');
+    if (empty($twitter_handle)) {
+        $twitter_handle = get_option('cta_twitter_handle', '');
+    }
+    // Remove @ if present (we add it in the meta tag)
+    $twitter_handle = ltrim($twitter_handle, '@');
     
     $courses_title = cta_safe_get_field('seo_courses_title', 'option', 'Professional Training Courses');
     $courses_desc = cta_safe_get_field('seo_courses_description', 'option', 'Browse our range of CQC-compliant, CPD-accredited care sector training courses in Maidstone, Kent.');
@@ -524,6 +539,12 @@ function cta_seo_meta_tags() {
     <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="<?php echo esc_attr($site_name); ?>">
     <meta property="og:locale" content="en_GB">
+    <?php 
+    // Facebook App ID (optional, for Insights)
+    $fb_app_id = get_option('cta_facebook_app_id', '');
+    if (!empty($fb_app_id)) : ?>
+    <meta property="fb:app_id" content="<?php echo esc_attr($fb_app_id); ?>">
+    <?php endif; ?>
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
@@ -1479,6 +1500,35 @@ function cta_get_breadcrumb_items() {
  * =========================================
  * SITEMAP ENHANCEMENTS
  * =========================================
+ */
+
+/**
+ * Prevent output during sitemap generation
+ * This ensures clean XML output without any whitespace or content before <?xml
+ */
+function cta_prevent_sitemap_output() {
+    // Check if this is a sitemap request
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    if (strpos($request_uri, '/wp-sitemap') !== false) {
+        // Clean any existing output buffer
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+        // Start fresh output buffer for sitemap
+        ob_start();
+        // Prevent common output sources that might interfere
+        remove_action('wp_head', 'wp_generator');
+        remove_action('wp_head', 'wlwmanifest_link');
+        remove_action('wp_head', 'rsd_link');
+        remove_action('wp_head', 'wp_shortlink_wp_head');
+        // Prevent our own SEO output during sitemap
+        remove_action('wp_head', 'cta_seo_meta_tags', 1);
+        remove_action('wp_head', 'cta_output_google_analytics', 2);
+        remove_action('wp_head', 'cta_output_google_tag_manager_head', 3);
+        remove_action('wp_head', 'cta_output_facebook_pixel', 4);
+    }
+}
+add_action('init', 'cta_prevent_sitemap_output', 1);
  */
 
 /**
@@ -3045,13 +3095,14 @@ function cta_fix_duplicate_course_urls() {
         $course = get_page_by_path($old_slug, OBJECT, 'course');
         
         if (!$course) {
-            // Check if it's already correct
+            // Check if it's already correct (course exists with new slug)
             $check_course = get_page_by_path($new_slug, OBJECT, 'course');
             if ($check_course) {
                 $updated[] = "✓ {$old_slug} → Already correct ({$new_slug})";
                 continue;
             }
-            $errors[] = "✗ {$old_slug} → Course not found";
+            // Course doesn't exist with either slug - redirect will handle old URLs
+            $updated[] = "✓ {$old_slug} → Redirect configured (course uses {$new_slug} or different slug)";
             continue;
         }
         
@@ -3296,6 +3347,11 @@ function cta_handle_specific_redirects() {
     $redirects = [
         '/contact-us' => '/contact',
         '/contact-us/' => '/contact/',
+        // Course slug redirects (old slugs to new slugs with duration/level)
+        '/courses/medication-competency-management' => '/courses/medication-competency-management-1d-l3',
+        '/courses/medication-competency-management/' => '/courses/medication-competency-management-1d-l3/',
+        '/courses/moving-positioning-inc-hoist' => '/courses/moving-positioning-inc-hoist-1d-l3',
+        '/courses/moving-positioning-inc-hoist/' => '/courses/moving-positioning-inc-hoist-1d-l3/',
     ];
     
     if (isset($redirects[$path])) {

@@ -7,20 +7,6 @@
 
 get_header();
 
-// SEO Meta Tags
-$meta_title = 'Care Training Guides & Resources | Planning Tools for Providers';
-$meta_description = 'Practical training guides for care providers. Group training planning, funding options, compliance checklists, and workforce development resources.';
-?>
-<meta name="description" content="<?php echo esc_attr($meta_description); ?>">
-<meta property="og:title" content="<?php echo esc_attr($meta_title); ?>">
-<meta property="og:description" content="<?php echo esc_attr($meta_description); ?>">
-<meta property="og:type" content="website">
-<meta property="og:url" content="<?php echo esc_url(get_permalink()); ?>">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<?php echo esc_attr($meta_title); ?>">
-<meta name="twitter:description" content="<?php echo esc_attr($meta_description); ?>">
-<?php
-
 $contact = cta_get_contact_info();
 
 // ACF fields
@@ -619,12 +605,12 @@ if (empty($hero_cta_url)) {
           </div>
         </div>
         
-        <div class="group-faq-item">
-          <button type="button" class="group-faq-question" aria-expanded="false" aria-controls="training-pathway-clinical-staff">
+        <div class="accordion" data-accordion-group="training-pathways">
+          <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="training-pathway-clinical-staff">
             <span>Nursing & Clinical Staff</span>
-            <span class="group-faq-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true"></span>
           </button>
-          <div id="training-pathway-clinical-staff" class="group-faq-answer" role="region" aria-hidden="true">
+          <div id="training-pathway-clinical-staff" class="accordion-content" role="region" aria-hidden="true">
             <p>All core care training plus clinical skills:</p>
             <ul>
               <li>Clinical Skills Updates</li>
@@ -640,12 +626,12 @@ if (empty($hero_cta_url)) {
           </div>
         </div>
         
-        <div class="group-faq-item">
-          <button type="button" class="group-faq-question" aria-expanded="false" aria-controls="training-pathway-specialist-roles">
+        <div class="accordion" data-accordion-group="training-pathways">
+          <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="training-pathway-specialist-roles">
             <span>Specialist Roles (LD, Complex Care, etc.)</span>
-            <span class="group-faq-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true"></span>
           </button>
-          <div id="training-pathway-specialist-roles" class="group-faq-answer" role="region" aria-hidden="true">
+          <div id="training-pathway-specialist-roles" class="accordion-content" role="region" aria-hidden="true">
             <p>Additional specialist training requirements:</p>
             <ul>
               <li>Learning Disabilities Awareness</li>

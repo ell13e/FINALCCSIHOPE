@@ -77,6 +77,23 @@ function cta_import_data_on_activation() {
             $pages_created = cta_create_static_pages();
         }
         
+        // Parse and store reviews
+        $reviews_parsed = 0;
+        if (function_exists('cta_parse_and_store_reviews')) {
+            $reviews_parsed = cta_parse_and_store_reviews();
+        }
+        
+        // Populate new course fields for existing courses
+        $courses_populated = 0;
+        if (function_exists('cta_populate_course_expanded_fields')) {
+            $courses_populated = cta_populate_course_expanded_fields();
+        }
+        
+        // Populate Safeguarding course with SEO-optimized content
+        if (function_exists('cta_populate_safeguarding_course_content')) {
+            cta_populate_safeguarding_course_content();
+        }
+        
         // Set up default WordPress settings
         if (function_exists('cta_configure_wordpress_settings')) {
             cta_configure_wordpress_settings();
@@ -90,6 +107,8 @@ function cta_import_data_on_activation() {
         update_option('cta_news_imported_count', $news_imported);
         update_option('cta_team_imported_count', $team_imported);
         update_option('cta_pages_created_count', $pages_created);
+        update_option('cta_reviews_parsed_count', $reviews_parsed);
+        update_option('cta_courses_expanded_populated_count', $courses_populated);
         
         // Add admin notice
         set_transient('cta_import_complete', [
@@ -222,6 +241,31 @@ function cta_import_courses() {
             // Set Legacy ID and Course Code for migration reference
             if (!empty($course['id'])) {
                 update_field('course_legacy_id', intval($course['id']), $post_id);
+            }
+            
+            // Populate expanded content fields if empty
+            $intro_paragraph = get_field('course_intro_paragraph', $post_id);
+            if (empty($intro_paragraph) && !empty($course['description'])) {
+                // Take first 120 words from description
+                $words = explode(' ', strip_tags($course['description']));
+                $intro = implode(' ', array_slice($words, 0, 120));
+                $intro_text = $intro . (count($words) > 120 ? '...' : '');
+                update_field('course_intro_paragraph', $intro_text, $post_id);
+            }
+            
+            // Populate benefits if empty
+            $benefits = get_field('course_benefits', $post_id);
+            if (empty($benefits) || !is_array($benefits) || count($benefits) === 0) {
+                $benefits_array = [];
+                if ($accreditation && strtolower(trim($accreditation)) !== 'none') {
+                    $benefits_array[] = ['benefit' => $accreditation . ' accredited'];
+                }
+                $benefits_array[] = ['benefit' => 'CPD Certificate upon completion'];
+                $benefits_array[] = ['benefit' => 'Digital certificate provided'];
+                $benefits_array[] = ['benefit' => 'Training records for CQC evidence'];
+                if (!empty($benefits_array)) {
+                    update_field('course_benefits', $benefits_array, $post_id);
+                }
             }
             
             // Generate course code from title (e.g., "Basic Life Support" -> "BLS-001")
@@ -405,6 +449,31 @@ function cta_populate_single_course_from_json($course_title) {
         }
         update_field('course_accreditation', sanitize_text_field($accreditation), $post_id);
         update_field('course_certificate', 'CPD Certificate upon completion', $post_id);
+        
+        // Populate expanded content fields if empty
+        $intro_paragraph = get_field('course_intro_paragraph', $post_id);
+        if (empty($intro_paragraph) && !empty($course['description'])) {
+            // Take first 120 words from description
+            $words = explode(' ', strip_tags($course['description']));
+            $intro = implode(' ', array_slice($words, 0, 120));
+            $intro_text = $intro . (count($words) > 120 ? '...' : '');
+            update_field('course_intro_paragraph', $intro_text, $post_id);
+        }
+        
+        // Populate benefits if empty
+        $benefits = get_field('course_benefits', $post_id);
+        if (empty($benefits) || !is_array($benefits) || count($benefits) === 0) {
+            $benefits_array = [];
+            if ($accreditation && strtolower(trim($accreditation)) !== 'none') {
+                $benefits_array[] = ['benefit' => $accreditation . ' accredited'];
+            }
+            $benefits_array[] = ['benefit' => 'CPD Certificate upon completion'];
+            $benefits_array[] = ['benefit' => 'Digital certificate provided'];
+            $benefits_array[] = ['benefit' => 'Training records for CQC evidence'];
+            if (!empty($benefits_array)) {
+                update_field('course_benefits', $benefits_array, $post_id);
+            }
+        }
         
         // Legacy ID
         if (!empty($course['id'])) {
@@ -2073,3 +2142,460 @@ function cta_get_team_members($type = null) {
     return get_posts($args);
 }
 
+/**
+ * Parse and store reviews from training_reviews.md
+ * Extracts reviews and stores them in ACF options for use in course testimonials
+ */
+function cta_parse_and_store_reviews() {
+    $reviews_file = '/Users/elliesmith/Downloads/training_reviews.md';
+    
+    // Check if file exists
+    if (!file_exists($reviews_file)) {
+        // Try relative path from theme directory
+        $reviews_file = get_template_directory() . '/../training_reviews.md';
+        if (!file_exists($reviews_file)) {
+            return 0;
+        }
+    }
+    
+    $content = file_get_contents($reviews_file);
+    if (empty($content)) {
+        return 0;
+    }
+    
+    // Split by horizontal rules (---)
+    $sections = preg_split('/^---$/m', $content);
+    $reviews = [];
+    $review_id = 1;
+    
+    // Course keywords for matching
+    $course_keywords = [
+        'first aid' => ['first aid', 'first aid at work', 'faw'],
+        'care certificate' => ['care certificate', 'care cert'],
+        'medication' => ['medication', 'medication management', 'meds'],
+        'moving and handling' => ['moving', 'handling', 'moving and handling', 'manual handling'],
+        'health and safety' => ['health', 'safety', 'health and safety', 'h&s'],
+        'safeguarding' => ['safeguarding'],
+        'train the trainer' => ['train the trainer', 'ttt', 'trainer'],
+    ];
+    
+    foreach ($sections as $section) {
+        $section = trim($section);
+        if (empty($section)) {
+            continue;
+        }
+        
+        // Extract title (## ⭐⭐⭐⭐⭐ [Title])
+        if (!preg_match('/^##\s+⭐⭐⭐⭐⭐\s+(.+)$/m', $section, $title_match)) {
+            continue;
+        }
+        $title = trim($title_match[1]);
+        
+        // Extract quote (paragraph after title, before author)
+        $quote_match = preg_match('/^##.*?\n\n(.+?)\n\n\*\*-/s', $section, $quote_m);
+        if (!$quote_match) {
+            // Try alternative pattern
+            $quote_match = preg_match('/^##.*?\n\n(.+?)(?=\n\n\*\*-)/s', $section, $quote_m);
+        }
+        $quote = $quote_match ? trim($quote_m[1]) : '';
+        
+        // Extract author (**- [Name]**)
+        $author_match = preg_match('/\*\*-\s*(.+?)\s*\*\*/', $section, $author_m);
+        $author = $author_match ? trim($author_m[1]) : 'Anonymous';
+        
+        // Extract date (*[Date]*)
+        $date_match = preg_match('/\*\s*([0-9]{2}\.[0-9]{2}\.[0-9]{4})\s*\*/', $section, $date_m);
+        $date = $date_match ? trim($date_m[1]) : '';
+        
+        if (empty($quote)) {
+            continue;
+        }
+        
+        // Extract keywords from title and quote
+        $text_to_search = strtolower($title . ' ' . $quote);
+        $matched_keywords = [];
+        $matched_courses = [];
+        
+        foreach ($course_keywords as $course_name => $keywords) {
+            foreach ($keywords as $keyword) {
+                if (stripos($text_to_search, $keyword) !== false) {
+                    $matched_keywords[] = $keyword;
+                    if (!in_array($course_name, $matched_courses)) {
+                        $matched_courses[] = $course_name;
+                    }
+                    break;
+                }
+            }
+        }
+        
+        // Create review object
+        $review_id_str = 'review_' . str_pad($review_id, 3, '0', STR_PAD_LEFT);
+        $reviews[$review_id_str] = [
+            'id' => $review_id_str,
+            'title' => $title,
+            'quote' => $quote,
+            'author' => $author,
+            'date' => $date,
+            'keywords' => array_unique($matched_keywords),
+            'course_matches' => $matched_courses,
+        ];
+        
+        $review_id++;
+    }
+    
+    // Store in ACF options
+    if (!empty($reviews)) {
+        update_option('cta_all_reviews', $reviews);
+        
+        // Also update ACF field choices for course_selected_reviews
+        $choices = [];
+        foreach ($reviews as $id => $review) {
+            $display = $review['title'] . ' - ' . $review['author'];
+            if ($review['date']) {
+                $display .= ' (' . $review['date'] . ')';
+            }
+            $choices[$id] = $display;
+        }
+        
+        // Update the field choices dynamically
+        add_filter('acf/load_field/name=course_selected_reviews', function($field) use ($choices) {
+            $field['choices'] = $choices;
+            return $field;
+        });
+        
+        return count($reviews);
+    }
+    
+    return 0;
+}
+
+/**
+ * Populate expanded content fields for existing courses on theme activation/update
+ * Only populates if fields are empty (doesn't overwrite existing content)
+ */
+function cta_populate_course_expanded_fields() {
+    if (!function_exists('get_field') || !function_exists('update_field')) {
+        return 0;
+    }
+    
+    // Get all existing courses
+    $courses = get_posts([
+        'post_type' => 'course',
+        'posts_per_page' => -1,
+        'post_status' => ['publish', 'draft', 'private'],
+    ]);
+    
+    if (empty($courses)) {
+        return 0;
+    }
+    
+    $populated_count = 0;
+    
+    foreach ($courses as $course) {
+        $post_id = $course->ID;
+        $updated = false;
+        
+        // Populate course_intro_paragraph from course_description if empty
+        $intro_paragraph = get_field('course_intro_paragraph', $post_id);
+        if (empty($intro_paragraph)) {
+            $description = get_field('course_description', $post_id);
+            if (!empty($description)) {
+                // Take first 120 words from description
+                $words = explode(' ', strip_tags($description));
+                $intro = implode(' ', array_slice($words, 0, 120));
+                $intro_text = $intro . (count($words) > 120 ? '...' : '');
+                update_field('course_intro_paragraph', $intro_text, $post_id);
+                $updated = true;
+            }
+        }
+        
+        // Populate course_benefits from certificate/accreditation if empty
+        $benefits = get_field('course_benefits', $post_id);
+        if (empty($benefits) || !is_array($benefits) || count($benefits) === 0) {
+            $benefits_array = [];
+            $certificate = get_field('course_certificate', $post_id);
+            $accreditation = get_field('course_accreditation', $post_id);
+            
+            if ($certificate) {
+                $benefits_array[] = ['benefit' => $certificate];
+            }
+            if ($accreditation && strtolower(trim($accreditation)) !== 'none') {
+                $benefits_array[] = ['benefit' => $accreditation . ' accredited'];
+            }
+            $benefits_array[] = ['benefit' => 'Digital certificate provided'];
+            $benefits_array[] = ['benefit' => 'Training records for CQC evidence'];
+            
+            if (!empty($benefits_array)) {
+                update_field('course_benefits', $benefits_array, $post_id);
+                $updated = true;
+            }
+        }
+        
+        if ($updated) {
+            $populated_count++;
+        }
+    }
+    
+    return $populated_count;
+}
+add_action('after_switch_theme', 'cta_populate_course_expanded_fields', 30);
+
+/**
+ * Populate Safeguarding course with SEO-optimized content from optimization document
+ * This is a one-time population for the specific Safeguarding Level 2 course
+ */
+function cta_populate_safeguarding_course_content() {
+    if (!function_exists('get_field') || !function_exists('update_field')) {
+        return false;
+    }
+    
+    // Find Safeguarding course by title or slug
+    $safeguarding_course = get_posts([
+        'post_type' => 'course',
+        'posts_per_page' => 1,
+        'post_status' => ['publish', 'draft', 'private'],
+        'meta_query' => [
+            'relation' => 'OR',
+            [
+                'key' => 'course_legacy_id',
+                'value' => 'safeguarding',
+                'compare' => 'LIKE',
+            ],
+        ],
+    ]);
+    
+    // Try by title
+    if (empty($safeguarding_course)) {
+        $safeguarding_course = get_posts([
+            'post_type' => 'course',
+            'posts_per_page' => 1,
+            'post_status' => ['publish', 'draft', 'private'],
+            'title' => 'Safeguarding',
+        ]);
+    }
+    
+    // Try by slug
+    if (empty($safeguarding_course)) {
+        $safeguarding_course = get_posts([
+            'post_type' => 'course',
+            'posts_per_page' => 1,
+            'post_status' => ['publish', 'draft', 'private'],
+            'name' => 'safeguarding-l2',
+        ]);
+    }
+    
+    if (empty($safeguarding_course)) {
+        return false;
+    }
+    
+    $post_id = $safeguarding_course[0]->ID;
+    
+    // Only populate if fields are empty (don't overwrite existing content)
+    $intro_paragraph = get_field('course_intro_paragraph', $post_id);
+    $why_matters = get_field('course_why_matters', $post_id);
+    $covered_items = get_field('course_covered_items', $post_id);
+    $key_features = get_field('course_key_features', $post_id);
+    $faqs = get_field('course_faqs', $post_id);
+    
+    // A. Opening Paragraph
+    if (empty($intro_paragraph)) {
+        $intro_text = 'Safeguarding is one of the most critical responsibilities in care work. This Level 2 Safeguarding course provides essential training for all care workers in Kent, covering the recognition, prevention, and reporting of abuse for both vulnerable adults and children. Whether you work in a care home, domiciliary care, or supported living, this course ensures you meet CQC requirements and understand your legal duty to protect those in your care.';
+        update_field('course_intro_paragraph', $intro_text, $post_id);
+    }
+    
+    // B. Why Safeguarding Training Matters
+    if (empty($why_matters)) {
+        $why_text = '<p>Every care worker in the UK has a legal duty to safeguard vulnerable people. The Care Act 2014 and the Care Quality Commission\'s Fundamental Standards make safeguarding training mandatory for all health and social care staff. CQC inspectors specifically check:</p>
+<ul>
+<li>That all staff have received safeguarding training appropriate to their role</li>
+<li>Staff can recognise different types of abuse</li>
+<li>Clear reporting procedures are in place and understood</li>
+<li>The organisation has a robust safeguarding policy</li>
+</ul>
+<p>Without proper safeguarding training, care settings risk:</p>
+<ul>
+<li>CQC compliance failures</li>
+<li>Inadequate rating</li>
+<li>Legal action</li>
+<li>Most importantly: service users being left vulnerable to harm</li>
+</ul>
+<p>This course ensures you have the knowledge and confidence to identify signs of abuse and take appropriate action to protect the people you support.</p>';
+        update_field('course_why_matters', $why_text, $post_id);
+    }
+    
+    // D. What's Covered in Detail (as covered items)
+    if (empty($covered_items) || !is_array($covered_items) || count($covered_items) === 0) {
+        $covered_items_array = [
+            [
+                'title' => 'Types of Abuse',
+                'description' => 'Understand the six main categories of abuse: physical, emotional, sexual, neglect, financial, and discriminatory. Learn to recognise subtle signs and indicators that might suggest abuse is occurring.',
+            ],
+            [
+                'title' => 'Recognising Signs of Abuse',
+                'description' => 'Practical guidance on identifying physical indicators (unexplained injuries, poor hygiene, malnutrition), behavioural changes (withdrawal, fear, aggression), and environmental factors that may suggest abuse.',
+            ],
+            [
+                'title' => 'Safeguarding Procedures',
+                'description' => 'Your legal duty to report concerns, who to report to (manager, local authority safeguarding team, CQC), and what happens after you raise a concern. Understanding the difference between safeguarding concerns and alerts.',
+            ],
+            [
+                'title' => 'Protecting Vulnerable Adults',
+                'description' => 'Specific considerations when working with adults who lack mental capacity, including the Mental Capacity Act 2005 and how this relates to safeguarding. Understanding consent and when to override it in the person\'s best interests.',
+            ],
+            [
+                'title' => 'Child Safeguarding',
+                'description' => 'Recognising abuse in children and young people, understanding different thresholds for concern, and knowing when to involve children\'s social care services.',
+            ],
+            [
+                'title' => 'Whistleblowing',
+                'description' => 'Your protected right to report poor practice or abuse, even if it implicates your employer. Understanding the Public Interest Disclosure Act and how whistleblowing policies work.',
+            ],
+            [
+                'title' => 'Reducing Risks',
+                'description' => 'How good care practice reduces the likelihood of abuse. Person-centred approaches, maintaining dignity and respect, proper record-keeping, and creating open cultures where concerns can be raised safely.',
+            ],
+            [
+                'title' => 'Legal Framework',
+                'description' => 'Overview of the Care Act 2014, Mental Capacity Act 2005, Deprivation of Liberty Safeguards, and how these laws protect vulnerable people.',
+            ],
+        ];
+        update_field('course_covered_items', $covered_items_array, $post_id);
+    }
+    
+    // E. Course Format Details
+    $format_details = get_field('course_format_details', $post_id);
+    if (empty($format_details)) {
+        $format_text = '<p><strong>Duration:</strong> Half day (3 hours)<br>
+<strong>Delivery:</strong> Face-to-face training at our Maidstone training centre<br>
+<strong>Level:</strong> Level 2 (suitable for all care staff)<br>
+<strong>Assessment:</strong> Knowledge check and scenario-based discussions<br>
+<strong>Certification:</strong> CPD-accredited certificate valid for employment evidence<br>
+<strong>Refresher:</strong> Recommended every 1-2 years</p>
+<p>Group bookings available for care homes and agencies wanting to train multiple staff. We can also deliver this course at your premises - contact us for group training options.</p>';
+        update_field('course_format_details', $format_text, $post_id);
+    }
+    
+    // F. What Makes Our Training Different (key features)
+    if (empty($key_features) || !is_array($key_features) || count($key_features) === 0) {
+        $features_array = [
+            [
+                'icon' => 'fas fa-book',
+                'title' => 'Real-World Scenarios',
+                'description' => 'We use actual case studies from care settings (anonymised) so you understand how safeguarding situations develop in practice.',
+            ],
+            [
+                'icon' => 'fas fa-user-tie',
+                'title' => 'Experienced Trainers',
+                'description' => 'Our trainers have worked in care settings and bring first-hand experience of safeguarding investigations and procedures.',
+            ],
+            [
+                'icon' => 'fas fa-shield-alt',
+                'title' => 'CQC-Compliant',
+                'description' => 'Training mapped to CQC Key Lines of Enquiry and Fundamental Standards, so you can evidence compliance during inspections.',
+            ],
+            [
+                'icon' => 'fas fa-hands-helping',
+                'title' => 'Practical Focus',
+                'description' => 'Less theory, more practical guidance on what to do when you\'re worried about someone.',
+            ],
+            [
+                'icon' => 'fas fa-users',
+                'title' => 'Supportive Environment',
+                'description' => 'Small group sizes ensure everyone can ask questions and discuss concerns in confidence.',
+            ],
+        ];
+        update_field('course_key_features', $features_array, $post_id);
+    }
+    
+    // G & H. After the Course (benefits + note)
+    $benefits = get_field('course_benefits', $post_id);
+    if (empty($benefits) || !is_array($benefits) || count($benefits) === 0) {
+        $benefits_array = [
+            ['benefit' => 'CPD-accredited Level 2 Safeguarding certificate'],
+            ['benefit' => 'Course handout with reporting procedures'],
+            ['benefit' => 'Access to our safeguarding resources page'],
+            ['benefit' => 'Guidance on refresher training requirements'],
+        ];
+        update_field('course_benefits', $benefits_array, $post_id);
+    }
+    
+    $after_note = get_field('course_after_note', $post_id);
+    if (empty($after_note)) {
+        $after_note_text = '<p>Your certificate is recognised by CQC and can be used as evidence of mandatory training completion. Digital copies provided on request.</p>
+<p><strong>CQC Inspection Evidence:</strong> During CQC inspections, inspectors will ask: "Have all staff received safeguarding training?", "Can staff describe different types of abuse?", "Do staff know who to report concerns to?" This course ensures you can confidently answer these questions and provide certificate evidence of training. We provide training records suitable for CQC inspection documentation, including date of training, content covered, and certification details.</p>';
+        update_field('course_after_note', $after_note_text, $post_id);
+    }
+    
+    // 5. FAQs
+    if (empty($faqs) || !is_array($faqs) || count($faqs) === 0) {
+        $faqs_array = [
+            [
+                'question' => 'How often do I need safeguarding training?',
+                'answer' => '<p>CQC and most care providers require safeguarding refresher training every 1-2 years. New staff should complete safeguarding training during their induction period, ideally within the first few weeks of employment.</p>',
+            ],
+            [
+                'question' => 'Is this course CQC compliant?',
+                'answer' => '<p>Yes. This Level 2 Safeguarding course meets CQC requirements for mandatory safeguarding training. It covers all six types of abuse and reporting procedures as required by the Care Act 2014.</p>',
+            ],
+            [
+                'question' => 'What\'s the difference between Level 1 and Level 2 safeguarding?',
+                'answer' => '<p>Level 1 is basic awareness suitable for volunteers or those with minimal contact with vulnerable people. Level 2 is for care workers with direct responsibility for supporting adults or children - this is the level required by most care employers and CQC.</p>',
+            ],
+            [
+                'question' => 'Does this cover children as well as adults?',
+                'answer' => '<p>Yes. This course covers safeguarding for both vulnerable adults and children, making it suitable for care workers in settings that support young people or mixed-age service users.</p>',
+            ],
+            [
+                'question' => 'What happens if I report a safeguarding concern?',
+                'answer' => '<p>Your manager or safeguarding lead will investigate and may need to report to the local authority safeguarding team. You\'ll be asked to provide details of what you\'ve observed or been told. Your identity is protected throughout the process.</p>',
+            ],
+            [
+                'question' => 'Can I do safeguarding training online?',
+                'answer' => '<p>While some basic awareness can be learned online, CQC and most employers require face-to-face safeguarding training for care workers due to the importance of discussion, scenario work, and asking questions. Our half-day course provides this interactive element.</p>',
+            ],
+            [
+                'question' => 'Will I learn about the Mental Capacity Act?',
+                'answer' => '<p>Yes, we cover how the Mental Capacity Act relates to safeguarding, particularly when making decisions about reporting concerns for people who lack capacity to consent.</p>',
+            ],
+            [
+                'question' => 'Is this suitable for managers?',
+                'answer' => '<p>Yes, though managers with investigation responsibilities may also need Level 3 safeguarding training for their enhanced role. This Level 2 course provides the foundation all care staff need, including managers.</p>',
+            ],
+        ];
+        update_field('course_faqs', $faqs_array, $post_id);
+    }
+    
+    // Set as mandatory training
+    $is_mandatory = get_field('course_is_mandatory', $post_id);
+    if (empty($is_mandatory)) {
+        update_field('course_is_mandatory', true, $post_id);
+        update_field('course_mandatory_note', 'This course is required by CQC and must be completed during induction for all care workers. Refreshers needed every 1-2 years.', $post_id);
+    }
+    
+    // Update H1 (post title) if needed
+    $current_title = get_the_title($post_id);
+    if ($current_title === 'Safeguarding' || strpos(strtolower($current_title), 'safeguarding') === 0) {
+        $new_title = 'Safeguarding Adults and Children Training - Level 2';
+        if ($current_title !== $new_title) {
+            wp_update_post([
+                'ID' => $post_id,
+                'post_title' => $new_title,
+            ]);
+        }
+    }
+    
+    // Update SEO meta description if empty
+    $meta_desc = get_field('course_seo_meta_description', $post_id);
+    if (empty($meta_desc)) {
+        update_field('course_seo_meta_description', 'Level 2 Safeguarding training for care workers in Kent. Learn to recognise abuse, reporting procedures, and protecting vulnerable adults and children.', $post_id);
+    }
+    
+    // Update SEO H1 if empty
+    $seo_h1 = get_field('course_seo_h1', $post_id);
+    if (empty($seo_h1)) {
+        update_field('course_seo_h1', 'Safeguarding Adults and Children Training - Level 2', $post_id);
+    }
+    
+    return true;
+}
+add_action('after_switch_theme', 'cta_populate_safeguarding_course_content', 35);
