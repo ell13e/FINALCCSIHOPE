@@ -26,25 +26,6 @@ $contact = cta_get_contact_info();
 
 while (have_posts()) : the_post();
   
-  // Auto-populate SEO Meta Tags
-  $event_title = get_the_title();
-  $event_date_raw = get_field('event_date');
-  $event_date_formatted = $event_date_raw ? date('j F Y', strtotime($event_date_raw)) : '';
-  $linked_course = get_field('linked_course');
-  $course_title = $linked_course ? get_the_title($linked_course->ID) : $event_title;
-  
-  $meta_title = $course_title . ($event_date_formatted ? ' - ' . $event_date_formatted : '') . ' | Book Now | CTA';
-  $meta_description = 'Book ' . $course_title . ' training' . ($event_date_formatted ? ' on ' . $event_date_formatted : '') . ' at our Maidstone centre. CQC-compliant, CPD-accredited. Instant certificates.';
-  ?>
-  <meta name="description" content="<?php echo esc_attr($meta_description); ?>">
-  <meta property="og:title" content="<?php echo esc_attr($meta_title); ?>">
-  <meta property="og:description" content="<?php echo esc_attr($meta_description); ?>">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="<?php echo esc_url(get_permalink()); ?>">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="<?php echo esc_attr($meta_title); ?>">
-  <meta name="twitter:description" content="<?php echo esc_attr($meta_description); ?>">
-  <?php
   // Get event fields
   $course = get_field('linked_course');
   $event_date = get_field('event_date');
@@ -285,7 +266,7 @@ while (have_posts()) : the_post();
             </button>
             <div class="accordion-content" id="description-content" aria-hidden="<?php echo (!$outcomes || count($outcomes) === 0) ? 'false' : 'true'; ?>">
               <div class="course-detail-description">
-                <?php echo nl2br(esc_html($description)); ?>
+                <?php echo wpautop(wp_kses_post($description)); ?>
               </div>
             </div>
           </div>
@@ -308,7 +289,7 @@ while (have_posts()) : the_post();
             </button>
             <div class="accordion-content" id="requirements-content" aria-hidden="true">
               <div class="course-detail-text">
-                <?php echo nl2br(esc_html($prerequisites)); ?>
+                <?php echo wpautop(wp_kses_post($prerequisites)); ?>
               </div>
             </div>
           </div>
@@ -331,7 +312,7 @@ while (have_posts()) : the_post();
             </button>
             <div class="accordion-content" id="audience-content" aria-hidden="true">
               <div class="course-detail-text">
-                <?php echo nl2br(esc_html($suitable_for)); ?>
+                <?php echo wpautop(wp_kses_post($suitable_for)); ?>
               </div>
             </div>
           </div>

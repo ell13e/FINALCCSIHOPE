@@ -30,8 +30,8 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'CQC-compliant, CPD-accredited ca
 // Mission section
 $mission_title = get_field('mission_title') ?: 'Our Care Training Approach';
 $mission_text = get_field('mission_text') ?: [
-  "Continuity Training Academy\'s ethos reflects our goal: to urge businesses to invest in their staff, and individuals to invest in themselves.",
-  "We position ourselves as <strong>\'the external training room\'</strong> that becomes part of your organisation. We don\'t just deliver courses, we partner with you.",
+  "Continuity Training Academy's ethos reflects our goal: to urge businesses to invest in their staff, and individuals to invest in themselves.",
+  "We position ourselves as <strong>'the external training room'</strong> that becomes part of your organisation. We don't just deliver courses, we partner with you.",
   "When working with new care providers, we take time to understand your policies and procedures, ensuring our training complements how your organisation operates. We tailor our training to align perfectly with your needs, creating a seamless integration with your existing processes and standards."
 ];
 // Get mission image - try ACF field first, then fallback to default
@@ -101,9 +101,13 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
           <?php 
           if (is_array($mission_text)) {
             foreach ($mission_text as $paragraph) {
+              // Strip slashes in case ACF stored escaped quotes
+              $paragraph = stripslashes($paragraph);
               echo '<p>' . wp_kses_post($paragraph) . '</p>';
             }
           } else {
+            // Strip slashes in case ACF stored escaped quotes
+            $mission_text = stripslashes($mission_text);
             echo wp_kses_post($mission_text);
           }
           ?>
@@ -148,7 +152,7 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
           [
             'icon' => 'fas fa-handshake',
             'title' => 'Partnership Care Training',
-            'description' => 'We\'re your external training room. We learn your policies and procedures, then deliver training that fits how you actually work.'
+            'description' => 'We're your external training room. We learn your policies and procedures, then deliver training that fits how you actually work.'
           ]
         ];
         

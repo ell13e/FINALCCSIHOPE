@@ -7,20 +7,6 @@
 
 get_header();
 
-// SEO Meta Tags for Upcoming Courses
-$meta_title = 'Upcoming Care Training Courses | Book Now | Maidstone, Kent';
-$meta_description = 'Book upcoming care training courses at our Maidstone centre. Emergency first aid, medication management, moving & handling, safeguarding and more. Instant certificates.';
-?>
-<meta name="description" content="<?php echo esc_attr($meta_description); ?>">
-<meta property="og:title" content="<?php echo esc_attr($meta_title); ?>">
-<meta property="og:description" content="<?php echo esc_attr($meta_description); ?>">
-<meta property="og:type" content="website">
-<meta property="og:url" content="<?php echo esc_url(get_post_type_archive_link('course_event')); ?>">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<?php echo esc_attr($meta_title); ?>">
-<meta name="twitter:description" content="<?php echo esc_attr($meta_description); ?>">
-<?php
-
 $contact = cta_get_contact_info();
 
 $today = date('Y-m-d');

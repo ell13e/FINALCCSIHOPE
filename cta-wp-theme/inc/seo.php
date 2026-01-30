@@ -115,6 +115,13 @@ function cta_get_meta_description($post = null) {
         $custom_description = cta_safe_get_field('event_seo_meta_description', $post->ID, '');
     } elseif ($post_type === 'post') {
         $custom_description = cta_safe_get_field('news_meta_description', $post->ID, '');
+    } elseif ($post_type === 'page') {
+        // For pages, check page_seo_meta_description first (especially for permanent pages)
+        $custom_description = cta_safe_get_field('page_seo_meta_description', $post->ID, '');
+        // Fallback to generic seo_meta_description if page-specific field is empty
+        if (empty($custom_description)) {
+            $custom_description = cta_safe_get_field('seo_meta_description', $post->ID, '');
+        }
     } else {
         $custom_description = cta_safe_get_field('seo_meta_description', $post->ID, '');
     }
@@ -139,6 +146,55 @@ function cta_get_meta_description($post = null) {
     
     // Priority 4: Generic fallback (never empty)
     return 'Professional care sector training in Maidstone, Kent. CQC-compliant, CPD-accredited courses.';
+}
+
+/**
+ * Check if a page is a permanent page (static, non-dynamic content)
+ * Permanent pages: Home, About, Contact, Group Training, CQC Hub, Training Guides, FAQs, Downloadable Resources, News
+ * 
+ * @param int|WP_Post $post_id Post ID or object
+ * @return bool True if permanent page
+ */
+function cta_is_permanent_page($post_id = null) {
+    if (!$post_id) {
+        global $post;
+        $post_id = $post ? $post->ID : 0;
+    }
+    
+    if (is_numeric($post_id)) {
+        $post = get_post($post_id);
+    } else {
+        $post = $post_id;
+    }
+    
+    if (!$post || $post->post_type !== 'page') {
+        return false;
+    }
+    
+    // List of permanent page slugs
+    $permanent_pages = [
+        'home',
+        'about',
+        'about-us',
+        'contact',
+        'group-training',
+        'cqc-compliance-hub',
+        'training-guides',
+        'training-guides-tools',
+        'faqs',
+        'downloadable-resources',
+        'news',
+    ];
+    
+    $page_slug = $post->post_name;
+    
+    // Check if it's the front page
+    if (is_front_page() || $page_slug === 'home') {
+        return true;
+    }
+    
+    // Check against permanent pages list
+    return in_array($page_slug, $permanent_pages, true);
 }
 
 /**
@@ -334,6 +390,9 @@ function cta_seo_meta_tags() {
             $custom_meta_title = cta_safe_get_field('event_seo_meta_title', get_the_ID(), '');
         } elseif (get_post_type() === 'post') {
             $custom_meta_title = cta_safe_get_field('news_meta_title', get_the_ID(), '');
+        } elseif (get_post_type() === 'page') {
+            // For pages, check ACF field first (especially for permanent pages)
+            $custom_meta_title = cta_safe_get_field('page_seo_meta_title', get_the_ID(), '');
         }
         
         // Use custom meta title if set, otherwise use pattern or default
@@ -521,6 +580,181 @@ function cta_seo_meta_tags() {
 add_action('wp_head', 'cta_seo_meta_tags', 1);
 
 /**
+ * Output Google Analytics tracking code (GA4)
+ * 
+ * Requirements for Search Console verification:
+ * - Must be in <head> section
+ * - Must use gtag.js (GA4) or analytics.js (Universal Analytics)
+ * - Must be accessible to non-logged-in users
+ * - Code must be exactly as provided by Google
+ * 
+ * SECURITY NOTE: The Google Analytics Measurement ID (G-XXXXXXXXXX) is NOT an API key.
+ * It is a public identifier that is designed to be visible in frontend code.
+ * This is the correct and expected implementation - the ID must be in the client-side JavaScript.
+ * 
+ * @see https://support.google.com/webmasters/answer/9008080#google_analytics_verification
+ */
+function cta_output_google_analytics() {
+    $ga_id = cta_get_google_analytics_id();
+    
+    if (empty($ga_id)) {
+        return;
+    }
+    
+    // Determine if it's GA4 (G-XXXXXXXXXX) or Universal Analytics (UA-XXXXXXXXX-X)
+    $is_ga4 = preg_match('/^G-[A-Z0-9]+$/', $ga_id);
+    $is_ua = preg_match('/^UA-\d+-\d+$/', $ga_id);
+    
+    if (!$is_ga4 && !$is_ua) {
+        // Invalid format - don't output anything
+        return;
+    }
+    
+    if ($is_ga4) {
+        // Google Analytics 4 (GA4) - uses gtag.js
+        ?>
+<!-- Google Analytics 4 (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_js($ga_id); ?>"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '<?php echo esc_js($ga_id); ?>');
+</script>
+<!-- End Google Analytics 4 -->
+        <?php
+    } elseif ($is_ua) {
+        // Universal Analytics (legacy) - uses analytics.js
+        ?>
+<!-- Google Analytics (Universal Analytics) -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', '<?php echo esc_js($ga_id); ?>', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics (Universal Analytics) -->
+        <?php
+    }
+}
+add_action('wp_head', 'cta_output_google_analytics', 2);
+
+/**
+ * Output Google Tag Manager container code
+ * 
+ * Requirements for Search Console verification:
+ * - Script portion must be in <head> section
+ * - <noscript> portion must be immediately after opening <body> tag
+ * - Cannot have data layer or anything else between <body> and noscript (except HTML comments)
+ * - Code must be exactly as provided by Google
+ * 
+ * @see https://support.google.com/webmasters/answer/9008080#google_tag_manager_verification
+ */
+function cta_output_google_tag_manager_head() {
+    $gtm_id = cta_get_google_tag_manager_id();
+    
+    if (empty($gtm_id)) {
+        return;
+    }
+    
+    // Validate GTM ID format (GTM-XXXXXXX)
+    if (!preg_match('/^GTM-[A-Z0-9]+$/', $gtm_id)) {
+        // Invalid format - don't output anything
+        return;
+    }
+    
+    // Script portion in <head>
+    ?>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','<?php echo esc_js($gtm_id); ?>');</script>
+<!-- End Google Tag Manager -->
+    <?php
+}
+add_action('wp_head', 'cta_output_google_tag_manager_head', 3);
+
+/**
+ * Output Google Tag Manager noscript code
+ * 
+ * CRITICAL: This must be immediately after opening <body> tag
+ * No data layer or other code can be between <body> and this noscript tag
+ * (except HTML comments)
+ */
+function cta_output_google_tag_manager_body() {
+    $gtm_id = cta_get_google_tag_manager_id();
+    
+    if (empty($gtm_id)) {
+        return;
+    }
+    
+    // Validate GTM ID format (GTM-XXXXXXX)
+    if (!preg_match('/^GTM-[A-Z0-9]+$/', $gtm_id)) {
+        return;
+    }
+    
+    // Noscript portion immediately after <body> tag
+    ?>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo esc_attr($gtm_id); ?>"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+    <?php
+}
+add_action('wp_body_open', 'cta_output_google_tag_manager_body', 1);
+
+/**
+ * Output Facebook Pixel (Meta Pixel) tracking code
+ * 
+ * Requirements per Facebook documentation:
+ * - Should be in <head> section (recommended)
+ * - Reduces chances of browsers/third-party code blocking execution
+ * - Executes sooner, increasing tracking reliability
+ * - Code format must match Facebook's exact specification
+ * 
+ * @see https://developers.facebook.com/docs/meta-pixel/get-started/
+ */
+function cta_output_facebook_pixel() {
+    $fb_pixel_id = cta_get_facebook_pixel_id();
+    
+    if (empty($fb_pixel_id)) {
+        return;
+    }
+    
+    // Validate Pixel ID format (numeric, typically 15-16 digits)
+    if (!preg_match('/^\d+$/', $fb_pixel_id)) {
+        // Invalid format - don't output anything
+        return;
+    }
+    
+    // Facebook Pixel code in <head> section
+    ?>
+<!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '<?php echo esc_js($fb_pixel_id); ?>');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=<?php echo esc_attr($fb_pixel_id); ?>&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel Code -->
+    <?php
+}
+add_action('wp_head', 'cta_output_facebook_pixel', 4);
+
+/**
  * Optimise document title - Fix duplicates and shorten to <60 chars
  */
 function cta_document_title_parts($title_parts) {
@@ -561,18 +795,19 @@ function cta_document_title_parts($title_parts) {
         $event_date = get_post_meta(get_the_ID(), 'event_date', true);
         $base_title = get_the_title();
         
+        // Use shorter suffix: just "| CTA" (removed "Book Now" to keep under 60 chars)
         if ($event_date) {
             $date_formatted = date('j M', strtotime($event_date)); // "13 Feb"
-            $title_parts['title'] = $base_title . ' - ' . $date_formatted . ' | Book Now | CTA';
+            $title_parts['title'] = $base_title . ' - ' . $date_formatted . ' | CTA';
         } else {
-            $title_parts['title'] = $base_title . ' | Book Now | CTA';
+            $title_parts['title'] = $base_title . ' | CTA';
         }
         
         // Ensure max 60 chars
         if (strlen($title_parts['title']) > 60) {
-            $max_base_length = $event_date ? 60 - 20 : 60 - 18; // Reserve space for date + suffix
+            $max_base_length = $event_date ? 60 - 12 : 60 - 6; // Reserve space for date + " | CTA" or just " | CTA"
             if (strlen($base_title) > $max_base_length) {
-                $base_title = wp_trim_words($base_title, 4, '');
+                $base_title = wp_trim_words($base_title, 5, '');
             }
             if ($event_date) {
                 $date_formatted = date('j M', strtotime($event_date));
@@ -630,16 +865,30 @@ function cta_document_title_parts($title_parts) {
     
     // Pattern 6: Pages
     if (is_singular('page')) {
-        $title_parts['title'] = get_the_title() . ' | CTA';
+        // Check for custom ACF meta title first (especially for permanent pages)
+        $custom_meta_title = cta_safe_get_field('page_seo_meta_title', get_the_ID(), '');
+        
+        if (!empty($custom_meta_title)) {
+            // Use ACF meta title as-is (should already be optimized)
+            $title_parts['title'] = $custom_meta_title;
+        } else {
+            // Fallback to page title + CTA
+            $title_parts['title'] = get_the_title() . ' | CTA';
+        }
         
         // Ensure max 60 chars
         if (strlen($title_parts['title']) > 60) {
-            $title = get_the_title();
-            $max_title_length = 60 - 6;
-            if (strlen($title) > $max_title_length) {
-                $title = wp_trim_words($title, 6, '');
+            if (!empty($custom_meta_title)) {
+                // If custom title is too long, trim it
+                $title_parts['title'] = wp_trim_words($custom_meta_title, 8, '');
+            } else {
+                $title = get_the_title();
+                $max_title_length = 60 - 6;
+                if (strlen($title) > $max_title_length) {
+                    $title = wp_trim_words($title, 6, '');
+                }
+                $title_parts['title'] = $title . ' | CTA';
             }
-            $title_parts['title'] = $title . ' | CTA';
         }
         
         return $title_parts;
@@ -1138,9 +1387,12 @@ function cta_get_breadcrumb_items() {
         
         $terms = get_the_terms(get_the_ID(), 'course_category');
         if ($terms && !is_wp_error($terms)) {
+            // Use filtered courses URL instead of term link to match visual breadcrumb
+            $category_slug = $terms[0]->slug;
+            $filtered_url = add_query_arg('category', $category_slug, get_post_type_archive_link('course'));
             $items[] = [
                 'title' => $terms[0]->name,
-                'url' => get_term_link($terms[0]),
+                'url' => $filtered_url,
             ];
         }
         
@@ -1171,6 +1423,31 @@ function cta_get_breadcrumb_items() {
             'title' => 'Courses',
             'url' => get_post_type_archive_link('course'),
         ];
+        
+        // Add category breadcrumb if filtered
+        if (isset($_GET['category'])) {
+            $category_slug = sanitize_key($_GET['category']);
+            $category_names = [
+                'communication-workplace-culture' => 'Communication',
+                'core-care-skills' => 'Core Care Skills',
+                'emergency-first-aid' => 'First Aid',
+                'health-conditions-specialist-care' => 'Specialist Care',
+                'information-data-management' => 'GDPR & Data',
+                'leadership-professional-development' => 'Leadership',
+                'medication-management' => 'Medication',
+                'nutrition-hygiene' => 'Nutrition & Hygiene',
+                'safety-compliance' => 'Safety & Compliance'
+            ];
+            
+            $category_name = isset($category_names[$category_slug]) 
+                ? $category_names[$category_slug] 
+                : ucwords(str_replace('-', ' ', $category_slug));
+            
+            $items[] = [
+                'title' => $category_name,
+                'url' => add_query_arg('category', $category_slug, get_post_type_archive_link('course')),
+            ];
+        }
     } elseif (is_post_type_archive('course_event')) {
         $items[] = [
             'title' => 'Upcoming Courses',
@@ -1182,9 +1459,11 @@ function cta_get_breadcrumb_items() {
             'url' => get_post_type_archive_link('course'),
         ];
         $term = get_queried_object();
+        // Use filtered courses URL instead of term link to match visual breadcrumb
+        $filtered_url = add_query_arg('category', $term->slug, get_post_type_archive_link('course'));
         $items[] = [
             'title' => $term->name,
-            'url' => get_term_link($term),
+            'url' => $filtered_url,
         ];
     } elseif (is_page()) {
         $items[] = [

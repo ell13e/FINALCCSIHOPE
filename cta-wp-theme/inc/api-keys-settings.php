@@ -25,6 +25,10 @@ function cta_api_keys_register_settings() {
         'sanitize_callback' => 'sanitize_text_field',
         'default' => '',
     ]);
+    register_setting('cta_api_keys_settings', 'cta_google_tag_manager_id', [
+        'sanitize_callback' => 'sanitize_text_field',
+        'default' => '',
+    ]);
     register_setting('cta_api_keys_settings', 'cta_facebook_pixel_id', [
         'sanitize_callback' => 'sanitize_text_field',
         'default' => '',
@@ -96,6 +100,7 @@ function cta_api_keys_settings_page() {
         update_option('cta_recaptcha_site_key', sanitize_text_field($_POST['cta_recaptcha_site_key'] ?? ''));
         update_option('cta_recaptcha_secret_key', sanitize_text_field($_POST['cta_recaptcha_secret_key'] ?? ''));
         update_option('cta_google_analytics_id', sanitize_text_field($_POST['cta_google_analytics_id'] ?? ''));
+        update_option('cta_google_tag_manager_id', sanitize_text_field($_POST['cta_google_tag_manager_id'] ?? ''));
         update_option('cta_facebook_pixel_id', sanitize_text_field($_POST['cta_facebook_pixel_id'] ?? ''));
         update_option('cta_facebook_access_token', sanitize_text_field($_POST['cta_facebook_access_token'] ?? ''));
         update_option('cta_facebook_test_event_code', sanitize_text_field($_POST['cta_facebook_test_event_code'] ?? ''));
@@ -130,6 +135,7 @@ function cta_api_keys_settings_page() {
     $recaptcha_site_key = get_option('cta_recaptcha_site_key', '');
     $recaptcha_secret_key = get_option('cta_recaptcha_secret_key', '');
     $ga_id = get_option('cta_google_analytics_id', '');
+    $gtm_id = get_option('cta_google_tag_manager_id', '');
     $fb_pixel = get_option('cta_facebook_pixel_id', '');
     $fb_access_token = get_option('cta_facebook_access_token', '');
     $fb_test_code = get_option('cta_facebook_test_event_code', '');
@@ -362,6 +368,29 @@ function cta_api_keys_settings_page() {
                 </div>
                 
                 <div class="cta-api-key-field">
+                    <label for="cta_google_tag_manager_id">
+                        Google Tag Manager Container ID
+                        <?php if ($gtm_id) : ?>
+                            <span class="cta-api-key-status configured">✓ Configured</span>
+                        <?php else : ?>
+                            <span class="cta-api-key-status not-configured">Not Set</span>
+                        <?php endif; ?>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="cta_google_tag_manager_id" 
+                        name="cta_google_tag_manager_id" 
+                        value="<?php echo esc_attr($gtm_id); ?>" 
+                        placeholder="GTM-XXXXXXX"
+                    />
+                    <p class="description">
+                        Your Google Tag Manager container ID (format: GTM-XXXXXXX).
+                        <a href="https://tagmanager.google.com/" target="_blank">Get your Container ID →</a><br>
+                        <strong>💡 Tip:</strong> GTM allows you to manage multiple tracking tags from one place.
+                    </p>
+                </div>
+                
+                <div class="cta-api-key-field">
                     <label for="cta_facebook_pixel_id">
                         Facebook Pixel ID
                         <?php if ($fb_pixel) : ?>
@@ -465,8 +494,9 @@ function cta_api_keys_settings_page() {
                         placeholder="AIzaSyBxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
                     />
                     <p class="description">
-                        Your Google Maps API key for interactive maps and location features on your website.
-                        <a href="https://console.cloud.google.com/google/maps-apis" target="_blank">Get your API key →</a>
+                        <strong>⚠️ Security Note:</strong> Google Maps API keys should NEVER be exposed in frontend code.
+                        We use iframe embeds which don't require an API key. This setting is kept for potential future server-side use only.
+                        <a href="https://console.cloud.google.com/google/maps-apis" target="_blank">Learn more →</a>
                     </p>
                 </div>
             </div>
@@ -727,6 +757,13 @@ function cta_get_recaptcha_secret_key() {
  */
 function cta_get_google_analytics_id() {
     return get_option('cta_google_analytics_id', '');
+}
+
+/**
+ * Get Google Tag Manager Container ID
+ */
+function cta_get_google_tag_manager_id() {
+    return get_option('cta_google_tag_manager_id', '');
 }
 
 /**

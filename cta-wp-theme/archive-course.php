@@ -7,20 +7,6 @@
 
 get_header();
 
-// SEO Meta Tags for Course Archive
-$meta_title = 'All Care Training Courses | CQC-Compliant & CPD-Accredited | CTA';
-$meta_description = 'Browse all care training courses. Emergency first aid, medication management, moving & handling, safeguarding, dementia care and more. CQC-compliant, CPD-accredited.';
-?>
-<meta name="description" content="<?php echo esc_attr($meta_description); ?>">
-<meta property="og:title" content="<?php echo esc_attr($meta_title); ?>">
-<meta property="og:description" content="<?php echo esc_attr($meta_description); ?>">
-<meta property="og:type" content="website">
-<meta property="og:url" content="<?php echo esc_url(get_post_type_archive_link('course')); ?>">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<?php echo esc_attr($meta_title); ?>">
-<meta name="twitter:description" content="<?php echo esc_attr($meta_description); ?>">
-<?php
-
 $categories = cta_get_course_categories();
 $current_category = isset($_GET['category']) ? sanitize_text_field($_GET['category']) : '';
 
@@ -59,6 +45,18 @@ $category_short_names = [
   'nutrition-hygiene' => 'Nutrition',
   'leadership-professional-development' => 'Leadership',
 ];
+
+$category_names = [
+  'communication-workplace-culture' => 'Communication',
+  'core-care-skills' => 'Core Care Skills',
+  'emergency-first-aid' => 'First Aid',
+  'health-conditions-specialist-care' => 'Specialist Care',
+  'information-data-management' => 'GDPR & Data',
+  'leadership-professional-development' => 'Leadership',
+  'medication-management' => 'Medication',
+  'nutrition-hygiene' => 'Nutrition & Hygiene',
+  'safety-compliance' => 'Safety & Compliance'
+];
 ?>
 
 <main id="main-content" class="site-main">
@@ -68,7 +66,20 @@ $category_short_names = [
         <ol class="breadcrumb-list">
           <li class="breadcrumb-item"><a href="<?php echo esc_url(home_url('/')); ?>" class="breadcrumb-link">Home</a></li>
           <li class="breadcrumb-separator" aria-hidden="true">/</li>
-          <li class="breadcrumb-item"><span class="breadcrumb-current" aria-current="page">Courses</span></li>
+          <li class="breadcrumb-item">
+            <a href="<?php echo esc_url(get_post_type_archive_link('course')); ?>" class="breadcrumb-link">Courses</a>
+          </li>
+          <?php if ($current_category) : 
+            // Use full category name for breadcrumb (not short name)
+            $category_name = isset($category_names[$current_category]) 
+              ? $category_names[$current_category] 
+              : ucwords(str_replace('-', ' ', $current_category));
+          ?>
+          <li class="breadcrumb-separator" aria-hidden="true">/</li>
+          <li class="breadcrumb-item">
+            <span class="breadcrumb-current" aria-current="page"><?php echo esc_html($category_name); ?></span>
+          </li>
+          <?php endif; ?>
         </ol>
       </nav>
       <h1 id="courses-heading" class="hero-title">Accredited Care Training Courses</h1>

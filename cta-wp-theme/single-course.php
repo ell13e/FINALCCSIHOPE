@@ -13,22 +13,6 @@ $contact = cta_get_contact_info();
 
 while (have_posts()) : the_post();
   
-  // Auto-populate SEO Meta Tags
-  $course_title = get_the_title();
-  $course_excerpt = get_the_excerpt();
-  $course_description = $course_excerpt ? wp_trim_words(strip_tags($course_excerpt), 25) : wp_trim_words(strip_tags(get_the_content()), 25);
-  $meta_title = $course_title . ' | CQC-Compliant Care Training | CTA';
-  $meta_description = $course_description ? $course_description : 'CQC-compliant ' . $course_title . ' training for care providers. CPD-accredited course with instant certification.';
-  ?>
-  <meta name="description" content="<?php echo esc_attr($meta_description); ?>">
-  <meta property="og:title" content="<?php echo esc_attr($meta_title); ?>">
-  <meta property="og:description" content="<?php echo esc_attr($meta_description); ?>">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="<?php echo esc_url(get_permalink()); ?>">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="<?php echo esc_attr($meta_title); ?>">
-  <meta name="twitter:description" content="<?php echo esc_attr($meta_description); ?>">
-  <?php
   $level = get_field('course_level');
   $duration = get_field('course_duration');
   $hours = get_field('course_hours');
@@ -176,6 +160,155 @@ while (have_posts()) : the_post();
         <div class="course-detail-main">
           
           <?php 
+          // Expanded Content Section (before accordions)
+          $intro_paragraph = get_field('course_intro_paragraph');
+          $why_matters = get_field('course_why_matters');
+          $covered_items = get_field('course_covered_items');
+          $format_details = get_field('course_format_details');
+          $key_features = get_field('course_key_features');
+          $benefits = get_field('course_benefits');
+          $after_note = get_field('course_after_note');
+          
+          if ($intro_paragraph || $why_matters || $covered_items || $format_details || $key_features || $benefits) :
+          ?>
+          <div class="course-expanded-content">
+            <?php if ($intro_paragraph) : ?>
+            <div class="course-intro-lead">
+              <?php echo wp_kses_post($intro_paragraph); ?>
+            </div>
+            <?php endif; ?>
+            
+            <?php if ($why_matters) : ?>
+            <div class="course-why-matters-callout">
+              <div class="course-callout-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                  <path d="M2 17l10 5 10-5"></path>
+                  <path d="M2 12l10 5 10-5"></path>
+                </svg>
+              </div>
+              <div class="course-callout-content">
+                <h3>Why This Course Matters</h3>
+                <?php echo wp_kses_post($why_matters); ?>
+              </div>
+            </div>
+            <?php endif; ?>
+            
+            <?php if ($covered_items && is_array($covered_items)) : ?>
+            <div class="course-covered-section">
+              <h3>What's Covered</h3>
+              <div class="course-covered-grid">
+                <?php foreach ($covered_items as $item) : ?>
+                <div class="course-covered-item">
+                  <h4><?php echo esc_html($item['title']); ?></h4>
+                  <p><?php echo esc_html($item['description']); ?></p>
+                </div>
+                <?php endforeach; ?>
+              </div>
+            </div>
+            <?php endif; ?>
+            
+            <?php if ($duration || $hours || $level || $certificate || $accreditation || $format_details) : ?>
+            <div class="course-format-cards">
+              <?php if ($duration) : ?>
+              <div class="course-format-card">
+                <div class="course-format-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </div>
+                <div class="course-format-label">Duration</div>
+                <div class="course-format-value"><?php echo esc_html($duration); ?></div>
+              </div>
+              <?php endif; ?>
+              
+              <?php if ($level) : ?>
+              <div class="course-format-card">
+                <div class="course-format-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                  </svg>
+                </div>
+                <div class="course-format-label">Level</div>
+                <div class="course-format-value"><?php echo esc_html($level); ?></div>
+              </div>
+              <?php endif; ?>
+              
+              <?php if ($certificate) : ?>
+              <div class="course-format-card">
+                <div class="course-format-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="8" r="7"></circle>
+                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                  </svg>
+                </div>
+                <div class="course-format-label">Certificate</div>
+                <div class="course-format-value"><?php echo esc_html($certificate); ?></div>
+              </div>
+              <?php endif; ?>
+              
+              <?php if ($accreditation && strtolower(trim($accreditation)) !== 'none') : ?>
+              <div class="course-format-card">
+                <div class="course-format-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                </div>
+                <div class="course-format-label">Accreditation</div>
+                <div class="course-format-value"><?php echo esc_html($accreditation); ?></div>
+              </div>
+              <?php endif; ?>
+            </div>
+            <?php endif; ?>
+            
+            <?php if ($format_details) : ?>
+            <div class="course-format-details">
+              <?php echo wp_kses_post($format_details); ?>
+            </div>
+            <?php endif; ?>
+            
+            <?php if ($key_features && is_array($key_features)) : ?>
+            <div class="course-different-section">
+              <h3>What Makes Our Training Different</h3>
+              <div class="course-features-list">
+                <?php foreach ($key_features as $feature) : ?>
+                <div class="course-feature-item">
+                  <?php if (!empty($feature['icon'])) : ?>
+                  <div class="course-feature-icon">
+                    <i class="<?php echo esc_attr($feature['icon']); ?>" aria-hidden="true"></i>
+                  </div>
+                  <?php endif; ?>
+                  <div class="course-feature-content">
+                    <h4><?php echo esc_html($feature['title']); ?></h4>
+                    <p><?php echo esc_html($feature['description']); ?></p>
+                  </div>
+                </div>
+                <?php endforeach; ?>
+              </div>
+            </div>
+            <?php endif; ?>
+            
+            <?php if ($benefits && is_array($benefits)) : ?>
+            <div class="course-after-box">
+              <h3>After the Course</h3>
+              <ul class="course-benefits-list">
+                <?php foreach ($benefits as $benefit) : ?>
+                <li><?php echo esc_html($benefit['benefit']); ?></li>
+                <?php endforeach; ?>
+              </ul>
+              <?php if ($after_note) : ?>
+              <div class="course-after-note">
+                <?php echo wp_kses_post($after_note); ?>
+              </div>
+              <?php endif; ?>
+            </div>
+            <?php endif; ?>
+          </div>
+          <?php endif; ?>
+          
+          <?php 
           $section_heading = get_field('course_seo_section_heading');
           if (!$section_heading) {
             $section_heading = cta_safe_get_field('seo_default_section_heading', 'option', 'Course Overview');
@@ -225,7 +358,7 @@ while (have_posts()) : the_post();
             </button>
             <div class="accordion-content" id="description-content" aria-hidden="<?php echo (!$outcomes || count($outcomes) === 0) ? 'false' : 'true'; ?>">
               <div class="course-detail-description">
-                <?php echo nl2br(esc_html($description)); ?>
+                <?php echo wpautop(wp_kses_post($description)); ?>
               </div>
             </div>
           </div>
@@ -248,7 +381,7 @@ while (have_posts()) : the_post();
             </button>
             <div class="accordion-content" id="requirements-content" aria-hidden="true">
               <div class="course-detail-text">
-                <?php echo nl2br(esc_html($prerequisites)); ?>
+                <?php echo wpautop(wp_kses_post($prerequisites)); ?>
               </div>
             </div>
           </div>
@@ -271,7 +404,7 @@ while (have_posts()) : the_post();
             </button>
             <div class="accordion-content" id="audience-content" aria-hidden="true">
               <div class="course-detail-text">
-                <?php echo nl2br(esc_html($suitable_for)); ?>
+                <?php echo wpautop(wp_kses_post($suitable_for)); ?>
               </div>
             </div>
           </div>
@@ -330,6 +463,28 @@ while (have_posts()) : the_post();
 
         <!-- Sidebar -->
         <aside class="course-detail-sidebar">
+          
+          <!-- Mandatory Badge (separate card, outside booking card) -->
+          <?php 
+          $is_mandatory = get_field('course_is_mandatory');
+          $mandatory_note = get_field('course_mandatory_note');
+          if ($is_mandatory) : 
+          ?>
+          <div class="course-mandatory-card">
+            <div class="course-mandatory-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </div>
+            <div class="course-mandatory-content">
+              <h3>Mandatory Training</h3>
+              <p><?php echo $mandatory_note ? esc_html($mandatory_note) : 'This course is mandatory for CQC compliance. Ensure all staff complete this training.'; ?></p>
+            </div>
+          </div>
+          <?php endif; ?>
+          
           <div class="course-detail-booking-card">
             
             <!-- Price Display -->
@@ -390,6 +545,78 @@ while (have_posts()) : the_post();
               <?php endif; ?>
             </ul>
 
+            <!-- Next Available Dates -->
+            <?php
+            $today = date('Y-m-d');
+            $upcoming_events = new WP_Query([
+                'post_type' => 'course_event',
+                'posts_per_page' => 3,
+                'meta_key' => 'event_date',
+                'orderby' => 'meta_value',
+                'order' => 'ASC',
+                'meta_query' => [
+                    [
+                        'key' => 'event_date',
+                        'value' => $today,
+                        'compare' => '>=',
+                        'type' => 'DATE',
+                    ],
+                    [
+                        'key' => 'linked_course',
+                        'value' => get_the_ID(),
+                        'compare' => '=',
+                    ],
+                ],
+            ]);
+            
+            if ($upcoming_events->have_posts()) :
+            ?>
+            <div class="course-next-dates">
+              <h4>Next Available Dates</h4>
+              <ul class="course-dates-list">
+                <?php while ($upcoming_events->have_posts()) : $upcoming_events->the_post(); 
+                  $event_date = get_field('event_date');
+                  $event_location = get_field('event_location');
+                  $spaces_available = get_field('spaces_available');
+                  $eventbrite_url = get_field('eventbrite_url');
+                ?>
+                <li class="course-date-item">
+                  <div class="course-date-info">
+                    <div class="course-date-date"><?php echo esc_html(date('j M Y', strtotime($event_date))); ?></div>
+                    <?php if ($event_location) : ?>
+                    <div class="course-date-location"><?php echo esc_html($event_location); ?></div>
+                    <?php endif; ?>
+                    <?php if ($spaces_available !== '' && $spaces_available <= 5) : ?>
+                    <div class="course-date-spaces"><?php echo esc_html($spaces_available); ?> spaces left</div>
+                    <?php endif; ?>
+                  </div>
+                  <?php if ($eventbrite_url) : ?>
+                  <a href="<?php echo esc_url($eventbrite_url); ?>" class="course-date-book" target="_blank" rel="noopener">Book</a>
+                  <?php endif; ?>
+                </li>
+                <?php endwhile; ?>
+              </ul>
+              <p class="course-dates-fallback">
+                Can't see a date that works for you?
+              </p>
+              <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact'))); ?>" class="button button-secondary">
+                Enquire About This Course
+              </a>
+            </div>
+            <?php 
+            wp_reset_postdata();
+            else :
+            ?>
+            <div class="course-next-dates">
+              <p class="course-dates-fallback">
+                Can't see a date that works for you?
+              </p>
+              <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact'))); ?>" class="button button-secondary">
+                Enquire About This Course
+              </a>
+            </div>
+            <?php endif; ?>
+
             <!-- Book Now Button -->
             <button 
               type="button"
@@ -417,6 +644,83 @@ while (have_posts()) : the_post();
     </div>
   </section>
 
+  <!-- Course FAQs Section -->
+  <?php
+  $course_faqs = get_field('course_faqs');
+  if (!empty($course_faqs) && is_array($course_faqs)) :
+  ?>
+  <section id="faq" class="content-section" aria-labelledby="course-faq-heading">
+    <div class="container">
+      <div class="section-header-center">
+        <h2 id="course-faq-heading" class="section-title">Frequently Asked Questions</h2>
+      </div>
+      
+      <div class="faqs-content-wrapper">
+        <div class="group-faq-list">
+          <?php foreach ($course_faqs as $index => $faq) : 
+            if (!is_array($faq) || !isset($faq['question']) || !isset($faq['answer'])) {
+              continue;
+            }
+          ?>
+          <div class="accordion faq-item" data-accordion-group="course-faqs">
+            <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="course-faq-<?php echo (int) $index; ?>">
+              <span><?php echo esc_html($faq['question']); ?></span>
+              <span class="accordion-icon" aria-hidden="true"></span>
+            </button>
+            <div id="course-faq-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
+              <?php echo wpautop(wp_kses_post($faq['answer'])); ?>
+            </div>
+          </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </div>
+  </section>
+  <?php endif; ?>
+
+  <!-- Testimonials Section -->
+  <?php 
+  $selected_review_ids = get_field('course_selected_reviews');
+  if (!empty($selected_review_ids)) : 
+    $all_reviews = get_option('cta_all_reviews', []);
+    $reviews_to_show = [];
+    foreach ($selected_review_ids as $review_id) {
+      if (isset($all_reviews[$review_id])) {
+        $reviews_to_show[] = $all_reviews[$review_id];
+      }
+    }
+    
+    if (!empty($reviews_to_show)) :
+  ?>
+  <section class="course-testimonials-section content-section" aria-labelledby="course-testimonials-heading">
+    <div class="container">
+      <div class="section-header-center">
+        <h2 id="course-testimonials-heading" class="section-title">What Our Students Say</h2>
+      </div>
+      <div class="testimonials-grid">
+        <?php foreach ($reviews_to_show as $review) : ?>
+        <article class="testimonial-card">
+          <div class="testimonial-quote-wrapper">
+            <p class="testimonial-quote"><?php echo esc_html($review['quote']); ?></p>
+          </div>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <i class="fas fa-user" aria-hidden="true"></i>
+            </div>
+            <div class="testimonial-info">
+              <div class="testimonial-name"><?php echo esc_html($review['author']); ?></div>
+              <div class="testimonial-company"><?php echo esc_html($review['date']); ?></div>
+            </div>
+          </div>
+        </article>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  </section>
+  <?php 
+    endif;
+  endif; 
+  ?>
 
   <!-- Related Courses Section -->
   <?php
