@@ -3708,9 +3708,80 @@ function cta_import_meta_descriptions_from_csv() {
         // Handle course events (/upcoming-courses/slug/)
         elseif (preg_match('#^/upcoming-courses/([^/]+)/?$#', $path, $matches)) {
             $event_slug = $matches[1];
+            
+            // Try exact match first
             $event = get_page_by_path($event_slug, OBJECT, 'course_event');
             if ($event) {
                 $post_id = $event->ID;
+            } else {
+                // Try partial match - event slugs are format: {course-slug}-{date}
+                // Date format: jan15, feb9, jan29, etc. (lowercase month + day number)
+                // Extract potential date suffix (last segment matching date pattern)
+                $date_pattern = '/-([a-z]{3}\d{1,2}(?:-\d{4})?)$/i'; // e.g., -jan29, -feb9, -jan15-2026
+                if (preg_match($date_pattern, $event_slug, $date_matches)) {
+                    $date_suffix = $date_matches[1];
+                    $course_part = substr($event_slug, 0, -strlen($date_suffix) - 1); // Remove "-{date}"
+                    
+                    // Search all course events for matching pattern
+                    $all_events = get_posts([
+                        'post_type' => 'course_event',
+                        'post_status' => 'publish',
+                        'posts_per_page' => -1,
+                    ]);
+                    
+                    foreach ($all_events as $e) {
+                        $event_slug_full = $e->post_name;
+                        
+                        // Check if event slug matches: {course-part}-{date}
+                        // Try exact match on course part + date
+                        if (preg_match('/^(.+)-([a-z]{3}\d{1,2}(?:-\d{4})?)$/i', $event_slug_full, $event_parts)) {
+                            $event_course_part = $event_parts[1];
+                            $event_date_part = $event_parts[2];
+                            
+                            // Match if course parts match and date parts match
+                            if ($event_course_part === $course_part && $event_date_part === $date_suffix) {
+                                $post_id = $e->ID;
+                                break;
+                            }
+                            // Also try if CSV course part matches event course part (handles variations)
+                            elseif ($event_date_part === $date_suffix) {
+                                // Check if course parts are similar (one might have suffixes like -1d-l3)
+                                $csv_base = preg_replace('/-(3d|2d|1d|hd)-(l[123])$/i', '', $course_part);
+                                $csv_base = preg_replace('/-(l[123])$/i', '', $csv_base);
+                                $event_base = preg_replace('/-(3d|2d|1d|hd)-(l[123])$/i', '', $event_course_part);
+                                $event_base = preg_replace('/-(l[123])$/i', '', $event_base);
+                                
+                                if ($csv_base === $event_base || 
+                                    strpos($event_course_part, $course_part . '-') === 0 ||
+                                    strpos($course_part, $event_course_part . '-') === 0) {
+                                    $post_id = $e->ID;
+                                    break;
+                                }
+                            }
+                        }
+                        // Fallback: check if event slug starts with course part and ends with date
+                        elseif (strpos($event_slug_full, $course_part . '-') === 0 && 
+                                preg_match('/' . preg_quote($date_suffix, '/') . '$/i', $event_slug_full)) {
+                            $post_id = $e->ID;
+                            break;
+                        }
+                    }
+                } else {
+                    // No date pattern found, try to find by course slug only
+                    // Search for events where slug starts with the CSV slug
+                    $all_events = get_posts([
+                        'post_type' => 'course_event',
+                        'post_status' => 'publish',
+                        'posts_per_page' => -1,
+                    ]);
+                    
+                    foreach ($all_events as $e) {
+                        if (strpos($e->post_name, $event_slug . '-') === 0) {
+                            $post_id = $e->ID;
+                            break;
+                        }
+                    }
+                }
             }
         }
         // Handle courses (/courses/slug/)
