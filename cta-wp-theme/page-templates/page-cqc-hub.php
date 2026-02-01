@@ -11,6 +11,70 @@ get_header();
 
 $contact = cta_get_contact_info();
 
+/**
+ * Helper function to find course page URL by title/keywords
+ */
+function cta_find_course_link($keywords) {
+  static $courses_cache = null;
+  
+  if ($courses_cache === null) {
+    $courses_cache = get_posts([
+      'post_type' => 'course',
+      'posts_per_page' => -1,
+      'post_status' => 'publish',
+    ]);
+  }
+  
+  $keywords_lower = strtolower(trim($keywords));
+  
+  // Exact title matches first
+  foreach ($courses_cache as $course) {
+    $title_lower = strtolower($course->post_title);
+    if ($title_lower === $keywords_lower || strpos($title_lower, $keywords_lower) !== false) {
+      return get_permalink($course->ID);
+    }
+  }
+  
+  // Keyword mapping for common variations
+  $keyword_map = [
+    'safeguarding' => ['safeguarding', 'safeguarding adults', 'safeguarding children'],
+    'first aid' => ['first aid', 'efaw', 'emergency first aid', 'efa'],
+    'moving' => ['moving', 'handling', 'manual handling', 'moving & handling', 'moving and handling'],
+    'medication' => ['medication', 'medicines', 'medication management', 'medication competency'],
+    'fire safety' => ['fire safety', 'fire'],
+    'health & safety' => ['health', 'safety', 'health & safety', 'health and safety'],
+    'infection' => ['infection', 'ipc', 'infection control', 'infection prevention'],
+    'care certificate' => ['care certificate'],
+    'dementia' => ['dementia', 'dementia care'],
+    'mca' => ['mental capacity', 'dols', 'mca', 'mental capacity act'],
+    'food hygiene' => ['food hygiene', 'food safety'],
+  ];
+  
+  foreach ($keyword_map as $key => $terms) {
+    if (in_array($keywords_lower, $terms) || strpos($keywords_lower, $key) !== false) {
+      foreach ($courses_cache as $course) {
+        $title_lower = strtolower($course->post_title);
+        foreach ($terms as $term) {
+          if (strpos($title_lower, $term) !== false) {
+            return get_permalink($course->ID);
+          }
+        }
+      }
+    }
+  }
+  
+  return null;
+}
+
+/**
+ * Helper to create a course link or plain text
+ */
+function cta_course_link($course_name, $display_text = null) {
+  $link = cta_find_course_link($course_name);
+  $text = $display_text ?: $course_name;
+  return $link ? '<a href="' . esc_url($link) . '">' . esc_html($text) . '</a>' : esc_html($text);
+}
+
 // ACF fields
 $hero_title = function_exists('get_field') ? get_field('hero_title') : '';
 $hero_subtitle = function_exists('get_field') ? get_field('hero_subtitle') : '';
@@ -91,17 +155,28 @@ if (empty($faqs)) {
         [
             'category' => 'general',
             'question' => 'What training do care homes need for CQC compliance?',
-            'answer' => 'Care homes need mandatory training including: Safeguarding, Health & Safety, Fire Safety, Manual Handling, First Aid, Food Hygiene, Infection Control, and Medication Management. All staff must complete the Care Certificate within 12 weeks of starting.',
+            'answer' => 'Care homes need mandatory training including:' . 
+              '<ul class="list-two-column-gold">' .
+              '<li>' . (cta_find_course_link('Safeguarding') ? '<a href="' . esc_url(cta_find_course_link('Safeguarding')) . '">Safeguarding</a>' : 'Safeguarding') . '</li>' .
+              '<li>' . (cta_find_course_link('Health Safety') ? '<a href="' . esc_url(cta_find_course_link('Health Safety')) . '">Health & Safety</a>' : 'Health & Safety') . '</li>' .
+              '<li>' . (cta_find_course_link('Fire Safety') ? '<a href="' . esc_url(cta_find_course_link('Fire Safety')) . '">Fire Safety</a>' : 'Fire Safety') . '</li>' .
+              '<li>' . (cta_find_course_link('Moving Handling') ? '<a href="' . esc_url(cta_find_course_link('Moving Handling')) . '">Moving & Handling</a>' : 'Moving & Handling') . '</li>' .
+              '<li>' . (cta_find_course_link('First Aid') ? '<a href="' . esc_url(cta_find_course_link('First Aid')) . '">First Aid</a>' : 'First Aid') . '</li>' .
+              '<li>' . (cta_find_course_link('Food Hygiene') ? '<a href="' . esc_url(cta_find_course_link('Food Hygiene')) . '">Food Hygiene</a>' : 'Food Hygiene') . '</li>' .
+              '<li>' . (cta_find_course_link('Infection Control') ? '<a href="' . esc_url(cta_find_course_link('Infection Control')) . '">Infection Control</a>' : 'Infection Control') . '</li>' .
+              '<li>' . (cta_find_course_link('Medication Management') ? '<a href="' . esc_url(cta_find_course_link('Medication Management')) . '">Medication Management</a>' : 'Medication Management') . '</li>' .
+              '</ul>' .
+              '<p>All staff must complete the ' . (cta_find_course_link('Care Certificate') ? '<a href="' . esc_url(cta_find_course_link('Care Certificate')) . '">Care Certificate</a>' : 'Care Certificate') . ' within 12 weeks of starting.</p>',
         ],
         [
             'category' => 'general',
             'question' => 'How do I prepare staff for a CQC inspection?',
-            'answer' => 'Ensure all staff have completed mandatory training, training records are up to date, policies and procedures are current, and staff understand their roles. Our CQC Inspection Preparation course covers everything you need to know.',
+            'answer' => 'Ensure all staff have completed <a href="' . esc_url(get_permalink(get_page_by_path('faqs')) . '?category=general') . '">mandatory training</a>, <a href="' . esc_url(get_permalink(get_page_by_path('downloadable-resources'))) . '">training records</a> are up to date, policies and procedures are current, and staff understand their roles. Our <a href="' . esc_url(get_post_type_archive_link('course')) . '">CQC-compliant training courses</a> cover everything you need to know.',
         ],
         [
             'category' => 'training',
             'question' => 'How often does CQC training need to be refreshed?',
-            'answer' => 'Most CQC mandatory training should be refreshed annually. First Aid certificates typically last 3 years. Safeguarding training should be refreshed every 2-3 years. Check specific course requirements for exact refresh periods.',
+            'answer' => 'Most CQC <a href="' . esc_url(get_permalink(get_page_by_path('faqs')) . '?category=general') . '">mandatory training</a> should be refreshed annually. <a href="' . esc_url(cta_find_course_link('First Aid') ?: get_post_type_archive_link('course')) . '">First Aid</a> certificates typically last 3 years. <a href="' . esc_url(cta_find_course_link('Safeguarding') ?: get_post_type_archive_link('course')) . '">Safeguarding</a> training should be refreshed every 2-3 years. Check specific <a href="' . esc_url(get_post_type_archive_link('course')) . '">course requirements</a> for exact refresh periods.',
         ],
         [
             'category' => 'training',
@@ -191,16 +266,16 @@ $collection_schema = [
           </button>
           <div id="cqc-setting-domiciliary" class="accordion-content" role="region" aria-hidden="true">
             <p><strong>Required courses:</strong></p>
-            <ul>
-              <li>Care Certificate</li>
-              <li>Safeguarding Adults</li>
-              <li>Moving & Handling</li>
-              <li>First Aid</li>
-              <li>Medication Awareness</li>
-              <li>Infection Control</li>
-              <li>Health & Safety</li>
-              <li>Fire Safety</li>
-              <li>Food Hygiene (if applicable)</li>
+            <ul class="list-two-column-gold">
+              <li><?php echo cta_course_link('Care Certificate'); ?></li>
+              <li><?php echo cta_course_link('Safeguarding Adults'); ?></li>
+              <li><?php echo cta_course_link('Moving & Handling'); ?></li>
+              <li><?php echo cta_course_link('First Aid'); ?></li>
+              <li><?php echo cta_course_link('Medication Awareness'); ?></li>
+              <li><?php echo cta_course_link('Infection Control'); ?></li>
+              <li><?php echo cta_course_link('Health & Safety'); ?></li>
+              <li><?php echo cta_course_link('Fire Safety'); ?></li>
+              <li><?php echo cta_course_link('Food Hygiene'); ?> (if applicable)</li>
               <li>Lone Working Safety</li>
             </ul>
           </div>
@@ -213,17 +288,17 @@ $collection_schema = [
           </button>
           <div id="cqc-setting-residential" class="accordion-content" role="region" aria-hidden="true">
             <p><strong>Required courses:</strong></p>
-            <ul>
-              <li>Care Certificate</li>
-              <li>Safeguarding Adults & Children</li>
-              <li>Moving & Handling</li>
-              <li>First Aid</li>
-              <li>Medication Management</li>
-              <li>Infection Control</li>
-              <li>Health & Safety</li>
-              <li>Fire Safety</li>
-              <li>Food Hygiene</li>
-              <li>Dementia Care</li>
+            <ul class="list-two-column-gold">
+              <li><?php echo cta_course_link('Care Certificate'); ?></li>
+              <li><?php echo cta_course_link('Safeguarding Adults'); ?> & Children</li>
+              <li><?php echo cta_course_link('Moving & Handling'); ?></li>
+              <li><?php echo cta_course_link('First Aid'); ?></li>
+              <li><?php echo cta_course_link('Medication Management'); ?></li>
+              <li><?php echo cta_course_link('Infection Control'); ?></li>
+              <li><?php echo cta_course_link('Health & Safety'); ?></li>
+              <li><?php echo cta_course_link('Fire Safety'); ?></li>
+              <li><?php echo cta_course_link('Food Hygiene'); ?></li>
+              <li><?php echo cta_course_link('Dementia Care'); ?></li>
               <li>End of Life Care</li>
             </ul>
           </div>
@@ -256,17 +331,17 @@ $collection_schema = [
           </button>
           <div id="cqc-setting-supported-living" class="accordion-content" role="region" aria-hidden="true">
             <p><strong>Required courses:</strong></p>
-            <ul>
-              <li>Care Certificate</li>
-              <li>Safeguarding Adults</li>
-              <li>Moving & Handling</li>
-              <li>First Aid</li>
-              <li>Medication Management</li>
+            <ul class="list-two-column-gold">
+              <li><?php echo cta_course_link('Care Certificate'); ?></li>
+              <li><?php echo cta_course_link('Safeguarding Adults'); ?></li>
+              <li><?php echo cta_course_link('Moving & Handling'); ?></li>
+              <li><?php echo cta_course_link('First Aid'); ?></li>
+              <li><?php echo cta_course_link('Medication Management'); ?></li>
               <li>Learning Disabilities Awareness</li>
-              <li>Mental Capacity Act & DoLS</li>
+              <li><?php echo cta_course_link('Mental Capacity Act'); ?> & DoLS</li>
               <li>Positive Behaviour Support</li>
-              <li>Health & Safety</li>
-              <li>Fire Safety</li>
+              <li><?php echo cta_course_link('Health & Safety'); ?></li>
+              <li><?php echo cta_course_link('Fire Safety'); ?></li>
             </ul>
           </div>
         </div>
@@ -311,7 +386,7 @@ $collection_schema = [
           </div>
           <div class="cqc-inspection-highlight-content">
             <h3>What Inspectors Check</h3>
-            <p>CQC inspectors verify all staff have completed mandatory training, certificates are current, and competency is documented.</p>
+            <p>CQC inspectors verify all staff have completed <a href="<?php echo esc_url(get_permalink(get_page_by_path('faqs')) . '?category=general'); ?>">mandatory training</a>, certificates are current, and competency is documented.</p>
           </div>
         </div>
       </div>
@@ -335,11 +410,11 @@ $collection_schema = [
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
-                <span>Training matrices showing who has completed what training</span>
+                <span><a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">Training matrices</a> showing who has completed what training</span>
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
-                <span>Evidence of competency assessments</span>
+                <span>Evidence of <a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">competency assessments</a></span>
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
@@ -370,11 +445,11 @@ $collection_schema = [
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
-                <span>Store certificates digitally with expiry date tracking</span>
+                <span>Store <a href="<?php echo esc_url(get_permalink(get_page_by_path('faqs')) . '?category=certification'); ?>">certificates</a> digitally with expiry date tracking</span>
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
-                <span>Document competency assessments alongside certificates</span>
+                <span>Document <a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">competency assessments</a> alongside certificates</span>
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
@@ -401,23 +476,23 @@ $collection_schema = [
             <div class="cqc-checklist-grid">
               <div class="cqc-checklist-item cqc-warning">
                 <i class="fas fa-times-circle" aria-hidden="true"></i>
-                <span>Staff have not completed mandatory training within required timeframes</span>
+                <span>Staff have not completed <a href="<?php echo esc_url(get_permalink(get_page_by_path('faqs')) . '?category=general'); ?>">mandatory training</a> within required timeframes</span>
               </div>
               <div class="cqc-checklist-item cqc-warning">
                 <i class="fas fa-times-circle" aria-hidden="true"></i>
-                <span>Training certificates have expired and not been renewed</span>
+                <span><a href="<?php echo esc_url(get_permalink(get_page_by_path('faqs')) . '?category=certification'); ?>">Training certificates</a> have expired and not been renewed</span>
               </div>
               <div class="cqc-checklist-item cqc-warning">
                 <i class="fas fa-times-circle" aria-hidden="true"></i>
-                <span>Competency assessments are missing or incomplete</span>
+                <span><a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">Competency assessments</a> are missing or incomplete</span>
               </div>
               <div class="cqc-checklist-item cqc-warning">
                 <i class="fas fa-times-circle" aria-hidden="true"></i>
-                <span>Training records are disorganized or inaccessible</span>
+                <span><a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">Training records</a> are disorganized or inaccessible</span>
               </div>
               <div class="cqc-checklist-item cqc-warning">
                 <i class="fas fa-times-circle" aria-hidden="true"></i>
-                <span>New staff have not completed induction training</span>
+                <span>New staff have not completed <a href="<?php echo esc_url(cta_find_course_link('Care Certificate') ?: get_post_type_archive_link('course')); ?>">induction training</a></span>
               </div>
             </div>
           </div>
@@ -452,7 +527,7 @@ $collection_schema = [
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
-                <span>Competency assessment records</span>
+                <span><a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">Competency assessment records</a></span>
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
@@ -485,57 +560,116 @@ $collection_schema = [
         <p class="section-description">Stay ahead of upcoming CQC framework updates and new training requirements</p>
       </div>
       
+      <?php
+      // Get regulatory cards from ACF or use defaults
+      $regulatory_cards = get_field('regulatory_cards');
+      if (empty($regulatory_cards)) {
+        // Default cards with links
+        $regulatory_cards = [
+          [
+            'label' => 'New Framework',
+            'title' => 'Single Assessment Framework Updates',
+            'content' => 'CQC is implementing a new Single Assessment Framework that streamlines inspections and focuses on outcomes. <a href="' . esc_url(get_permalink(get_page_by_path('faqs')) . '?category=general') . '">Training evidence</a> will continue to be a key component, with emphasis on demonstrating <a href="' . esc_url(get_permalink(get_page_by_path('downloadable-resources'))) . '">competency</a> and continuous improvement.',
+            'link_url' => 'https://www.cqc.org.uk/guidance-providers/assessment-framework',
+            'link_text' => 'Read CQC framework guidance',
+            'highlight' => false,
+          ],
+          [
+            'label' => 'Mandatory Training',
+            'title' => 'New Mandatory Training Requirements',
+            'content' => 'Several new mandatory training requirements are being introduced in 2026:',
+            'list_items' => [
+              'Oliver McGowan Mandatory Training on Learning Disability and Autism (becoming statutory)',
+              'Enhanced <a href="' . esc_url(cta_find_course_link('Safeguarding') ?: get_post_type_archive_link('course')) . '">safeguarding training</a> requirements',
+              'Updated <a href="' . esc_url(cta_find_course_link('Medication Management') ?: get_post_type_archive_link('course')) . '">medication management</a> competencies',
+              'Refreshed <a href="' . esc_url(cta_find_course_link('Infection Control') ?: get_post_type_archive_link('course')) . '">infection prevention and control</a> standards',
+            ],
+            'link_url' => get_permalink(get_page_by_path('faqs')) . '?category=general',
+            'link_text' => 'View mandatory training FAQs',
+            'highlight' => false,
+          ],
+          [
+            'label' => 'Statutory Requirement',
+            'title' => 'Oliver McGowan Training Becoming Statutory',
+            'content' => 'The Oliver McGowan Mandatory Training on Learning Disability and Autism will become a legal requirement for all health and social care staff in 2026. This training is essential for services supporting people with learning disabilities and autism.',
+            'link_url' => 'https://www.gov.uk/government/publications/the-oliver-mcgowan-mandatory-training-on-learning-disability-and-autism',
+            'link_text' => 'Read official guidance on Oliver McGowan training',
+            'highlight' => true,
+          ],
+          [
+            'label' => 'Timeline',
+            'title' => 'Timeline of Upcoming Changes',
+            'list_items' => [
+              '<strong>Q1 2026:</strong> Single Assessment Framework fully implemented',
+              '<strong>Q2 2026:</strong> <a href="https://www.gov.uk/government/publications/the-oliver-mcgowan-mandatory-training-on-learning-disability-and-autism">Oliver McGowan training</a> becomes statutory',
+              '<strong>Q3 2026:</strong> Updated <a href="' . esc_url(cta_find_course_link('Safeguarding') ?: get_post_type_archive_link('course')) . '">safeguarding</a> requirements in effect',
+              '<strong>Q4 2026:</strong> Enhanced <a href="' . esc_url(cta_find_course_link('Medication Management') ?: get_post_type_archive_link('course')) . '">medication competency</a> standards',
+            ],
+            'link_url' => get_permalink(get_page_by_path('faqs')) . '?category=general',
+            'link_text' => 'View training renewal FAQs',
+            'highlight' => false,
+            'timeline' => true,
+          ],
+          [
+            'label' => 'Our Commitment',
+            'title' => 'How CTA Courses Meet New Standards',
+            'content' => 'All <a href="' . esc_url(get_post_type_archive_link('course')) . '">Continuity Training Academy courses</a> are designed to meet current and upcoming <a href="' . esc_url(get_permalink(get_page_by_path('faqs')) . '?category=general') . '">CQC requirements</a>. We regularly update our course content to align with regulatory changes and ensure your training remains compliant.',
+            'link_url' => get_permalink(get_page_by_path('about')),
+            'link_text' => 'Learn about our training approach',
+            'highlight' => false,
+            'cta' => true,
+          ],
+        ];
+      }
+      ?>
+      
       <div class="cqc-regulatory-grid">
-        <div class="cqc-regulatory-card">
-          <div class="cqc-regulatory-label">
-            <span>New Framework</span>
+        <?php foreach ($regulatory_cards as $card) : 
+          $card_class = 'cqc-regulatory-card';
+          if (!empty($card['highlight'])) $card_class .= ' cqc-regulatory-card-highlight';
+          if (!empty($card['cta'])) $card_class .= ' cqc-regulatory-card-cta';
+          
+          $label_class = 'cqc-regulatory-label';
+          if (!empty($card['highlight'])) $label_class .= ' cqc-regulatory-label-important';
+          
+          $list_class = !empty($card['timeline']) ? 'cqc-timeline-list' : '';
+        ?>
+        <div class="<?php echo esc_attr($card_class); ?>">
+          <?php if (!empty($card['link_url'])) : ?>
+          <a href="<?php echo esc_url($card['link_url']); ?>" class="cqc-regulatory-card-link" aria-label="<?php echo esc_attr($card['title'] . ' - ' . (!empty($card['link_text']) ? $card['link_text'] : 'Learn more')); ?>">
+          <?php endif; ?>
+          
+          <div class="<?php echo esc_attr($label_class); ?>">
+            <span><?php echo esc_html($card['label']); ?></span>
           </div>
-          <h3 class="cqc-regulatory-title">Single Assessment Framework Updates</h3>
-          <p>CQC is implementing a new Single Assessment Framework that streamlines inspections and focuses on outcomes. Training evidence will continue to be a key component, with emphasis on demonstrating competency and continuous improvement.</p>
-        </div>
-        
-        <div class="cqc-regulatory-card">
-          <div class="cqc-regulatory-label">
-            <span>Mandatory Training</span>
-          </div>
-          <h3 class="cqc-regulatory-title">New Mandatory Training Requirements</h3>
-          <p>Several new mandatory training requirements are being introduced in 2026:</p>
-          <ul>
-            <li>Oliver McGowan Mandatory Training on Learning Disability and Autism (becoming statutory)</li>
-            <li>Enhanced safeguarding training requirements</li>
-            <li>Updated medication management competencies</li>
-            <li>Refreshed infection prevention and control standards</li>
+          <h3 class="cqc-regulatory-title"><?php echo esc_html($card['title']); ?></h3>
+          
+          <?php if (!empty($card['content'])) : ?>
+          <p><?php echo wp_kses_post($card['content']); ?></p>
+          <?php endif; ?>
+          
+          <?php if (!empty($card['list_items'])) : ?>
+          <ul class="<?php echo esc_attr($list_class); ?>">
+            <?php foreach ($card['list_items'] as $item) : ?>
+            <li><?php echo wp_kses_post($item); ?></li>
+            <?php endforeach; ?>
           </ul>
-        </div>
-        
-        <div class="cqc-regulatory-card cqc-regulatory-card-highlight">
-          <div class="cqc-regulatory-label cqc-regulatory-label-important">
-            <span>Statutory Requirement</span>
+          <?php endif; ?>
+          
+          <?php if (!empty($card['link_url']) && !empty($card['link_text'])) : ?>
+          <div class="cqc-regulatory-card-footer">
+            <span class="cqc-regulatory-link-text"><?php echo esc_html($card['link_text']); ?></span>
+            <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M7 17L17 7M7 7h10v10"></path>
+            </svg>
           </div>
-          <h3 class="cqc-regulatory-title">Oliver McGowan Training Becoming Statutory</h3>
-          <p>The Oliver McGowan Mandatory Training on Learning Disability and Autism will become a legal requirement for all health and social care staff in 2026. This training is essential for services supporting people with learning disabilities and autism.</p>
+          <?php endif; ?>
+          
+          <?php if (!empty($card['link_url'])) : ?>
+          </a>
+          <?php endif; ?>
         </div>
-        
-        <div class="cqc-regulatory-card">
-          <div class="cqc-regulatory-label">
-            <span>Timeline</span>
-          </div>
-          <h3 class="cqc-regulatory-title">Timeline of Upcoming Changes</h3>
-          <ul class="cqc-timeline-list">
-            <li><strong>Q1 2026:</strong> Single Assessment Framework fully implemented</li>
-            <li><strong>Q2 2026:</strong> Oliver McGowan training becomes statutory</li>
-            <li><strong>Q3 2026:</strong> Updated safeguarding requirements in effect</li>
-            <li><strong>Q4 2026:</strong> Enhanced medication competency standards</li>
-          </ul>
-        </div>
-        
-        <div class="cqc-regulatory-card cqc-regulatory-card-cta">
-          <div class="cqc-regulatory-label">
-            <span>Our Commitment</span>
-          </div>
-          <h3 class="cqc-regulatory-title">How CTA Courses Meet New Standards</h3>
-          <p>All Continuity Training Academy courses are designed to meet current and upcoming CQC requirements. We regularly update our course content to align with regulatory changes and ensure your training remains compliant.</p>
-        </div>
+        <?php endforeach; ?>
       </div>
     </div>
   </section>

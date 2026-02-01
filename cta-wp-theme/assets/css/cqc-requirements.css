@@ -88,9 +88,10 @@
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1400px) {
   .cqc-standards-grid {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem;
   }
 }
 

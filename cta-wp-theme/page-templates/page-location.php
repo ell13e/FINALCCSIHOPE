@@ -100,7 +100,13 @@ $location_schema = cta_get_location_schema($location_data);
               <?php if (!empty($heading)) : ?>
                 <h3 class="section-title" style="font-size: 1.5rem;"><?php echo esc_html($heading); ?></h3>
               <?php endif; ?>
-              <?php if (!empty($content)) : ?>
+              <?php if (!empty($content)) : 
+                $list_style = is_array($section) ? ($section['section_list_style'] ?? 'default') : 'default';
+                if ($list_style === 'two-column-gold') {
+                  // Apply class to all ul elements in content
+                  $content = preg_replace('/<ul\b([^>]*)>/i', '<ul class="list-two-column-gold"$1>', $content);
+                }
+              ?>
                 <div class="section-content"><?php echo wp_kses_post($content); ?></div>
               <?php endif; ?>
             </section>

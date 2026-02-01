@@ -552,11 +552,44 @@ foreach ($faqs as $faq) {
     });
   }
   
+  // Check URL parameter for initial category filter
+  const urlParams = new URLSearchParams(window.location.search);
+  const categoryParam = urlParams.get('category');
+  if (categoryParam) {
+    // Map URL parameter to filter category
+    const categoryMap = {
+      'general': 'general',
+      'booking': 'booking',
+      'certification': 'certification',
+      'payment': 'payment',
+      'group-training': 'group-training',
+    };
+    const mappedCategory = categoryMap[categoryParam] || categoryParam;
+    if (mappedCategory && document.querySelector(`.faqs-filter-btn[data-category="${mappedCategory}"]`)) {
+      filterByCategory(mappedCategory);
+      // Scroll to FAQs section if needed
+      setTimeout(() => {
+        const faqsSection = document.querySelector('.faqs-content-wrapper');
+        if (faqsSection) {
+          faqsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  }
+  
   // Event listeners
   filterButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const category = btn.getAttribute('data-category');
       filterByCategory(category);
+      // Update URL without reload
+      const url = new URL(window.location);
+      if (category === 'all') {
+        url.searchParams.delete('category');
+      } else {
+        url.searchParams.set('category', category);
+      }
+      window.history.pushState({}, '', url);
     });
   });
   

@@ -1579,11 +1579,25 @@ function cta_register_acf_fields() {
                         'placeholder' => 'e.g., How It Works, Our Services, What We Offer',
                     ],
                     [
+                        'key' => 'field_page_section_list_style',
+                        'label' => 'List Style',
+                        'name' => 'section_list_style',
+                        'type' => 'button_group',
+                        'instructions' => 'Choose how lists in this section should be displayed. "Two Column Gold" creates a two-column layout with gold arrow bullets.',
+                        'choices' => [
+                            'default' => 'Default',
+                            'two-column-gold' => 'Two Column Gold',
+                        ],
+                        'default_value' => 'default',
+                        'allow_null' => 0,
+                        'layout' => 'horizontal',
+                    ],
+                    [
                         'key' => 'field_page_section_content',
                         'label' => 'Section Content',
                         'name' => 'section_content',
                         'type' => 'wysiwyg',
-                        'instructions' => 'The main content for this section. Use H3 for subheadings, paragraphs, lists, etc. H1 and H2 are not available here (use H2 for the section heading above, H3 for subheadings within content).',
+                        'instructions' => 'The main content for this section. Use H3 for subheadings, paragraphs, lists, etc. H1 and H2 are not available here (use H2 for the section heading above, H3 for subheadings within content). If you selected "Two Column Gold" above, all &lt;ul&gt; lists in this content will automatically use that styling.',
                         'required' => 1,
                         'tabs' => 'all',
                         'toolbar' => 'full',
@@ -2670,6 +2684,7 @@ function cta_get_page_content_sections($post_id) {
         $sections = [
             [
                 'section_heading' => 'Professional Care Training in ' . $location_name,
+                'section_list_style' => 'default',
                 'section_content' => '<p>We provide CQC-compliant, CPD-accredited care training for teams across ' . esc_html($location_name) . ' and the surrounding area.</p>
 <p>Choose face-to-face sessions at our Maidstone Studios or book on-site training at your service to keep your team confident, compliant, and inspection-ready.</p>
 <h3>On-site training for your team</h3>
@@ -2677,6 +2692,7 @@ function cta_get_page_content_sections($post_id) {
             ],
             [
                 'section_heading' => 'What training can you book?',
+                'section_list_style' => 'default',
                 'section_content' => '<p>Our most popular courses for care providers include:</p>
 <ul>
 <li>Moving &amp; Handling</li>
