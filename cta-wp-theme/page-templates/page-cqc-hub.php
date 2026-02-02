@@ -371,7 +371,7 @@ $collection_schema = [
           <span class="cqc-path-badge">NEW</span>
         </a>
         
-        <a href="#essential-guidance" class="cqc-path-card">
+        <a href="#featured-resources" class="cqc-path-card">
           <i class="<?php echo esc_attr(cta_get_cqc_icon('guide')); ?>" aria-hidden="true"></i>
           <strong>New Provider?</strong>
           <span>Essential compliance guidance</span>
@@ -396,7 +396,7 @@ $collection_schema = [
           >
           <input type="hidden" name="post_type" value="post">
           <button type="submit" class="cqc-search-btn" aria-label="Search">
-            <i class="<?php echo esc_attr(cta_get_cqc_icon('inspection')); ?>" aria-hidden="true"></i>
+            <i class="fas fa-search" aria-hidden="true"></i>
           </button>
         </div>
       </form>
@@ -412,18 +412,18 @@ $collection_schema = [
     </div>
   </section>
 
-  <!-- Essential Guidance Section -->
-  <section class="cqc-section cqc-section-essential" id="essential-guidance">
+  <!-- Featured Resources Section (merged Essential + Most Viewed) -->
+  <section class="cqc-section cqc-section-featured" id="featured-resources">
     <div class="container">
       <div class="cqc-section-header">
-        <span class="cqc-section-badge">Essential</span>
-        <h2 class="cqc-section-title">Essential Guidance</h2>
-        <p class="cqc-section-description">Must-read resources for all care providers</p>
+        <span class="cqc-section-badge">Featured</span>
+        <h2 class="cqc-section-title">Featured Resources</h2>
+        <p class="cqc-section-description">Essential guides and tools to help you stay compliant</p>
       </div>
       
       <?php
-      // Manually curated essential items (3-5 max)
-      $essential_items = [
+      // Curated featured items with better variety (5-6 items)
+      $featured_items = [
         [
           'title' => 'CQC Inspection Preparation Guide',
           'type' => 'guide',
@@ -441,66 +441,7 @@ $collection_schema = [
           'manual_new' => false,
         ],
         [
-          'title' => '2026 Regulatory Changes: What You Need to Know',
-          'type' => 'update',
-          'url' => '#regulatory-updates',
-          'excerpt' => 'New requirements and framework updates',
-          'updated' => '2024-01-20',
-          'manual_new' => true,
-        ],
-      ];
-      ?>
-      
-      <div class="cqc-essential-grid">
-        <?php foreach ($essential_items as $item) : 
-          $is_new = cta_is_content_new(0, $item['manual_new']) || (strtotime($item['updated']) > strtotime('-30 days'));
-        ?>
-        <article class="cqc-essential-card">
-          <span class="cqc-content-type cqc-content-type--<?php echo esc_attr($item['type']); ?>">
-            <?php echo esc_html(ucfirst($item['type'])); ?>
-            <?php if ($is_new) : ?><span class="cqc-new-badge">NEW</span><?php endif; ?>
-          </span>
-          <h3 class="cqc-essential-title"><a href="<?php echo esc_url($item['url']); ?>"><?php echo esc_html($item['title']); ?></a></h3>
-          <p class="cqc-essential-excerpt"><?php echo esc_html($item['excerpt']); ?></p>
-          <time datetime="<?php echo esc_attr($item['updated']); ?>" class="cqc-updated-date">
-            Updated <?php echo esc_html(human_time_diff(strtotime($item['updated']), current_time('timestamp'))); ?> ago
-          </time>
-        </article>
-        <?php endforeach; ?>
-      </div>
-    </div>
-  </section>
-  
-  <!-- Most Viewed Resources Section -->
-  <section class="cqc-section cqc-section-popular" id="most-viewed">
-    <div class="container">
-      <div class="cqc-section-header">
-        <span class="cqc-section-badge">Popular</span>
-        <h2 class="cqc-section-title">Most Viewed Resources</h2>
-        <p class="cqc-section-description">Resources other providers find most helpful</p>
-      </div>
-      
-      <?php
-      // Manually curated popular items (4 items)
-      $popular_items = [
-        [
-          'title' => 'CQC Inspection Preparation Guide',
-          'type' => 'guide',
-          'url' => '#inspection-prep',
-          'excerpt' => 'Complete checklist for inspection readiness',
-          'updated' => '2024-01-15',
-          'manual_new' => false,
-        ],
-        [
-          'title' => 'Mandatory Training Requirements Explained',
-          'type' => 'reference',
-          'url' => '#training-requirements',
-          'excerpt' => 'What training is legally required by care setting',
-          'updated' => '2024-01-10',
-          'manual_new' => false,
-        ],
-        [
-          'title' => '2026 Regulatory Changes: What You Need to Know',
+          'title' => '2026 Regulatory Changes',
           'type' => 'update',
           'url' => '#regulatory-updates',
           'excerpt' => 'New requirements and framework updates',
@@ -515,20 +456,36 @@ $collection_schema = [
           'updated' => '2024-01-05',
           'manual_new' => false,
         ],
+        [
+          'title' => 'Training Matrix Template',
+          'type' => 'tool',
+          'url' => get_permalink(get_page_by_path('downloadable-resources')),
+          'excerpt' => 'Excel template to track staff training completion',
+          'updated' => '2024-01-08',
+          'manual_new' => false,
+        ],
+        [
+          'title' => 'CQC FAQs',
+          'type' => 'reference',
+          'url' => '#cqc-faq-heading',
+          'excerpt' => 'Answers to common compliance questions',
+          'updated' => '2024-01-12',
+          'manual_new' => false,
+        ],
       ];
       ?>
       
-      <div class="cqc-popular-grid">
-        <?php foreach ($popular_items as $item) : 
+      <div class="cqc-featured-grid">
+        <?php foreach ($featured_items as $item) : 
           $is_new = cta_is_content_new(0, $item['manual_new']) || (strtotime($item['updated']) > strtotime('-30 days'));
         ?>
-        <article class="cqc-popular-card">
+        <article class="cqc-featured-card">
           <span class="cqc-content-type cqc-content-type--<?php echo esc_attr($item['type']); ?>">
             <?php echo esc_html(ucfirst($item['type'])); ?>
             <?php if ($is_new) : ?><span class="cqc-new-badge">NEW</span><?php endif; ?>
           </span>
-          <h3 class="cqc-popular-title"><a href="<?php echo esc_url($item['url']); ?>"><?php echo esc_html($item['title']); ?></a></h3>
-          <p class="cqc-popular-excerpt"><?php echo esc_html($item['excerpt']); ?></p>
+          <h3 class="cqc-featured-title"><a href="<?php echo esc_url($item['url']); ?>"><?php echo esc_html($item['title']); ?></a></h3>
+          <p class="cqc-featured-excerpt"><?php echo esc_html($item['excerpt']); ?></p>
           <time datetime="<?php echo esc_attr($item['updated']); ?>" class="cqc-updated-date">
             Updated <?php echo esc_html(human_time_diff(strtotime($item['updated']), current_time('timestamp'))); ?> ago
           </time>
@@ -1113,13 +1070,13 @@ $collection_schema = [
   </section>
   <?php endif; ?>
 
-  <!-- Tools & Resources Section -->
+  <!-- Downloadable Tools Section -->
   <section class="cqc-section cqc-section-tools" id="tools-resources" aria-labelledby="cqc-tools-heading">
     <div class="container">
       <div class="cqc-section-header">
-        <span class="cqc-section-badge">Tools</span>
-        <h2 id="cqc-tools-heading" class="cqc-section-title">Tools & Resources</h2>
-        <p class="cqc-section-description">Checklists, templates, and downloadable resources</p>
+        <span class="cqc-section-badge">Downloads</span>
+        <h2 id="cqc-tools-heading" class="cqc-section-title">Downloadable Tools</h2>
+        <p class="cqc-section-description">Free templates, checklists, and tools to support your compliance</p>
       </div>
       
       <div class="cqc-toolkit-grid">
@@ -1147,28 +1104,12 @@ $collection_schema = [
           <span class="cqc-toolkit-desc">Interactive tool</span>
         </a>
         
-        <a href="#essential-guidance" class="cqc-toolkit-item">
+        <a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>" class="cqc-toolkit-item">
           <div class="cqc-toolkit-icon">
-            <?php echo cta_get_cqc_icon('book'); ?>
+            <i class="<?php echo esc_attr(cta_get_cqc_icon('book')); ?>" aria-hidden="true"></i>
           </div>
-          <strong class="cqc-toolkit-title">Essential Reading</strong>
-          <span class="cqc-toolkit-desc">View curated list</span>
-        </a>
-        
-        <a href="#cqc-faq-heading" class="cqc-toolkit-item">
-          <div class="cqc-toolkit-icon">
-            <i class="<?php echo esc_attr(cta_get_cqc_icon('question')); ?>" aria-hidden="true"></i>
-          </div>
-          <strong class="cqc-toolkit-title">FAQs</strong>
-          <span class="cqc-toolkit-desc">Common questions answered</span>
-        </a>
-        
-        <a href="<?php echo esc_url(get_post_type_archive_link('course')); ?>" class="cqc-toolkit-item">
-          <div class="cqc-toolkit-icon">
-            <?php echo cta_get_cqc_icon('book'); ?>
-          </div>
-          <strong class="cqc-toolkit-title">All Courses</strong>
-          <span class="cqc-toolkit-desc">Browse training courses</span>
+          <strong class="cqc-toolkit-title">All Resources</strong>
+          <span class="cqc-toolkit-desc">View all downloads</span>
         </a>
       </div>
     </div>
