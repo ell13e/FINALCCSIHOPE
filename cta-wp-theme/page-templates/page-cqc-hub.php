@@ -96,20 +96,24 @@ if (empty($intro_text)) {
 $cqc_category_ids = function_exists('get_field') ? (get_field('cqc_post_categories') ?: []) : [];
 $cqc_category_ids = is_array($cqc_category_ids) ? array_filter(array_map('absint', $cqc_category_ids)) : [];
 
+// Get CQC Compliance category specifically
+$cqc_compliance_category = get_term_by('slug', 'cqc-compliance', 'category');
+$cqc_compliance_category_id = $cqc_compliance_category ? $cqc_compliance_category->term_id : 0;
+
 $cqc_query = new WP_Query([
     'post_type' => 'post',
-    'posts_per_page' => 12,
+    'posts_per_page' => 3,
     'post_status' => 'publish',
     'orderby' => 'date',
     'order' => 'DESC',
-    'tax_query' => !empty($cqc_category_ids) ? [
+    'tax_query' => [
         [
             'taxonomy' => 'category',
             'field' => 'term_id',
-            'terms' => $cqc_category_ids,
+            'terms' => $cqc_compliance_category_id ? [$cqc_compliance_category_id] : ($cqc_category_ids ?: []),
             'operator' => 'IN',
         ],
-    ] : [],
+    ],
 ]);
 
 // If no posts found with those categories, get recent posts (fallback)
@@ -559,7 +563,7 @@ $collection_schema = [
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
-                <span><a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">Training matrices</a> showing who has completed what training</span>
+                <span><a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">Training matrix</a> recording who has completed what training</span>
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
@@ -727,7 +731,7 @@ $collection_schema = [
           [
             'label' => 'New Framework',
             'title' => 'Single Assessment Framework Updates',
-            'content' => 'CQC is implementing a new Single Assessment Framework that streamlines inspections and focuses on outcomes. <a href="' . esc_url(get_permalink(get_page_by_path('downloadable-resources'))) . '">Training evidence</a> will continue to be a key component, with emphasis on demonstrating <a href="' . esc_url(get_permalink(get_page_by_path('downloadable-resources'))) . '">competency</a> and continuous improvement.',
+            'content' => 'CQC is introducing a new Single Assessment Framework that simplifies the inspection process and focuses on care outcomes. Training evidence remains essential, with greater emphasis on demonstrating staff competency and ongoing professional development.',
             'link_url' => 'https://www.cqc.org.uk/guidance-providers/assessment-framework',
             'link_text' => 'Read CQC framework guidance',
             'highlight' => false,
@@ -742,7 +746,7 @@ $collection_schema = [
               'Updated <a href="' . esc_url(cta_find_course_link('Medication Management') ?: get_post_type_archive_link('course')) . '">medication management</a> competencies',
               'Refreshed <a href="' . esc_url(cta_find_course_link('Infection Control') ?: get_post_type_archive_link('course')) . '">infection prevention and control</a> standards',
             ],
-            'link_url' => get_permalink(get_page_by_path('faqs')) . '?category=general',
+            'link_url' => get_permalink(get_page_by_path('faqs')) . '?category=mandatory-training',
             'link_text' => 'View mandatory training FAQs',
             'highlight' => false,
           ],
@@ -763,15 +767,15 @@ $collection_schema = [
               '<strong>Q3 2026:</strong> Updated <a href="' . esc_url(cta_find_course_link('Safeguarding') ?: get_post_type_archive_link('course')) . '">safeguarding</a> requirements in effect',
               '<strong>Q4 2026:</strong> Enhanced <a href="' . esc_url(cta_find_course_link('Medication Management') ?: get_post_type_archive_link('course')) . '">medication competency</a> standards',
             ],
-            'link_url' => get_permalink(get_page_by_path('cqc-compliance-hub')) ?: get_permalink(get_page_by_path('cqc-hub')) ?: get_permalink(get_page_by_path('faqs')) . '?category=general',
-            'link_text' => 'View CQC compliance hub',
+            'link_url' => get_post_type_archive_link('course'),
+            'link_text' => 'Browse all courses',
             'highlight' => false,
             'timeline' => true,
           ],
           [
             'label' => 'Our Commitment',
             'title' => 'How CTA Courses Meet New Standards',
-            'content' => 'All <a href="' . esc_url(get_post_type_archive_link('course')) . '">Continuity Training Academy courses</a> are designed to meet current and upcoming <a href="' . esc_url(get_permalink(get_page_by_path('faqs')) . '?category=general') . '">CQC requirements</a>. We regularly update our course content to align with regulatory changes and ensure your training remains compliant.',
+            'content' => 'All Continuity Training Academy courses are designed to meet current and upcoming CQC requirements. We regularly update our course content to align with regulatory changes and ensure your training remains compliant.',
             'link_url' => get_post_type_archive_link('course'),
             'link_text' => 'Browse all courses',
             'highlight' => false,

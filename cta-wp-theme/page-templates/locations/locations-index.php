@@ -301,7 +301,7 @@ echo '<script type="application/ld+json">' . wp_json_encode($schema_data, JSON_U
           <div class="locations-delivery-icon">
             <i class="fas fa-building" aria-hidden="true"></i>
           </div>
-          <h3 class="locations-delivery-title"><i class="fas fa-building" aria-hidden="true"></i> At Our Centre</h3>
+          <h3 class="locations-delivery-title">At Our Centre</h3>
           <p class="locations-delivery-address">The Maidstone Studios, New Cut Road, Maidstone ME14 5NZ</p>
           
           <ul class="locations-delivery-features">
@@ -328,7 +328,7 @@ echo '<script type="application/ld+json">' . wp_json_encode($schema_data, JSON_U
           <div class="locations-delivery-icon">
             <i class="fas fa-home" aria-hidden="true"></i>
           </div>
-          <h3 class="locations-delivery-title"><i class="fas fa-home" aria-hidden="true"></i> We Come to You</h3>
+          <h3 class="locations-delivery-title">We Come to You</h3>
           <p class="locations-delivery-address">On-site training anywhere in the UK</p>
           
           <ul class="locations-delivery-features">
