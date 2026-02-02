@@ -800,12 +800,15 @@ $collection_schema = [
           <h3 class="cqc-regulatory-title"><?php echo esc_html($card['title']); ?></h3>
           
           <?php if (!empty($card['content'])) : ?>
-          <p><?php echo wp_kses_post($card['content']); ?></p>
+          <div><?php echo wp_kses_post($card['content']); ?></div>
           <?php endif; ?>
           
-          <?php if (!empty($card['list_items'])) : ?>
+          <?php if (!empty($card['list_items'])) : 
+            // Handle both array and newline-separated string
+            $list_items = is_array($card['list_items']) ? $card['list_items'] : array_filter(array_map('trim', explode("\n", $card['list_items'])));
+          ?>
           <ul class="<?php echo esc_attr($list_class); ?>">
-            <?php foreach ($card['list_items'] as $item) : ?>
+            <?php foreach ($list_items as $item) : ?>
             <li><?php echo wp_kses_post($item); ?></li>
             <?php endforeach; ?>
           </ul>
