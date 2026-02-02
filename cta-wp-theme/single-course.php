@@ -183,7 +183,6 @@ while (have_posts()) : the_post();
           
           <?php 
           // Expanded Content Section (before accordions)
-          $intro_paragraph = get_field('course_intro_paragraph');
           $why_matters = get_field('course_why_matters');
           $covered_items = get_field('course_covered_items');
           $format_details = get_field('course_format_details');
@@ -191,7 +190,7 @@ while (have_posts()) : the_post();
           $benefits = get_field('course_benefits');
           $after_note = get_field('course_after_note');
           
-          if ($intro_paragraph || $why_matters || $covered_items || $format_details || $key_features || $benefits) :
+          if ($why_matters || $covered_items || $format_details || $key_features || $benefits) :
           ?>
           <div class="course-expanded-content">
             <?php if ($why_matters) : ?>
@@ -282,7 +281,7 @@ while (have_posts()) : the_post();
                   </svg>
                 </div>
                 <div class="course-format-label">Accreditation</div>
-                <div class="course-format-value"><?php echo esc_html($accreditation); ?></div>
+                <div class="course-format-value"><?php echo esc_html($accreditation); ?> Accredited</div>
               </div>
               <?php endif; ?>
             </div>
@@ -344,16 +343,6 @@ while (have_posts()) : the_post();
                 <?php echo wp_kses_post($after_note); ?>
               </div>
               <?php endif; ?>
-            </div>
-            <?php endif; ?>
-            
-            <?php if ($intro_paragraph) : ?>
-            <div class="course-intro-lead course-intro-condensed">
-              <?php 
-              // Truncate to 2-3 sentences max (approximately 150 words)
-              $truncated_intro = wp_trim_words($intro_paragraph, 30, '');
-              echo wp_kses_post($truncated_intro);
-              ?>
             </div>
             <?php endif; ?>
           </div>
@@ -418,9 +407,19 @@ while (have_posts()) : the_post();
           <!-- Who Should Attend - EXPANDED (no accordion) -->
           <div class="course-detail-audience-section">
             <h3 class="course-detail-subheading">Who Should Attend</h3>
-            <div class="course-detail-text">
-              <?php echo wpautop(wp_kses_post($suitable_for)); ?>
-            </div>
+            <?php 
+            // Check if content already has list markup
+            $has_list_markup = strpos($suitable_for, '<ul>') !== false || strpos($suitable_for, '<li>') !== false;
+            
+            if ($has_list_markup) {
+              // Display as-is if already formatted as a list
+              echo '<div class="course-detail-text">' . wp_kses_post($suitable_for) . '</div>';
+            } else {
+              // Wrap in div with styling for paragraph format
+              echo '<div class="course-detail-text course-audience-text">' . wpautop(wp_kses_post($suitable_for)) . '</div>';
+              // TODO: Manually update ACF content to use bullet format for better scanability
+            }
+            ?>
           </div>
           <?php endif; ?>
 
@@ -556,7 +555,31 @@ while (have_posts()) : the_post();
               <?php endif; ?>
               <div class="course-detail-price-note">per person</div>
               <div class="course-detail-price-includes">
-                Includes certificate<?php if ($accreditation && strtolower(trim($accreditation)) !== 'none') : ?>, <?php echo esc_html($accreditation); ?> accreditation<?php endif; ?>, materials & lifetime access to resources
+                <?php
+                // Build includes array dynamically based on available fields
+                $includes = [];
+                
+                if ($certificate) {
+                  $includes[] = 'Certificate';
+                }
+                
+                if ($accreditation && strtolower(trim($accreditation)) !== 'none') {
+                  $includes[] = esc_html($accreditation) . ' accreditation';
+                }
+                
+                // Always include materials
+                $includes[] = 'Course materials';
+                
+                // Join with commas and "and" for last item
+                if (count($includes) > 1) {
+                  $last_item = array_pop($includes);
+                  $includes_text = implode(', ', $includes) . ' and ' . $last_item;
+                } else {
+                  $includes_text = $includes[0];
+                }
+                
+                echo 'Includes ' . $includes_text;
+                ?>
               </div>
             </div>
             <?php endif; ?>
@@ -766,7 +789,7 @@ while (have_posts()) : the_post();
       <div class="course-detail-cta-inline">
         <div class="course-detail-cta-content">
           <h3>Ready to Get Started?</h3>
-          <p>Book your place today and join hundreds of care professionals advancing their skills.</p>
+          <p>Spaces fill quickly - secure your place today</p>
         </div>
         <button 
           type="button"
@@ -1015,15 +1038,71 @@ while (have_posts()) : the_post();
       const isHidden = moreWrapper.style.display === 'none' || !moreWrapper.style.display;
       
       if (isHidden) {
+        // Check content height before animating
+        // Temporarily show to measure
         moreWrapper.style.display = 'block';
-        showMoreText.style.display = 'none';
-        showLessText.style.display = 'inline';
-        toggleIcon.style.transform = 'rotate(180deg)';
-      } else {
+        moreWrapper.style.visibility = 'hidden';
+        const contentHeight = moreWrapper.offsetHeight;
         moreWrapper.style.display = 'none';
+        moreWrapper.style.visibility = 'visible';
+        
+        // Skip animation for very long content (>1000px) to prevent jankiness
+        if (contentHeight > 1000) {
+          moreWrapper.style.display = 'block';
+          showMoreText.style.display = 'none';
+          showLessText.style.display = 'inline';
+          toggleIcon.style.transform = 'rotate(180deg)';
+          // Smooth scroll to toggle button
+          toggleButton.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+          // Animate for shorter content
+          moreWrapper.style.display = 'block';
+          moreWrapper.style.maxHeight = '0';
+          moreWrapper.style.overflow = 'hidden';
+          moreWrapper.style.transition = 'max-height 0.3s ease-out';
+          
+          // Force reflow
+          void moreWrapper.offsetHeight;
+          
+          moreWrapper.style.maxHeight = contentHeight + 'px';
+          showMoreText.style.display = 'none';
+          showLessText.style.display = 'inline';
+          toggleIcon.style.transform = 'rotate(180deg)';
+          
+          // Clean up after animation
+          setTimeout(() => {
+            moreWrapper.style.maxHeight = '';
+            moreWrapper.style.overflow = '';
+            moreWrapper.style.transition = '';
+          }, 300);
+          
+          // Smooth scroll to toggle button
+          setTimeout(() => {
+            toggleButton.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 150);
+        }
+      } else {
+        // Collapse
+        const currentHeight = moreWrapper.offsetHeight;
+        moreWrapper.style.maxHeight = currentHeight + 'px';
+        moreWrapper.style.overflow = 'hidden';
+        moreWrapper.style.transition = 'max-height 0.3s ease-out';
+        
+        // Force reflow
+        void moreWrapper.offsetHeight;
+        
+        moreWrapper.style.maxHeight = '0';
         showMoreText.style.display = 'inline';
         showLessText.style.display = 'none';
         toggleIcon.style.transform = 'rotate(0deg)';
+        
+        // Clean up after animation
+        setTimeout(() => {
+          moreWrapper.style.display = 'none';
+          moreWrapper.style.maxHeight = '';
+          moreWrapper.style.overflow = '';
+          moreWrapper.style.transition = '';
+        }, 300);
       }
     }
   }

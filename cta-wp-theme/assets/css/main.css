@@ -40943,20 +40943,24 @@ fieldset.booking-modal-field legend.booking-modal-label {
   min-width: 0; /* Prevent flex/grid item overflow */
 }
 
-/* Mobile: full width, static positioning */
+/* Mobile: full width, sticky positioning */
 @media (max-width: 639px) {
   .course-detail-sidebar {
-    position: static;
+    position: sticky;
+    top: 80px;
+    z-index: 90;
     order: -1;
     width: 100%;
     max-width: 100%;
   }
 }
 
-/* Tablet: full width, static positioning */
+/* Tablet: full width, sticky positioning */
 @media (min-width: 640px) and (max-width: 967px) {
   .course-detail-sidebar {
-    position: static;
+    position: sticky;
+    top: 80px;
+    z-index: 90;
     order: -1;
     width: 100%;
     max-width: 100%;
@@ -50668,6 +50672,28 @@ a.article-cta-btn:focus-visible {
   line-height: 1.5;
 }
 
+.course-detail-price-unit {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Audience text styling for paragraph format */
+.course-audience-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #374151;
+}
+
+.course-audience-text p {
+  margin-bottom: 1rem;
+}
+
+.course-audience-text p:last-child {
+  margin-bottom: 0;
+}
+
 /* =========================================
    Sticky Header CTA
    ========================================= */
@@ -50823,8 +50849,8 @@ a.article-cta-btn:focus-visible {
 @media (max-width: 967px) {
   .course-detail-sidebar {
     position: sticky;
-    top: 0;
-    z-index: 100;
+    top: 80px;
+    z-index: 90;
     margin-bottom: 2rem;
   }
   

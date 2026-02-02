@@ -829,9 +829,37 @@ function cta_generate_course_slug($post_id) {
     $level = get_field('course_level', $post_id);
     $duration = get_field('course_duration', $post_id);
     
-    // Generate base slug from title
-    $base_slug = sanitize_title($post->post_title);
+    // Generate shorter base slug from title (extract key words, limit length)
+    $title = $post->post_title;
+    $stop_words = ['a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'has', 'he', 'in', 'is', 'it', 'its', 'of', 'on', 'that', 'the', 'to', 'was', 'will', 'with', 'training', 'course'];
+    
+    // Extract key words from title
+    $words = preg_split('/[\s\-]+/', strtolower($title));
+    $key_words = array_filter($words, function($word) use ($stop_words) {
+        $clean_word = preg_replace('/[^a-z0-9]/', '', $word);
+        return strlen($clean_word) >= 3 && !in_array($clean_word, $stop_words);
+    });
+    
+    // Take first 2-3 key words for shorter slug
+    $key_words = array_slice($key_words, 0, 3);
+    $base_slug = !empty($key_words) ? implode('-', $key_words) : sanitize_title($title);
+    
+    // Limit base slug length to leave room for suffixes (max 40 chars)
+    if (strlen($base_slug) > 40) {
+        $base_slug = substr($base_slug, 0, 40);
+        $base_slug = rtrim($base_slug, '-');
+    }
+    
     $suffix_parts = [];
+    
+    // Add level shorthand FIRST (most important) - e.g., "Level 2" → "l2"
+    // Handle various formats: "Level 2", "L2", "2", "Level2", etc.
+    if ($level) {
+        $level_clean = trim($level);
+        if (preg_match('/(?:level\s*)?(\d+)/i', $level_clean, $matches)) {
+            $suffix_parts[] = 'l' . $matches[1];
+        }
+    }
     
     // Add duration shorthand (e.g., "1 Day" → "1d", "3 Hours" → "3h", "Half Day" → "hd")
     if ($duration) {
@@ -845,15 +873,26 @@ function cta_generate_course_slug($post_id) {
         }
     }
     
-    // Add level shorthand (e.g., "Level 2" → "l2")
-    if ($level && preg_match('/(\d+)/i', $level, $matches)) {
-        $suffix_parts[] = 'l' . $matches[1];
-    }
-    
     // Build final slug
     $new_slug = $base_slug;
     if (!empty($suffix_parts)) {
         $new_slug .= '-' . implode('-', $suffix_parts);
+    }
+    
+    // Enforce WordPress slug length limit (200 chars max, but keep it shorter for best practice)
+    // If too long, truncate base slug but keep suffixes
+    $max_length = 80; // Reasonable limit for URLs
+    if (strlen($new_slug) > $max_length) {
+        $suffix_length = strlen('-' . implode('-', $suffix_parts));
+        $base_max = $max_length - $suffix_length;
+        if ($base_max > 10) {
+            $base_slug = substr($base_slug, 0, $base_max);
+            $base_slug = rtrim($base_slug, '-');
+            $new_slug = $base_slug . '-' . implode('-', $suffix_parts);
+        } else {
+            // If even with minimal base it's too long, just use base + level
+            $new_slug = $base_slug . '-' . ($suffix_parts[0] ?? '');
+        }
     }
     
     // Only update if slug is different
@@ -894,6 +933,33 @@ function cta_auto_generate_course_slug_on_acf_save($post_id) {
     }
 }
 add_action('acf/save_post', 'cta_auto_generate_course_slug_on_acf_save', 20);
+
+/**
+ * Force regenerate slugs for all courses
+ * Run this once via WP-CLI or admin action to fix existing slugs
+ * Usage: wp eval 'cta_regenerate_all_course_slugs();'
+ */
+function cta_regenerate_all_course_slugs() {
+    $courses = get_posts([
+        'post_type' => 'course',
+        'posts_per_page' => -1,
+        'post_status' => ['publish', 'draft', 'private'],
+    ]);
+    
+    $updated = 0;
+    foreach ($courses as $course) {
+        $old_slug = $course->post_name;
+        cta_generate_course_slug($course->ID);
+        $new_slug = get_post($course->ID)->post_name;
+        
+        if ($old_slug !== $new_slug) {
+            $updated++;
+            error_log("Updated course slug: {$course->post_title} - {$old_slug} → {$new_slug}");
+        }
+    }
+    
+    return $updated;
+}
 
 /**
  * Auto-generate short slug for Course Events
