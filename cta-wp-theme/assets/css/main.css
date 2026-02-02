@@ -50357,12 +50357,11 @@ a.article-cta-btn:focus-visible {
 
 .course-next-dates {
   margin: 1.5rem 0;
-  padding: 1.75rem;
-  background: linear-gradient(135deg, var(--cream-light, #F5EFE0) 0%, var(--white, #ffffff) 100%);
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 1.5rem 0;
+  background: transparent;
+  border: none;
   text-align: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  box-shadow: none;
 }
 
 .course-next-dates h4 {
@@ -50555,12 +50554,11 @@ a.article-cta-btn:focus-visible {
    ========================================= */
 
 .course-detail-price-prominent {
-  padding: 1.75rem;
-  background: linear-gradient(135deg, var(--cream-light, #F5EFE0) 0%, var(--white, #ffffff) 100%);
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 1.5rem 0;
+  background: transparent;
+  border: none;
   margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  box-shadow: none;
 }
 
 .course-detail-price-prominent .course-detail-price-container {
@@ -50806,19 +50804,17 @@ a.article-cta-btn:focus-visible {
    ========================================= */
 
 .course-detail-price-includes {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 2px solid #e5e7eb;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .course-detail-price-includes-label {
-  font-weight: 700;
-  color: var(--brown-dark, #2B1B0E);
+  font-weight: 600;
+  color: var(--brown-medium, #4A3A2A);
   display: block;
-  margin-bottom: 1rem;
-  font-size: 0.8125rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
 }
 
 .course-detail-price-includes-list {
@@ -50983,8 +50979,6 @@ a.article-cta-btn:focus-visible {
   padding: var(--section-padding-mobile) 0;
   background: var(--white, #ffffff);
   margin: var(--section-padding-mobile) 0;
-  position: relative;
-  overflow: hidden;
 }
 
 @media (min-width: 768px) {
@@ -51001,35 +50995,15 @@ a.article-cta-btn:focus-visible {
   }
 }
 
-.course-detail-cta-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--gold-primary, #B29456) 0%, var(--teal-primary, #5BA8A0) 100%);
-}
-
 .course-detail-cta-card {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 4rem;
-  align-items: center;
-  max-width: 1100px;
+  display: block;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 3rem;
-  background: var(--white, #ffffff);
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.course-detail-cta-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  text-align: center;
 }
 
 .course-detail-cta-content h3 {
@@ -51042,29 +51016,27 @@ a.article-cta-btn:focus-visible {
 }
 
 .course-detail-cta-lead {
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
   color: var(--brown-medium, #4A3A2A);
-  line-height: 1.7;
-  margin: 0 0 1.75rem 0;
-  font-weight: 500;
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
+  font-weight: 400;
 }
 
 .course-detail-cta-benefits {
   list-style: none;
   padding: 0;
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  margin: 0 0 1.5rem 0;
+  display: block;
 }
 
 .course-detail-cta-benefits li {
   font-size: clamp(0.9375rem, 1.25vw, 1rem);
   color: var(--brown-medium, #4A3A2A);
-  padding: 0.625rem 0 0.625rem 2rem;
+  padding: 0.5rem 0;
   position: relative;
-  font-weight: 500;
-  line-height: 1.5;
+  font-weight: 400;
+  line-height: 1.6;
 }
 
 .course-detail-cta-benefits li::before {
@@ -51085,19 +51057,15 @@ a.article-cta-btn:focus-visible {
 }
 
 .course-detail-cta-action {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 1rem;
-  min-width: 280px;
+  display: block;
+  margin-top: 1.5rem;
 }
 
 .course-detail-cta-note {
   font-size: 0.875rem;
-  color: #6b7280;
-  margin: 0;
+  color: var(--brown-medium, #4A3A2A);
+  margin: 1rem 0 0 0;
   text-align: center;
-  font-style: italic;
   line-height: 1.5;
 }
 
