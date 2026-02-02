@@ -487,11 +487,15 @@ $collection_schema = [
       <!-- Accordion Sections -->
       <div class="cqc-inspection-accordions">
         <?php if (!empty($inspection_accordions) && is_array($inspection_accordions)) : 
+          // Default colors for each accordion (cycling through if more than 4)
+          $default_colors = ['#35938d', '#5BA8A0', '#d97706', '#9b8560', '#8B6F3F', '#805ad5'];
+          
           // Use ACF fields if available
           foreach ($inspection_accordions as $index => $accordion) :
             $accordion_title = $accordion['title'] ?? '';
             $accordion_icon = $accordion['icon'] ?? 'fas fa-check-circle';
-            $accordion_icon_color = $accordion['icon_color'] ?? '#35938d';
+            // Use custom color if set, otherwise use default color based on index
+            $accordion_icon_color = !empty($accordion['icon_color']) ? $accordion['icon_color'] : $default_colors[$index % count($default_colors)];
             $accordion_expanded = !empty($accordion['expanded']);
             $accordion_warning = !empty($accordion['warning']);
             $accordion_items = $accordion['items'] ?? '';
