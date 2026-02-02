@@ -41274,11 +41274,12 @@ fieldset.booking-modal-field legend.booking-modal-label {
 }
 
 .course-detail-phone-hours {
-  margin: 0.5rem 0 0 0;
-  font-size: 0.8125rem;
+  margin: 0.75rem 0 0 0;
+  font-size: 0.875rem;
   color: var(--brown-medium, #4A3A2A);
-  opacity: 0.7;
-  line-height: 1.4;
+  opacity: 0.8;
+  line-height: 1.5;
+  font-weight: 400;
 }
 
 .course-detail-phone-link svg {
@@ -50291,7 +50292,7 @@ a.article-cta-btn:focus-visible {
 
 .course-next-dates {
   margin: 1.5rem 0;
-  padding: 1.5rem;
+  padding: 2rem 1.5rem;
   background: var(--cream-light, #F5EFE0);
   border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -50300,7 +50301,7 @@ a.article-cta-btn:focus-visible {
 }
 
 .course-next-dates h4 {
-  margin: 0 0 1rem 0;
+  margin: 0 0 1.25rem 0;
   font-size: clamp(1rem, 1.5vw, 1.125rem);
   font-weight: 700;
   color: var(--brown-dark, #2B1B0E);
@@ -50365,38 +50366,22 @@ a.article-cta-btn:focus-visible {
 }
 
 .course-dates-fallback {
-  margin: 1.5rem 0 1rem 0;
-  font-size: clamp(0.875rem, 1.125vw, 0.9375rem);
-  color: var(--brown-medium, #4A3A2A);
-  line-height: 1.6;
-  font-weight: 500;
-}
-
-.course-dates-no-dates {
-  margin: 0 0 1rem 0;
-  font-size: clamp(0.875rem, 1.125vw, 0.9375rem);
+  margin: 1.5rem 0 1.5rem 0;
+  font-size: clamp(0.9375rem, 1.25vw, 1rem);
   color: var(--brown-medium, #4A3A2A);
   line-height: 1.6;
   font-weight: 400;
 }
 
-.course-next-dates .button-secondary {
-  width: 100%;
-  text-align: center;
-  padding: 0.875rem 1.5rem;
-  font-weight: 600;
-  border: 2px solid var(--gold-primary, #B29456);
-  color: var(--gold-primary, #B29456);
-  background: transparent;
-  transition: all 0.2s ease;
+.course-dates-no-dates {
+  margin: 0 0 1.5rem 0;
+  font-size: clamp(0.9375rem, 1.25vw, 1rem);
+  color: var(--brown-medium, #4A3A2A);
+  line-height: 1.6;
+  font-weight: 400;
 }
 
-.course-next-dates .button-secondary:hover {
-  background: var(--gold-primary, #B29456);
-  color: #ffffff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(178, 148, 86, 0.2);
-}
+/* Remove custom button styles - use standard btn-secondary */
 
 /* =========================================
    Course Testimonials Section

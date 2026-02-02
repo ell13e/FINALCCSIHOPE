@@ -567,7 +567,7 @@ while (have_posts()) : the_post();
               <p class="course-dates-fallback">
                 Can't see a date that works for you?
               </p>
-              <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact'))); ?>" class="button button-secondary">
+              <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact'))); ?>" class="btn btn-secondary">
                 Enquire About This Course
               </a>
             </div>
@@ -580,7 +580,7 @@ while (have_posts()) : the_post();
               <p class="course-dates-no-dates">
                 No upcoming dates scheduled at the moment. Please get in touch to discuss your training needs.
               </p>
-              <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact'))); ?>" class="button button-secondary">
+              <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact'))); ?>" class="btn btn-secondary">
                 Enquire About This Course
               </a>
             </div>
