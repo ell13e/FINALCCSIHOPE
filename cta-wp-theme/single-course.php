@@ -583,14 +583,14 @@ while (have_posts()) : the_post();
             </div>
             <?php endif; ?>
 
-            <!-- Book Now Button -->
+            <!-- Enquire Button -->
             <button 
               type="button"
               onclick="openBookingModal('<?php echo esc_js(get_the_title()); ?>', '<?php echo esc_js(get_the_ID()); ?>')"
               class="primary-cta-button primary-cta-button-large"
-              aria-label="Book this course"
+              aria-label="Request more information about this course"
             >
-              Book Now
+              Request More Information
             </button>
 
             <!-- Phone Number -->
@@ -698,12 +698,12 @@ while (have_posts()) : the_post();
             type="button"
             onclick="openBookingModal('<?php echo esc_js(get_the_title()); ?>', '<?php echo esc_js(get_the_ID()); ?>')"
             class="btn btn-primary"
-            aria-label="Book this course"
+            aria-label="Enquire about this course"
           >
-            Book Your Place Now
+            Request More Information
           </button>
-          <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact'))); ?>" class="btn btn-secondary">
-            Get in Touch
+          <a href="<?php echo esc_url(get_permalink(get_page_by_path('group-training')) ?: get_permalink(get_page_by_path('contact')) . '?type=group-training'); ?>" class="btn btn-secondary">
+            Book for Your Team
           </a>
         </div>
       </div>
