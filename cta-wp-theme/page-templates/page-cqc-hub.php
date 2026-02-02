@@ -691,7 +691,6 @@ $collection_schema = [
           </a>
         </div>
       </div>
-        <?php endif; ?>
     </div>
   </section>
 
