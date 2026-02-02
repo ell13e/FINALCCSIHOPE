@@ -791,18 +791,18 @@ echo '<script type="application/ld+json">' . wp_json_encode($schema_data, JSON_U
   </section>
 
   <!-- Final CTA -->
-  <section class="about-cta-new" aria-labelledby="cta-heading">
+  <section class="cta-section" aria-labelledby="cta-heading">
     <div class="container">
-      <div class="about-cta-content-new">
-        <h2 id="cta-heading">Book Your Team In</h2>
-        <p>Tell us what training you need and where you are. We'll quote you (centre-based or on-site) with available dates. Your team gets trained, certificates hit inboxes, you're CQC-ready.</p>
-        <div class="about-cta-buttons-new">
+      <div class="cta-content">
+        <h2 id="cta-heading" class="cta-title">Book Your Team In</h2>
+        <p class="cta-description">Tell us what training you need and where you are. We'll quote you (centre-based or on-site) with available dates. Your team gets trained, certificates hit inboxes, you're CQC-ready.</p>
+        <div class="cta-buttons">
           <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact'))); ?>" class="btn btn-primary">Get in Touch</a>
           <a href="<?php echo esc_url(get_post_type_archive_link('course_event')); ?>" class="btn btn-secondary">See Course Dates</a>
         </div>
-        <p style="margin-top: 32px; font-size: 1.125rem; color: rgba(255, 255, 255, 0.95);">
+        <p style="margin-top: 32px; font-size: 1.125rem; color: var(--brown-medium);">
           <i class="fas fa-phone" aria-hidden="true"></i> 
-          <a href="tel:<?php echo esc_attr(preg_replace('/[^0-9]/', '', $contact['phone'])); ?>" style="color: var(--white); font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px;"><?php echo esc_html($contact['phone']); ?></a>
+          <a href="tel:<?php echo esc_attr(preg_replace('/[^0-9]/', '', $contact['phone'])); ?>" style="color: var(--brown-dark); font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px;"><?php echo esc_html($contact['phone']); ?></a>
         </p>
       </div>
     </div>
