@@ -188,7 +188,7 @@ while (have_posts()) : the_post();
                 </svg>
               </div>
               <div class="course-callout-content">
-                <h3>Why This Course Matters</h3>
+                <h3>Why This Matters</h3>
                 <?php echo wp_kses_post($why_matters); ?>
               </div>
             </div>
@@ -196,15 +196,24 @@ while (have_posts()) : the_post();
             
             <?php if ($covered_items && is_array($covered_items)) : ?>
             <div class="course-covered-section">
-              <h3>What's Covered</h3>
+              <h3>Key Topics</h3>
               <div class="course-covered-grid">
-                <?php foreach ($covered_items as $item) : ?>
+                <?php 
+                // Limit to 6 items max to reduce density
+                $display_items = array_slice($covered_items, 0, 6);
+                foreach ($display_items as $item) : 
+                ?>
                 <div class="course-covered-item">
                   <h4><?php echo esc_html($item['title']); ?></h4>
-                  <p><?php echo esc_html($item['description']); ?></p>
+                  <p><?php echo esc_html(wp_trim_words($item['description'], 20)); ?></p>
                 </div>
                 <?php endforeach; ?>
               </div>
+              <?php if (count($covered_items) > 6) : ?>
+              <p class="course-covered-more">
+                <a href="#course-overview">View full curriculum below</a>
+              </p>
+              <?php endif; ?>
             </div>
             <?php endif; ?>
             
@@ -265,15 +274,22 @@ while (have_posts()) : the_post();
             
             <?php if ($format_details) : ?>
             <div class="course-format-details">
-              <?php echo wp_kses_post($format_details); ?>
+              <?php echo wp_kses_post(wp_trim_words($format_details, 100)); ?>
+              <?php if (str_word_count(strip_tags($format_details)) > 100) : ?>
+              <p><a href="#course-overview">Read more about course format</a></p>
+              <?php endif; ?>
             </div>
             <?php endif; ?>
             
             <?php if ($key_features && is_array($key_features)) : ?>
             <div class="course-different-section">
-              <h3>What Makes Our Training Different</h3>
+              <h3>Training Highlights</h3>
               <div class="course-features-list">
-                <?php foreach ($key_features as $feature) : ?>
+                <?php 
+                // Limit to 3 features max
+                $display_features = array_slice($key_features, 0, 3);
+                foreach ($display_features as $feature) : 
+                ?>
                 <div class="course-feature-item">
                   <?php if (!empty($feature['icon'])) : ?>
                   <div class="course-feature-icon">
@@ -282,7 +298,7 @@ while (have_posts()) : the_post();
                   <?php endif; ?>
                   <div class="course-feature-content">
                     <h4><?php echo esc_html($feature['title']); ?></h4>
-                    <p><?php echo esc_html($feature['description']); ?></p>
+                    <p><?php echo esc_html(wp_trim_words($feature['description'], 25)); ?></p>
                   </div>
                 </div>
                 <?php endforeach; ?>
@@ -292,12 +308,21 @@ while (have_posts()) : the_post();
             
             <?php if ($benefits && is_array($benefits)) : ?>
             <div class="course-after-box">
-              <h3>After the Course</h3>
+              <h3>What You'll Get</h3>
               <ul class="course-benefits-list">
-                <?php foreach ($benefits as $benefit) : ?>
+                <?php 
+                // Limit to 4 benefits max
+                $display_benefits = array_slice($benefits, 0, 4);
+                foreach ($display_benefits as $benefit) : 
+                ?>
                 <li><?php echo esc_html($benefit['benefit']); ?></li>
                 <?php endforeach; ?>
               </ul>
+              <?php if (count($benefits) > 4) : ?>
+              <p class="course-after-more">
+                <a href="#course-overview">See full benefits</a>
+              </p>
+              <?php endif; ?>
               <?php if ($after_note) : ?>
               <div class="course-after-note">
                 <?php echo wp_kses_post($after_note); ?>
@@ -314,52 +339,26 @@ while (have_posts()) : the_post();
             $section_heading = cta_safe_get_field('seo_default_section_heading', 'option', 'Course Overview');
           }
           ?>
-          <h2 class="course-detail-section-heading"><?php echo esc_html($section_heading); ?></h2>
+          <h2 class="course-detail-section-heading" id="course-overview"><?php echo esc_html($section_heading); ?></h2>
           
           <?php if ($outcomes && is_array($outcomes) && count($outcomes) > 0) : ?>
-          <!-- What You'll Learn Accordion (opens by default) -->
-          <div class="accordion" data-accordion-group="course-details">
-            <button 
-              type="button"
-              class="accordion-trigger" 
-              aria-expanded="true"
-              aria-controls="learn-content"
-              data-accordion="learn"
-            >
-              <h3 class="course-detail-accordion-title">What You'll Learn</h3>
-              <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-            <div class="accordion-content" id="learn-content" aria-hidden="false">
-              <div class="course-detail-learn-grid">
-                <?php foreach ($outcomes as $outcome) : ?>
-                <div class="course-detail-learn-item"><?php echo esc_html($outcome['outcome_text']); ?></div>
-                <?php endforeach; ?>
-              </div>
+          <!-- What You'll Learn - EXPANDED (no accordion) -->
+          <div class="course-detail-learn-section">
+            <h3 class="course-detail-subheading">What You'll Learn</h3>
+            <div class="course-detail-learn-grid">
+              <?php foreach ($outcomes as $outcome) : ?>
+              <div class="course-detail-learn-item"><?php echo esc_html($outcome['outcome_text']); ?></div>
+              <?php endforeach; ?>
             </div>
           </div>
           <?php endif; ?>
 
           <?php if ($description) : ?>
-          <!-- Description Accordion -->
-          <div class="accordion" data-accordion-group="course-details">
-            <button 
-              type="button"
-              class="accordion-trigger" 
-              aria-expanded="<?php echo (!$outcomes || count($outcomes) === 0) ? 'true' : 'false'; ?>"
-              aria-controls="description-content"
-              data-accordion="description"
-            >
-              <h3 class="course-detail-accordion-title">Description</h3>
-              <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-            <div class="accordion-content" id="description-content" aria-hidden="<?php echo (!$outcomes || count($outcomes) === 0) ? 'false' : 'true'; ?>">
-              <div class="course-detail-description">
-                <?php echo wpautop(wp_kses_post($description)); ?>
-              </div>
+          <!-- Description - EXPANDED (no accordion) -->
+          <div class="course-detail-description-section">
+            <h3 class="course-detail-subheading">Course Description</h3>
+            <div class="course-detail-description">
+              <?php echo wpautop(wp_kses_post($description)); ?>
             </div>
           </div>
           <?php endif; ?>
@@ -510,7 +509,7 @@ while (have_posts()) : the_post();
               </div>
             <?php endif; ?>
 
-            <div class="course-detail-price-wrapper">
+            <div class="course-detail-price-wrapper course-detail-price-prominent">
               <?php if ($has_discount) : ?>
                 <div class="course-detail-price-line">
                   <span class="course-detail-price-original" aria-label="Original price">£<?php echo esc_html(number_format($original_price, 0)); ?></span>
@@ -621,8 +620,8 @@ while (have_posts()) : the_post();
             <button 
               type="button"
               onclick="openBookingModal('<?php echo esc_js(get_the_title()); ?>', '<?php echo esc_js(get_the_ID()); ?>')"
-              class="primary-cta-button"
-              aria-label="Enquire about this course"
+              class="primary-cta-button primary-cta-button-large"
+              aria-label="Book this course"
             >
               Book Now
             </button>
@@ -819,6 +818,26 @@ while (have_posts()) : the_post();
     </div>
   </section>
   <?php endif; endif; ?>
+  
+  <!-- Sticky CTA Button (mobile/tablet) -->
+  <div id="course-sticky-cta" class="course-sticky-cta" aria-hidden="true">
+    <div class="course-sticky-cta-content">
+      <div class="course-sticky-cta-price">
+        <?php if ($price) : ?>
+          <span class="course-sticky-price-label">From</span>
+          <span class="course-sticky-price-amount">£<?php echo esc_html(number_format($price, 0)); ?></span>
+        <?php endif; ?>
+      </div>
+      <button 
+        type="button"
+        onclick="openBookingModal('<?php echo esc_js(get_the_title()); ?>', '<?php echo esc_js(get_the_ID()); ?>')"
+        class="course-sticky-cta-button"
+        aria-label="Book this course"
+      >
+        Book Now
+      </button>
+    </div>
+  </div>
 </main>
 
 <?php endwhile; ?>
@@ -844,6 +863,56 @@ while (have_posts()) : the_post();
       }
     });
   });
+  
+  // Sticky CTA functionality
+  const stickyCTA = document.getElementById('course-sticky-cta');
+  if (stickyCTA) {
+    let lastScrollTop = 0;
+    let ticking = false;
+    
+    function handleScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const isMobile = window.innerWidth < 968;
+          
+          if (isMobile && scrollTop > 300) {
+            // Check if footer is near
+            const footer = document.querySelector('.site-footer, .site-footer-modern');
+            if (footer) {
+              const footerRect = footer.getBoundingClientRect();
+              const footerNear = footerRect.top < window.innerHeight + 200;
+              
+              if (footerNear) {
+                stickyCTA.setAttribute('aria-hidden', 'true');
+                stickyCTA.classList.remove('visible');
+              } else {
+                stickyCTA.setAttribute('aria-hidden', 'false');
+                stickyCTA.classList.add('visible');
+              }
+            } else {
+              stickyCTA.setAttribute('aria-hidden', 'false');
+              stickyCTA.classList.add('visible');
+            }
+          } else {
+            stickyCTA.setAttribute('aria-hidden', 'true');
+            stickyCTA.classList.remove('visible');
+          }
+          
+          lastScrollTop = scrollTop;
+          ticking = false;
+        });
+        
+        ticking = true;
+      }
+    }
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+    
+    // Initial check
+    handleScroll();
+  }
 })();
 </script>
 
