@@ -183,21 +183,6 @@ if (empty($faqs)) {
             'question' => 'Is online training accepted by CQC?',
             'answer' => 'CQC accepts a mix of online and face-to-face training, but some topics (like <a href="' . esc_url(cta_find_course_link('First Aid') ?: get_post_type_archive_link('course')) . '">practical first aid</a>) require hands-on training. Our <a href="' . esc_url(get_permalink(get_page_by_path('group-training'))) . '">face-to-face courses</a> ensure all practical elements are covered to CQC standards.',
         ],
-        [
-            'category' => 'general',
-            'question' => 'What training is required for complex care services?',
-            'answer' => 'Complex care services require all <a href="' . esc_url(get_permalink(get_page_by_path('faqs')) . '?category=general') . '">core mandatory training</a> plus specialist clinical training. This includes: ' . 
-              '<ul class="list-two-column-gold">' .
-              '<li>' . (cta_find_course_link('Clinical Skills') ? '<a href="' . esc_url(cta_find_course_link('Clinical Skills')) . '">Clinical Skills</a>' : 'Clinical Skills') . '</li>' .
-              '<li>' . (cta_find_course_link('Ventilator Care') ? '<a href="' . esc_url(cta_find_course_link('Ventilator Care')) . '">Ventilator Care</a>' : 'Ventilator Care') . '</li>' .
-              '<li>' . (cta_find_course_link('Tracheostomy Care') ? '<a href="' . esc_url(cta_find_course_link('Tracheostomy Care')) . '">Tracheostomy Care</a>' : 'Tracheostomy Care') . '</li>' .
-              '<li>' . (cta_find_course_link('Enteral Feeding') ? '<a href="' . esc_url(cta_find_course_link('Enteral Feeding')) . '">Enteral Feeding</a>' : 'Enteral Feeding') . '</li>' .
-              '<li>' . (cta_find_course_link('Seizure Management') ? '<a href="' . esc_url(cta_find_course_link('Seizure Management')) . '">Seizure Management</a>' : 'Seizure Management') . '</li>' .
-              '<li>' . (cta_find_course_link('Diabetes Management') ? '<a href="' . esc_url(cta_find_course_link('Diabetes Management')) . '">Diabetes Management</a>' : 'Diabetes Management') . '</li>' .
-              '<li>' . (cta_find_course_link('Epilepsy Awareness') ? '<a href="' . esc_url(cta_find_course_link('Epilepsy Awareness')) . '">Epilepsy Awareness</a>' : 'Epilepsy Awareness') . '</li>' .
-              '</ul>' .
-              '<p>Staff must demonstrate <a href="' . esc_url(get_permalink(get_page_by_path('downloadable-resources'))) . '">competency</a> in these specialist areas through both training and practical assessment. Complex care services often require <a href="' . esc_url(get_permalink(get_page_by_path('group-training'))) . '">bespoke training</a> tailored to specific equipment and procedures used in your service.</p>',
-        ],
     ];
 }
 
@@ -291,7 +276,7 @@ $collection_schema = [
               <li><?php echo cta_course_link('Health & Safety'); ?></li>
               <li><?php echo cta_course_link('Fire Safety'); ?></li>
               <li><?php echo cta_course_link('Food Hygiene'); ?> (if applicable)</li>
-              <li>Lone Working Safety</li>
+              <li><?php echo cta_course_link('Lone Working Safety') ?: 'Lone Working Safety'; ?></li>
             </ul>
           </div>
         </div>
@@ -326,7 +311,7 @@ $collection_schema = [
           </button>
           <div id="cqc-setting-nursing" class="accordion-content" role="region" aria-hidden="true">
             <p><strong>Required courses:</strong></p>
-            <p>All residential care requirements plus:</p>
+            <p>All <a href="#cqc-setting-residential">residential care requirements</a> plus:</p>
             <ul>
               <li><?php echo cta_course_link('Clinical Skills') ?: 'Clinical Skills'; ?></li>
               <li><?php echo cta_course_link('Wound Care') ?: 'Wound Care'; ?></li>
@@ -368,7 +353,7 @@ $collection_schema = [
           </button>
           <div id="cqc-setting-complex-care" class="accordion-content" role="region" aria-hidden="true">
             <p><strong>Required courses:</strong></p>
-            <p>All core care training plus:</p>
+            <p>All <a href="<?php echo esc_url(get_permalink(get_page_by_path('faqs')) . '?category=general'); ?>">core care training</a> plus:</p>
             <ul>
               <li><?php echo cta_course_link('Clinical Skills') ?: 'Clinical Skills'; ?></li>
               <li><?php echo cta_course_link('Ventilator Care') ?: 'Ventilator Care'; ?></li>
