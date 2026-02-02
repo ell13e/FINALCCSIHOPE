@@ -166,28 +166,6 @@ while (have_posts()) : the_post();
     </div>
   </section>
 
-  <!-- Sticky Header CTA (appears after hero) -->
-  <div id="course-header-sticky-cta" class="course-header-sticky-cta" aria-hidden="true">
-    <div class="container">
-      <div class="course-header-sticky-content">
-        <div class="course-header-sticky-info">
-          <span class="course-header-sticky-title"><?php echo esc_html(get_the_title()); ?></span>
-          <?php if ($price) : ?>
-          <span class="course-header-sticky-price">From £<?php echo esc_html(number_format($price, 0)); ?></span>
-          <?php endif; ?>
-        </div>
-        <button 
-          type="button"
-          onclick="openBookingModal('<?php echo esc_js(get_the_title()); ?>', '<?php echo esc_js(get_the_ID()); ?>')"
-          class="course-header-sticky-button"
-          aria-label="Book this course"
-        >
-          Book Now
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- Course Detail Content Section -->
   <section class="course-detail-content content-section">
     <div class="container">
@@ -835,26 +813,6 @@ while (have_posts()) : the_post();
     </div>
   </section>
   <?php endif; endif; ?>
-  
-  <!-- Sticky CTA Button (mobile/tablet) -->
-  <div id="course-sticky-cta" class="course-sticky-cta" aria-hidden="true">
-    <div class="course-sticky-cta-content">
-      <div class="course-sticky-cta-price">
-        <?php if ($price) : ?>
-          <span class="course-sticky-price-label">From</span>
-          <span class="course-sticky-price-amount">£<?php echo esc_html(number_format($price, 0)); ?></span>
-        <?php endif; ?>
-      </div>
-      <button 
-        type="button"
-        onclick="openBookingModal('<?php echo esc_js(get_the_title()); ?>', '<?php echo esc_js(get_the_ID()); ?>')"
-        class="course-sticky-cta-button"
-        aria-label="Book this course"
-      >
-        Book Now
-      </button>
-    </div>
-  </div>
 </main>
 
 <?php endwhile; ?>
@@ -880,86 +838,6 @@ while (have_posts()) : the_post();
       }
     });
   });
-  
-  // Sticky CTA functionality
-  const stickyCTA = document.getElementById('course-sticky-cta');
-  if (stickyCTA) {
-    let lastScrollTop = 0;
-    let ticking = false;
-    
-    function handleScroll() {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          const isMobile = window.innerWidth < 968;
-          
-          if (isMobile && scrollTop > 300) {
-            // Check if footer is near
-            const footer = document.querySelector('.site-footer, .site-footer-modern');
-            if (footer) {
-              const footerRect = footer.getBoundingClientRect();
-              const footerNear = footerRect.top < window.innerHeight + 200;
-              
-              if (footerNear) {
-                stickyCTA.setAttribute('aria-hidden', 'true');
-                stickyCTA.classList.remove('visible');
-              } else {
-                stickyCTA.setAttribute('aria-hidden', 'false');
-                stickyCTA.classList.add('visible');
-              }
-            } else {
-              stickyCTA.setAttribute('aria-hidden', 'false');
-              stickyCTA.classList.add('visible');
-            }
-          } else {
-            stickyCTA.setAttribute('aria-hidden', 'true');
-            stickyCTA.classList.remove('visible');
-          }
-          
-          lastScrollTop = scrollTop;
-          ticking = false;
-        });
-        
-        ticking = true;
-      }
-    }
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll, { passive: true });
-    
-    // Initial check
-    handleScroll();
-  }
-  
-  // Sticky header CTA functionality
-  const headerStickyCTA = document.getElementById('course-header-sticky-cta');
-  if (headerStickyCTA) {
-    const heroSection = document.querySelector('.group-hero-section');
-    let ticking = false;
-    
-    function handleHeaderScroll() {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          if (heroSection) {
-            const heroBottom = heroSection.getBoundingClientRect().bottom;
-            // Show sticky header CTA when hero section scrolls out of view
-            if (heroBottom < 0) {
-              headerStickyCTA.setAttribute('aria-hidden', 'false');
-              headerStickyCTA.classList.add('visible');
-            } else {
-              headerStickyCTA.setAttribute('aria-hidden', 'true');
-              headerStickyCTA.classList.remove('visible');
-            }
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }
-    
-    window.addEventListener('scroll', handleHeaderScroll, { passive: true });
-    handleHeaderScroll();
-  }
   
   // Toggle course content (Show more/less) - make globally accessible
   window.toggleCourseContent = function() {
