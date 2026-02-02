@@ -10128,6 +10128,8 @@ textarea:focus-visible,
 .cta-center {
   text-align: center;
   margin-top: 64px;
+  padding-bottom: 40px; /* Allow space for button shadow (24px shadow + 2px translate + buffer) */
+  overflow: visible; /* Ensure shadows aren't clipped */
 }
 
 .cta-center.large-spacing {
@@ -28475,6 +28477,7 @@ input[type="email"].contact-form-input {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 16px;
+  overflow: visible; /* Ensure shadows aren't clipped */
 }
 
 @media (min-width: 640px) {
@@ -50516,27 +50519,16 @@ a.article-cta-btn:focus-visible {
    Large CTA Button
    ========================================= */
 
-.course-detail-cta-action .primary-cta-button-large {
-  background: var(--white);
-  color: var(--gold-primary);
-  border: none;
-  padding: 14px 32px;
-  font-size: 1rem;
-  min-width: 200px;
+.primary-cta-button-large {
+  width: 100%;
+  max-width: 400px;
   margin: 0 auto;
-}
-
-.course-detail-cta-action .primary-cta-button-large:hover {
-  background: var(--white-95);
-  color: var(--gold-hover);
-  transform: translateY(-2px);
-}
-
-@media (min-width: 768px) {
-  .course-detail-cta-action .primary-cta-button-large {
-    padding: 16px 40px;
-    font-size: 1.05rem;
-  }
+  padding: 18px 32px;
+  font-size: 18px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* =========================================

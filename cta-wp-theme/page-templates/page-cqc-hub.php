@@ -492,7 +492,7 @@ $collection_schema = [
       <div class="cqc-inspection-accordions">
         <?php if (!empty($inspection_accordions) && is_array($inspection_accordions)) : 
           // Default colors for each accordion (cycling through if more than 4)
-          $default_colors = ['#35938d', '#5BA8A0', '#d97706', '#9b8560', '#8B6F3F', '#805ad5'];
+          $default_colors = ['#3b82f6', '#8b5cf6', '#ef4444', '#f59e0b', '#10b981', '#06b6d4'];
           
           // Use ACF fields if available
           foreach ($inspection_accordions as $index => $accordion) :
@@ -550,7 +550,7 @@ $collection_schema = [
         <div class="accordion" data-accordion-group="cqc-inspection">
           <button type="button" class="accordion-trigger" aria-expanded="true" aria-controls="inspection-look-for">
             <span>
-              <i class="fas fa-search" aria-hidden="true" style="margin-right: 12px; color: #35938d;"></i>
+              <i class="fas fa-search" aria-hidden="true" style="margin-right: 12px; color: #3b82f6;"></i>
               What Inspectors Look For in Training Records
             </span>
             <span class="accordion-icon" aria-hidden="true"></span>
@@ -584,7 +584,7 @@ $collection_schema = [
         <div class="accordion" data-accordion-group="cqc-inspection">
           <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="inspection-organize">
             <span>
-              <i class="fas fa-folder-open" aria-hidden="true" style="margin-right: 12px; color: #5BA8A0;"></i>
+              <i class="fas fa-folder-open" aria-hidden="true" style="margin-right: 12px; color: #8b5cf6;"></i>
               How to Organize Your Training Evidence
             </span>
             <span class="accordion-icon" aria-hidden="true"></span>
@@ -618,7 +618,7 @@ $collection_schema = [
         <div class="accordion cqc-warning-item" data-accordion-group="cqc-inspection">
           <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="inspection-inadequate">
             <span>
-              <i class="fas fa-exclamation-triangle" aria-hidden="true" style="margin-right: 12px; color: #d97706;"></i>
+              <i class="fas fa-exclamation-triangle" aria-hidden="true" style="margin-right: 12px; color: #ef4444;"></i>
               Common Training-Related Inadequate Ratings
             </span>
             <span class="accordion-icon" aria-hidden="true"></span>
@@ -652,7 +652,7 @@ $collection_schema = [
         <div class="accordion cqc-featured-item" data-accordion-group="cqc-inspection">
           <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="inspection-best-practice">
             <span>
-              <i class="fas fa-star" aria-hidden="true" style="margin-right: 12px; color: #8B6F3F;"></i>
+              <i class="fas fa-star" aria-hidden="true" style="margin-right: 12px; color: #f59e0b;"></i>
               Best Practice Documentation
             </span>
             <span class="accordion-icon" aria-hidden="true"></span>
@@ -1066,10 +1066,10 @@ $collection_schema = [
   <?php endif; ?>
 
   <!-- CTA Section -->
-  <section class="cqc-cta-section">
+  <section class="cqc-cta-section" aria-labelledby="cqc-cta-heading">
     <div class="container">
       <div class="cqc-cta-content">
-        <h2 class="cqc-cta-title">Not Sure What Training You Need for Your Next CQC Inspection?</h2>
+        <h2 id="cqc-cta-heading" class="cqc-cta-title">Need Help With CQC Training?</h2>
         <p class="cqc-cta-description">Our team can help you understand CQC requirements and ensure your staff have the right training to achieve a positive inspection outcome.</p>
         <div class="cqc-cta-buttons">
           <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact'))); ?>" class="btn btn-primary btn-large">Book a Free Training Consultation</a>
