@@ -50709,13 +50709,6 @@ a.article-cta-btn:focus-visible {
    Expanded Sections (Who Should Attend, Requirements)
    ========================================= */
 
-.course-detail-audience-section,
-.course-detail-requirements-section {
-  margin-bottom: 2.5rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid #e5e5e5;
-}
-
 .course-requirements-summary {
   padding: 16px;
   background: #f0f6fc;
