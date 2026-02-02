@@ -89,7 +89,7 @@ if (empty($hero_subtitle)) {
     $hero_subtitle = 'Everything care providers need to know about training requirements, inspection preparation, and regulatory changes.';
 }
 if (empty($intro_text)) {
-    $intro_text = 'The Care Quality Commission (CQC) sets standards for health and social care services in England. Our <a href="' . esc_url(get_post_type_archive_link('course')) . '">CQC-compliant training courses</a> help care providers meet these requirements and prepare for inspections.';
+    $intro_text = 'The Care Quality Commission (CQC) sets standards for health and social care services in England. Our <a href="' . esc_url(get_post_type_archive_link('course')) . '">CQC-compliant training courses</a> help care providers meet these requirements and prepare for inspections. <a href="https://www.cqc.org.uk/about-us/fundamental-standards" target="_blank" rel="noopener noreferrer">Learn more about CQC fundamental standards</a>.';
 }
 
 // Get CQC-related posts
@@ -491,8 +491,8 @@ $collection_schema = [
       <!-- Accordion Sections -->
       <div class="cqc-inspection-accordions">
         <?php if (!empty($inspection_accordions) && is_array($inspection_accordions)) : 
-          // Default colors for each accordion (cycling through if more than 4)
-          $default_colors = ['#3b82f6', '#8b5cf6', '#ef4444', '#f59e0b', '#10b981', '#06b6d4'];
+          // Default colors for each accordion (using CQC requirements colors)
+          $default_colors = ['#3182ce', '#805ad5', '#d53f8c', '#d69e2e', '#38a169', '#35938d'];
           
           // Use ACF fields if available
           foreach ($inspection_accordions as $index => $accordion) :
@@ -550,7 +550,7 @@ $collection_schema = [
         <div class="accordion" data-accordion-group="cqc-inspection">
           <button type="button" class="accordion-trigger" aria-expanded="true" aria-controls="inspection-look-for">
             <span>
-              <i class="fas fa-search" aria-hidden="true" style="margin-right: 12px; color: #3b82f6;"></i>
+              <i class="fas fa-search" aria-hidden="true" style="margin-right: 12px; color: #3182ce;"></i>
               What Inspectors Look For in Training Records
             </span>
             <span class="accordion-icon" aria-hidden="true"></span>
@@ -584,7 +584,7 @@ $collection_schema = [
         <div class="accordion" data-accordion-group="cqc-inspection">
           <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="inspection-organize">
             <span>
-              <i class="fas fa-folder-open" aria-hidden="true" style="margin-right: 12px; color: #8b5cf6;"></i>
+              <i class="fas fa-folder-open" aria-hidden="true" style="margin-right: 12px; color: #805ad5;"></i>
               How to Organize Your Training Evidence
             </span>
             <span class="accordion-icon" aria-hidden="true"></span>
@@ -618,7 +618,7 @@ $collection_schema = [
         <div class="accordion cqc-warning-item" data-accordion-group="cqc-inspection">
           <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="inspection-inadequate">
             <span>
-              <i class="fas fa-exclamation-triangle" aria-hidden="true" style="margin-right: 12px; color: #ef4444;"></i>
+              <i class="fas fa-exclamation-triangle" aria-hidden="true" style="margin-right: 12px; color: #d53f8c;"></i>
               Common Training-Related Inadequate Ratings
             </span>
             <span class="accordion-icon" aria-hidden="true"></span>
@@ -652,7 +652,7 @@ $collection_schema = [
         <div class="accordion cqc-featured-item" data-accordion-group="cqc-inspection">
           <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="inspection-best-practice">
             <span>
-              <i class="fas fa-star" aria-hidden="true" style="margin-right: 12px; color: #f59e0b;"></i>
+              <i class="fas fa-star" aria-hidden="true" style="margin-right: 12px; color: #d69e2e;"></i>
               Best Practice Documentation
             </span>
             <span class="accordion-icon" aria-hidden="true"></span>
@@ -731,20 +731,20 @@ $collection_schema = [
           [
             'label' => 'New Framework',
             'title' => 'Single Assessment Framework Updates',
-            'content' => 'CQC is introducing a new Single Assessment Framework that simplifies the inspection process and focuses on care outcomes. Training evidence remains essential, with greater emphasis on demonstrating staff competency and ongoing professional development.',
-            'link_url' => 'https://www.cqc.org.uk/guidance-providers/assessment-framework',
+            'content' => 'CQC has introduced a new Single Assessment Framework that simplifies the inspection process and focuses on care outcomes. The framework is being fully implemented throughout 2026. Training evidence remains essential, with greater emphasis on demonstrating staff competency and ongoing professional development. <a href="https://www.cqc.org.uk/guidance-regulation/providers/assessment/assessing-quality-and-performance" target="_blank" rel="noopener noreferrer">Learn how CQC assesses quality and performance</a> and <a href="https://www.cqc.org.uk/guidance-regulation/providers/assessment/evidence-categories" target="_blank" rel="noopener noreferrer">understand the evidence categories</a> they consider.',
+            'link_url' => 'https://www.cqc.org.uk/guidance-regulation/providers/assessment/assessment-framework',
             'link_text' => 'Read CQC framework guidance',
             'highlight' => false,
           ],
           [
             'label' => 'Mandatory Training',
             'title' => 'New Mandatory Training Requirements',
-            'content' => 'Several new mandatory training requirements are being introduced in 2026:',
+            'content' => 'Several mandatory training requirements are being updated throughout 2026:',
             'list_items' => [
-              'Oliver McGowan Mandatory Training on Learning Disability and Autism (becoming statutory)',
-              '<a href="' . esc_url(cta_find_course_link('Safeguarding') ?: get_post_type_archive_link('course')) . '">Enhanced safeguarding training</a> requirements',
-              'Updated <a href="' . esc_url(cta_find_course_link('Medication Management') ?: get_post_type_archive_link('course')) . '">medication management</a> competencies',
-              'Refreshed <a href="' . esc_url(cta_find_course_link('Infection Control') ?: get_post_type_archive_link('course')) . '">infection prevention and control</a> standards',
+              'Oliver McGowan Mandatory Training on Learning Disability and Autism (becoming statutory in Q2 2026)',
+              '<a href="' . esc_url(cta_find_course_link('Safeguarding') ?: get_post_type_archive_link('course')) . '">Enhanced safeguarding training</a> requirements (coming in Q3 2026)',
+              'Updated <a href="' . esc_url(cta_find_course_link('Medication Management') ?: get_post_type_archive_link('course')) . '">medication management</a> competencies (coming in Q4 2026)',
+              'Refreshed <a href="' . esc_url(cta_find_course_link('Infection Control') ?: get_post_type_archive_link('course')) . '">infection prevention and control</a> standards (see <a href="https://www.gov.uk/government/publications/the-health-and-social-care-act-2008-code-of-practice-on-the-prevention-and-control-of-infections-and-related-guidance/health-and-social-care-act-2008-code-of-practice-on-the-prevention-and-control-of-infections-and-related-guidance" target="_blank" rel="noopener noreferrer">code of practice</a>)',
             ],
             'link_url' => get_permalink(get_page_by_path('faqs')) . '?category=general',
             'link_text' => 'View mandatory training FAQs',
@@ -753,24 +753,40 @@ $collection_schema = [
           [
             'label' => 'Statutory Requirement',
             'title' => 'Oliver McGowan Training Becoming Statutory',
-            'content' => 'The Oliver McGowan Mandatory Training on Learning Disability and Autism will become a legal requirement for all health and social care staff in 2026. This training is essential for services supporting people with learning disabilities and autism.',
-            'link_url' => 'https://www.gov.uk/government/publications/the-oliver-mcgowan-mandatory-training-on-learning-disability-and-autism',
-            'link_text' => 'Read official guidance on Oliver McGowan training',
+            'content' => 'The Oliver McGowan Mandatory Training on Learning Disability and Autism will become a legal requirement for all health and social care staff in Q2 2026 (April-June). The code of practice became final on 6 September 2025 under the Health and Care Act 2022. This training is essential for services supporting people with learning disabilities and autism. The training consists of two tiers: Tier 1 (general awareness) includes elearning plus a 1-hour online interactive session, while Tier 2 (direct care roles) includes elearning plus a 1-day face-to-face session. <a href="https://www.e-lfh.org.uk/programmes/the-oliver-mcgowan-mandatory-training-on-learning-disability-and-autism/" target="_blank" rel="noopener noreferrer">Access the training via e-Learning for Healthcare</a>.',
+            'link_url' => 'https://www.gov.uk/government/publications/oliver-mcgowan-code-of-practice/the-oliver-mcgowan-draft-code-of-practice-on-statutory-learning-disability-and-autism-training',
+            'link_text' => 'Read the code of practice',
             'highlight' => true,
           ],
           [
             'label' => 'Timeline',
-            'title' => 'Timeline of Upcoming Changes',
+            'title' => 'Timeline of Regulatory Changes',
             'list_items' => [
-              '<strong>Q1 2026:</strong> Single Assessment Framework fully implemented',
-              '<strong>Q2 2026:</strong> <a href="https://www.gov.uk/government/publications/the-oliver-mcgowan-mandatory-training-on-learning-disability-and-autism">Oliver McGowan training</a> becomes statutory',
-              '<strong>Q3 2026:</strong> Updated <a href="' . esc_url(cta_find_course_link('Safeguarding') ?: get_post_type_archive_link('course')) . '">safeguarding</a> requirements in effect',
-              '<strong>Q4 2026:</strong> Enhanced <a href="' . esc_url(cta_find_course_link('Medication Management') ?: get_post_type_archive_link('course')) . '">medication competency</a> standards',
+              '<strong>Q1 2026 (Jan-Mar):</strong> Single Assessment Framework is being fully implemented',
+              '<strong>Q2 2026 (Apr-Jun):</strong> <a href="https://www.gov.uk/government/publications/oliver-mcgowan-code-of-practice/the-oliver-mcgowan-draft-code-of-practice-on-statutory-learning-disability-and-autism-training" target="_blank" rel="noopener noreferrer">Oliver McGowan training</a> will become statutory (code of practice finalised 6 September 2025)',
+              '<strong>Q3 2026 (Jul-Sep):</strong> Updated <a href="' . esc_url(cta_find_course_link('Safeguarding') ?: get_post_type_archive_link('course')) . '">safeguarding</a> requirements will come into effect',
+              '<strong>Q4 2026 (Oct-Dec):</strong> Enhanced <a href="' . esc_url(cta_find_course_link('Medication Management') ?: get_post_type_archive_link('course')) . '">medication competency</a> standards will be introduced',
             ],
             'link_url' => get_post_type_archive_link('course'),
             'link_text' => 'Browse all courses',
             'highlight' => false,
             'timeline' => true,
+          ],
+          [
+            'label' => 'Infection Control',
+            'title' => 'Infection Prevention and Control Code of Practice',
+            'content' => 'The Health and Social Care Act 2008 code of practice on the prevention and control of infections sets out requirements for registered providers. This is a fundamental standard that CQC inspectors check during inspections. All staff must receive appropriate infection control training.',
+            'link_url' => 'https://www.gov.uk/government/publications/the-health-and-social-care-act-2008-code-of-practice-on-the-prevention-and-control-of-infections-and-related-guidance/health-and-social-care-act-2008-code-of-practice-on-the-prevention-and-control-of-infections-and-related-guidance',
+            'link_text' => 'Read the infection control code of practice',
+            'highlight' => false,
+          ],
+          [
+            'label' => 'Fundamental Standard',
+            'title' => 'Reducing Restraint and Restrictive Intervention',
+            'content' => 'The fundamental standards require that people must not suffer unnecessary or disproportionate restraint. The Department of Health guidance on reducing the need for restraint and restrictive intervention provides best practice for care providers. This is a key safeguarding requirement that CQC inspectors assess.',
+            'link_url' => 'https://assets.publishing.service.gov.uk/media/5d1387e240f0b6350e1ab567/reducing-the-need-for-restraint-and-restrictive-intervention.pdf',
+            'link_text' => 'Read restraint reduction guidance',
+            'highlight' => false,
           ],
           [
             'label' => 'Our Commitment',
@@ -837,6 +853,336 @@ $collection_schema = [
           <?php endif; ?>
         </div>
         <?php endforeach; ?>
+      </div>
+    </div>
+  </section>
+
+  <!-- Oliver McGowan Training Section -->
+  <section class="content-section bg-light-cream" aria-labelledby="oliver-mcgowan-heading">
+    <div class="container">
+      <div class="section-header-center">
+        <h2 id="oliver-mcgowan-heading" class="section-title">Oliver McGowan Mandatory Training</h2>
+        <p class="section-description">Understanding the new statutory requirement for learning disability and autism training</p>
+      </div>
+      
+      <div class="cqc-regulatory-grid">
+        <!-- What is Oliver McGowan Training -->
+        <div class="cqc-regulatory-card cqc-regulatory-card-highlight">
+          <div class="cqc-regulatory-label cqc-regulatory-label-important">
+            <span>Statutory Requirement</span>
+          </div>
+          <h3 class="cqc-regulatory-title">What is Oliver McGowan Training?</h3>
+          <div>
+            <p>The Oliver McGowan Mandatory Training on Learning Disability and Autism is the government's preferred and recommended training for health and social care staff. Named after Oliver McGowan, a young autistic teenager with a mild learning disability who died in 2016, this training ensures staff have the right skills and knowledge to provide safe, compassionate care.</p>
+            <p><strong>The code of practice became final on 6 September 2025</strong> and the training will become a legal requirement for all health and social care staff in Q2 2026 (April-June) under the Health and Care Act 2022.</p>
+          </div>
+          <div class="cqc-regulatory-card-footer">
+            <a href="https://www.gov.uk/government/publications/oliver-mcgowan-code-of-practice/the-oliver-mcgowan-draft-code-of-practice-on-statutory-learning-disability-and-autism-training" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-link-text">
+              Read the code of practice
+              <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M7 17L17 7M7 7h10v10"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Training Structure -->
+        <div class="cqc-regulatory-card">
+          <div class="cqc-regulatory-label">
+            <span>Training Structure</span>
+          </div>
+          <h3 class="cqc-regulatory-title">Two Tiers of Training</h3>
+          <div>
+            <p>The training is delivered in two tiers, both consisting of two parts:</p>
+            <ul class="cqc-timeline-list">
+              <li><strong>Tier 1 (General Awareness):</strong> For staff who require general awareness of support needs. Includes elearning (1.5 hours) plus a 1-hour online interactive session co-delivered by experts by experience.</li>
+              <li><strong>Tier 2 (Direct Care):</strong> For staff who provide care and support. Includes the same elearning plus a 1-day face-to-face training session co-delivered by experts by experience.</li>
+            </ul>
+            <p><strong>Important:</strong> Everyone must complete the elearning regardless of tier. Tier 2 training includes Tier 1 material, so staff only need to complete one tier based on their role.</p>
+          </div>
+          <div class="cqc-regulatory-card-footer">
+            <a href="https://www.e-lfh.org.uk/programmes/the-oliver-mcgowan-mandatory-training-on-learning-disability-and-autism/" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-link-text">
+              Access the training
+              <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M7 17L17 7M7 7h10v10"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Who Needs It -->
+        <div class="cqc-regulatory-card">
+          <div class="cqc-regulatory-label">
+            <span>Requirements</span>
+          </div>
+          <h3 class="cqc-regulatory-title">Who Needs This Training?</h3>
+          <div>
+            <p>All registered health and social care providers must ensure their staff receive appropriate training:</p>
+            <ul class="cqc-timeline-list">
+              <li><strong>Tier 1:</strong> Staff who need general awareness (e.g., finance staff, administrators without patient contact)</li>
+              <li><strong>Tier 2:</strong> Staff who provide direct care or support (e.g., care workers, nurses, GPs, reception staff with patient contact, managers making service decisions)</li>
+            </ul>
+            <p>Employers must assess which tier each staff member needs based on their role and level of contact with people with learning disabilities or autistic people.</p>
+          </div>
+          <div class="cqc-regulatory-card-footer">
+            <a href="https://www.gov.uk/government/publications/explanatory-memorandum-on-the-oliver-mcgowan-code-of-practice/explanatory-memorandum-to-the-oliver-mcgowan-draft-code-of-practice-on-statutory-learning-disability-and-autism-training" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-link-text">
+              Read explanatory memorandum
+              <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M7 17L17 7M7 7h10v10"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Compliance -->
+        <div class="cqc-regulatory-card">
+          <div class="cqc-regulatory-label">
+            <span>Compliance</span>
+          </div>
+          <h3 class="cqc-regulatory-title">Meeting the Requirement</h3>
+          <div>
+            <p>The code of practice sets out standards for training and guidance for meeting those standards. CQC will assess whether registered providers are meeting this requirement during inspections.</p>
+            <p>Key points:</p>
+            <ul class="cqc-timeline-list">
+              <li>Training must be standardised and meet the core capabilities frameworks</li>
+              <li>Training must be co-delivered by experts by experience (people with learning disabilities or autistic people)</li>
+              <li>Providers must maintain records of staff completion</li>
+              <li>CQC can take enforcement action if providers fail to meet the requirement</li>
+            </ul>
+          </div>
+          <div class="cqc-regulatory-card-footer">
+            <a href="<?php echo esc_url(get_post_type_archive_link('course')); ?>" class="cqc-regulatory-link-text">
+              Browse our courses
+              <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M7 17L17 7M7 7h10v10"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CQC Official Resources Section -->
+  <section class="content-section" aria-labelledby="cqc-resources-heading">
+    <div class="container">
+      <div class="section-header-center">
+        <h2 id="cqc-resources-heading" class="section-title">Official CQC Resources</h2>
+        <p class="section-description">Essential links to CQC guidance, publications, and updates to help you stay compliant</p>
+      </div>
+      
+      <div class="cqc-regulatory-grid">
+        <!-- Guidance & Regulation -->
+        <div class="cqc-regulatory-card">
+          <a href="https://www.cqc.org.uk/guidance-regulation" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
+            <div class="cqc-regulatory-label">
+              <span>Guidance</span>
+            </div>
+            <h3 class="cqc-regulatory-title">CQC Guidance & Regulation</h3>
+            <div>
+              <p>Comprehensive guidance for health and social care providers, including:</p>
+              <ul class="cqc-timeline-list">
+                <li><a href="https://www.cqc.org.uk/guidance-regulation/providers/registration" target="_blank" rel="noopener noreferrer">Registration requirements</a></li>
+                <li><a href="https://www.cqc.org.uk/guidance-regulation/providers/assessment/assessment-framework" target="_blank" rel="noopener noreferrer">Assessment framework</a></li>
+                <li><a href="https://www.cqc.org.uk/guidance-regulation/providers/regulations" target="_blank" rel="noopener noreferrer">Regulations and fundamental standards</a></li>
+                <li><a href="https://www.cqc.org.uk/guidance-regulation/providers/enforcement" target="_blank" rel="noopener noreferrer">Enforcement actions</a></li>
+                <li><a href="https://www.cqc.org.uk/guidance-regulation/providers/notifications" target="_blank" rel="noopener noreferrer">Notification requirements</a></li>
+                <li><a href="https://www.cqc.org.uk/guidance-regulation/providers/fees" target="_blank" rel="noopener noreferrer">Registration fees</a></li>
+              </ul>
+            </div>
+            <div class="cqc-regulatory-card-footer">
+              <span class="cqc-regulatory-link-text">Visit CQC Guidance & Regulation</span>
+              <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M7 17L17 7M7 7h10v10"></path>
+              </svg>
+            </div>
+          </a>
+        </div>
+
+        <!-- Publications -->
+        <div class="cqc-regulatory-card">
+          <a href="https://www.cqc.org.uk/publications" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
+            <div class="cqc-regulatory-label">
+              <span>Reports</span>
+            </div>
+            <h3 class="cqc-regulatory-title">CQC Publications</h3>
+            <div>
+              <p>Access CQC's official reports and publications:</p>
+              <ul class="cqc-timeline-list">
+                <li><strong>State of Care</strong> - Annual assessment of health and social care in England</li>
+                <li><strong>Major reports</strong> - In-depth analysis of care quality and trends</li>
+                <li><strong>Surveys</strong> - Feedback from people using NHS services</li>
+                <li><strong>Themed inspections</strong> - Focused reports on specific care areas</li>
+                <li><strong>Annual reports</strong> - CQC's corporate activities and performance</li>
+              </ul>
+            </div>
+            <div class="cqc-regulatory-card-footer">
+              <span class="cqc-regulatory-link-text">Browse CQC Publications</span>
+              <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M7 17L17 7M7 7h10v10"></path>
+              </svg>
+            </div>
+          </a>
+        </div>
+
+        <!-- News & Updates -->
+        <div class="cqc-regulatory-card">
+          <a href="https://www.cqc.org.uk/news" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
+            <div class="cqc-regulatory-label">
+              <span>Updates</span>
+            </div>
+            <h3 class="cqc-regulatory-title">CQC News & Updates</h3>
+            <div>
+              <p>Stay informed with the latest CQC news and regulatory updates:</p>
+              <ul class="cqc-timeline-list">
+                <li>Latest news and announcements</li>
+                <li>Press releases on inspection findings</li>
+                <li>Regulatory changes and framework updates</li>
+                <li>Service rating announcements</li>
+                <li>Improvement plans and progress updates</li>
+              </ul>
+            </div>
+            <div class="cqc-regulatory-card-footer">
+              <span class="cqc-regulatory-link-text">Read CQC News</span>
+              <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M7 17L17 7M7 7h10v10"></path>
+              </svg>
+            </div>
+          </a>
+        </div>
+
+        <!-- About CQC -->
+        <div class="cqc-regulatory-card">
+          <a href="https://www.cqc.org.uk/about-us" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
+            <div class="cqc-regulatory-label">
+              <span>About</span>
+            </div>
+            <h3 class="cqc-regulatory-title">About the Care Quality Commission</h3>
+            <div>
+              <p>Learn about CQC's role and how they regulate care:</p>
+              <ul class="cqc-timeline-list">
+                <li><strong>Purpose:</strong> Regulate health and adult social care to protect people and improve quality</li>
+                <li><strong>Vision:</strong> Everyone receives safe, effective and compassionate care</li>
+                <li><a href="https://www.cqc.org.uk/about-us/fundamental-standards" target="_blank" rel="noopener noreferrer">Fundamental standards of care</a></li>
+                <li>How CQC monitors, inspects and rates services</li>
+                <li>Who CQC regulates and works with</li>
+              </ul>
+            </div>
+            <div class="cqc-regulatory-card-footer">
+              <span class="cqc-regulatory-link-text">Learn About CQC</span>
+              <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M7 17L17 7M7 7h10v10"></path>
+              </svg>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Additional Government Guidance Section -->
+  <section class="content-section bg-light-cream" aria-labelledby="government-guidance-heading">
+    <div class="container">
+      <div class="section-header-center">
+        <h2 id="government-guidance-heading" class="section-title">Additional Government Guidance</h2>
+        <p class="section-description">Essential codes of practice, guidance documents, and regulations from the Department of Health and Social Care</p>
+      </div>
+      
+      <div class="cqc-regulatory-grid">
+        <!-- Infection Control Code of Practice -->
+        <div class="cqc-regulatory-card">
+          <a href="https://www.gov.uk/government/publications/the-health-and-social-care-act-2008-code-of-practice-on-the-prevention-and-control-of-infections-and-related-guidance/health-and-social-care-act-2008-code-of-practice-on-the-prevention-and-control-of-infections-and-related-guidance" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
+            <div class="cqc-regulatory-label">
+              <span>Code of Practice</span>
+            </div>
+            <h3 class="cqc-regulatory-title">Infection Prevention and Control</h3>
+            <div>
+              <p>The Health and Social Care Act 2008 code of practice on the prevention and control of infections sets out requirements for registered providers. This is a fundamental standard that CQC inspectors check during inspections.</p>
+            </div>
+            <div class="cqc-regulatory-card-footer">
+              <span class="cqc-regulatory-link-text">Read the code of practice</span>
+              <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M7 17L17 7M7 7h10v10"></path>
+              </svg>
+            </div>
+          </a>
+        </div>
+
+        <!-- Restraint and Restrictive Intervention -->
+        <div class="cqc-regulatory-card">
+          <a href="https://assets.publishing.service.gov.uk/media/5d1387e240f0b6350e1ab567/reducing-the-need-for-restraint-and-restrictive-intervention.pdf" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
+            <div class="cqc-regulatory-label">
+              <span>Guidance</span>
+            </div>
+            <h3 class="cqc-regulatory-title">Reducing Restraint and Restrictive Intervention</h3>
+            <div>
+              <p>Department of Health guidance on reducing the need for restraint and restrictive intervention. This relates to the fundamental standard that people must not suffer unnecessary or disproportionate restraint.</p>
+            </div>
+            <div class="cqc-regulatory-card-footer">
+              <span class="cqc-regulatory-link-text">Read the guidance</span>
+              <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M7 17L17 7M7 7h10v10"></path>
+              </svg>
+            </div>
+          </a>
+        </div>
+
+        <!-- Training Tariff -->
+        <div class="cqc-regulatory-card">
+          <a href="https://www.gov.uk/government/publications/healthcare-education-and-training-tariff-2025-to-2026/education-and-training-tariffs-2025-to-2026" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
+            <div class="cqc-regulatory-label">
+              <span>Funding</span>
+            </div>
+            <h3 class="cqc-regulatory-title">Healthcare Education and Training Tariff</h3>
+            <div>
+              <p>Information about education and training tariff payments for 2025 to 2026, including clinical placements, undergraduate medical and dental training, and postgraduate training arrangements.</p>
+            </div>
+            <div class="cqc-regulatory-card-footer">
+              <span class="cqc-regulatory-link-text">View training tariff guidance</span>
+              <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M7 17L17 7M7 7h10v10"></path>
+              </svg>
+            </div>
+          </a>
+        </div>
+
+        <!-- Naloxone Guidance -->
+        <div class="cqc-regulatory-card">
+          <a href="https://www.gov.uk/guidance/supplying-take-home-naloxone-without-a-prescription" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
+            <div class="cqc-regulatory-label">
+              <span>Guidance</span>
+            </div>
+            <h3 class="cqc-regulatory-title">Supplying Take-Home Naloxone</h3>
+            <div>
+              <p>Guidance for health and social care providers on supplying take-home naloxone without a prescription. Relevant for services supporting people at risk of opioid overdose.</p>
+            </div>
+            <div class="cqc-regulatory-card-footer">
+              <span class="cqc-regulatory-link-text">Read the guidance</span>
+              <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M7 17L17 7M7 7h10v10"></path>
+              </svg>
+            </div>
+          </a>
+        </div>
+
+        <!-- Down Syndrome Act Guidance -->
+        <div class="cqc-regulatory-card">
+          <a href="https://www.gov.uk/government/consultations/down-syndrome-act-2022-draft-statutory-guidance-easy-read" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
+            <div class="cqc-regulatory-label">
+              <span>Statutory Guidance</span>
+            </div>
+            <h3 class="cqc-regulatory-title">Down Syndrome Act 2022</h3>
+            <div>
+              <p>Draft statutory guidance for the Down Syndrome Act 2022. This Act requires local authorities and NHS bodies to have regard to guidance when providing services to people with Down syndrome. Relevant for care providers supporting people with Down syndrome.</p>
+            </div>
+            <div class="cqc-regulatory-card-footer">
+              <span class="cqc-regulatory-link-text">Read the draft guidance</span>
+              <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M7 17L17 7M7 7h10v10"></path>
+              </svg>
+            </div>
+          </a>
+        </div>
       </div>
     </div>
   </section>

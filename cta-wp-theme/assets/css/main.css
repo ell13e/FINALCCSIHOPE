@@ -46796,8 +46796,21 @@ a.article-cta-btn:focus-visible {
   margin-top: 2px;
 }
 
-.cqc-checklist-item.cqc-warning i {
-  color: #d97706;
+/* Match checklist icon colors to accordion trigger icon colors - using CQC requirements colors */
+.cqc-inspection-accordions > .accordion:nth-of-type(1) .cqc-checklist-item i.fa-check-circle {
+  color: #3182ce;
+}
+
+.cqc-inspection-accordions > .accordion:nth-of-type(2) .cqc-checklist-item i.fa-check-circle {
+  color: #805ad5;
+}
+
+.cqc-inspection-accordions > .accordion.cqc-warning-item .cqc-checklist-item i.fa-times-circle {
+  color: #d53f8c;
+}
+
+.cqc-inspection-accordions > .accordion.cqc-featured-item .cqc-checklist-item i.fa-check-circle {
+  color: #d69e2e;
 }
 
 .cqc-checklist-item span {

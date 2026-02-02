@@ -220,6 +220,7 @@ $cqc_standards = [
       <p class="cqc-requirements-description">
         The Care Quality Commission (CQC) sets standards for health and social care services in England. 
         Our CQC-compliant training courses help care providers meet these requirements and prepare for inspections.
+        <a href="https://www.cqc.org.uk/about-us/fundamental-standards" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; text-decoration-color: rgba(155, 133, 96, 0.4);">Learn more about CQC fundamental standards</a>.
       </p>
     </div>
 
