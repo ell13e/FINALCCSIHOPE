@@ -82,8 +82,8 @@
 .locations-delivery-highlight {
   padding: 20px;
   background: rgba(91, 168, 160, 0.08);
-  border: 2px solid #35938d !important;
-  border-left: 2px solid #35938d !important;
+  border: 2px solid #35938d;
+  border-left: 2px solid #35938d;
   border-radius: 8px;
   margin: 0;
   transition: all 0.3s ease;
@@ -128,7 +128,7 @@
 .locations-contact-details {
   margin: 0;
   font-size: 16px;
-  color: #35938d;
+  color: var(--brown-medium);
 }
 
 .locations-contact-details a {

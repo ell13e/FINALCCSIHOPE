@@ -775,7 +775,7 @@ $collection_schema = [
           [
             'label' => 'Our Commitment',
             'title' => 'How CTA Courses Meet New Standards',
-            'content' => 'All Continuity Training Academy courses are designed to meet current and upcoming CQC requirements. We regularly update our course content to align with regulatory changes and ensure your training remains compliant.',
+            'content' => 'All Continuity Training Academy courses are designed to meet current and upcoming CQC requirements. We regularly update our course content to align with regulatory changes and ensure your training remains compliant and up-to-date.',
             'link_url' => get_post_type_archive_link('course'),
             'link_text' => 'Browse all courses',
             'highlight' => false,
