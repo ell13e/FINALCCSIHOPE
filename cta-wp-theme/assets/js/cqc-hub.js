@@ -110,4 +110,98 @@
     }
   }
   
+  // ============================================
+  // Jump to Navigation - Smooth Scroll
+  // ============================================
+  
+  const jumpNavLinks = document.querySelectorAll('.cqc-jump-nav-link');
+  
+  if (jumpNavLinks.length > 0) {
+    jumpNavLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          e.preventDefault();
+          const targetId = href.substring(1);
+          const targetElement = document.getElementById(targetId);
+          
+          if (targetElement) {
+            // Calculate offset for sticky header and jump nav
+            const headerOffset = 120; // Account for sticky header
+            const jumpNavOffset = 60; // Account for sticky jump nav
+            const totalOffset = headerOffset + jumpNavOffset;
+            
+            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - totalOffset;
+            
+            window.scrollTo({
+              top: targetPosition,
+              behavior: 'smooth'
+            });
+            
+            // Update active state
+            jumpNavLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Update URL hash without scrolling again
+            if (history.pushState) {
+              history.pushState(null, null, href);
+            }
+          }
+        }
+      });
+    });
+    
+    // Update active link on scroll
+    let ticking = false;
+    const updateActiveJumpLink = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollPosition = window.scrollY + 180; // Offset for header + jump nav
+          
+          // Find which section is currently in view
+          const sections = [
+            'cqc-requirements-heading',
+            'mandatory-training-heading',
+            'inspection-prep-heading',
+            'regulatory-changes-heading',
+            'oliver-mcgowan-heading',
+            'cqc-resources-heading',
+            'government-guidance-heading',
+            'cqc-articles-heading',
+            'cqc-courses-heading',
+            'cqc-faq-heading'
+          ];
+          
+          let activeSection = null;
+          
+          sections.forEach(sectionId => {
+            const section = document.getElementById(sectionId);
+            if (section) {
+              const sectionTop = section.getBoundingClientRect().top + window.pageYOffset;
+              const sectionBottom = sectionTop + section.offsetHeight;
+              
+              if (scrollPosition >= sectionTop - 100 && scrollPosition < sectionBottom - 100) {
+                activeSection = sectionId;
+              }
+            }
+          });
+          
+          // Update active state
+          jumpNavLinks.forEach(link => {
+            link.classList.remove('active');
+            if (activeSection && link.getAttribute('href') === `#${activeSection}`) {
+              link.classList.add('active');
+            }
+          });
+          
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    
+    window.addEventListener('scroll', updateActiveJumpLink, { passive: true });
+    updateActiveJumpLink(); // Initial check
+  }
+  
 })();

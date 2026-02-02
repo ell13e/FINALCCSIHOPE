@@ -252,6 +252,27 @@ $collection_schema = [
     </div>
   </section>
 
+  <!-- Jump to Navigation -->
+  <nav class="cqc-jump-nav" aria-label="Page sections">
+    <div class="container">
+      <div class="cqc-jump-nav-wrapper">
+        <span class="cqc-jump-nav-label">Jump to:</span>
+        <ul class="cqc-jump-nav-list">
+          <li><a href="#cqc-requirements-heading" class="cqc-jump-nav-link">Training Requirements</a></li>
+          <li><a href="#mandatory-training-heading" class="cqc-jump-nav-link">Mandatory Training</a></li>
+          <li><a href="#inspection-prep-heading" class="cqc-jump-nav-link">Inspection Prep</a></li>
+          <li><a href="#regulatory-changes-heading" class="cqc-jump-nav-link">Regulatory Changes</a></li>
+          <li><a href="#oliver-mcgowan-heading" class="cqc-jump-nav-link">Oliver McGowan</a></li>
+          <li><a href="#cqc-resources-heading" class="cqc-jump-nav-link">CQC Resources</a></li>
+          <li><a href="#government-guidance-heading" class="cqc-jump-nav-link">Government Guidance</a></li>
+          <li><a href="#cqc-articles-heading" class="cqc-jump-nav-link">Articles</a></li>
+          <li><a href="#cqc-courses-heading" class="cqc-jump-nav-link">Courses</a></li>
+          <li><a href="#cqc-faq-heading" class="cqc-jump-nav-link">FAQs</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
   <!-- CQC Training Requirements Section -->
   <?php get_template_part('template-parts/cqc-requirements-section'); ?>
 
@@ -716,7 +737,7 @@ $collection_schema = [
     $regulatory_description = 'Stay ahead of upcoming CQC framework updates and new training requirements';
   }
   ?>
-  <section class="content-section bg-light-cream" aria-labelledby="regulatory-changes-heading">
+  <section class="content-section bg-light-cream" aria-labelledby="regulatory-changes-heading" style="margin-top: 2rem;">
     <div class="container">
       <div class="section-header-center">
         <h2 id="regulatory-changes-heading" class="section-title"><?php echo esc_html($regulatory_title); ?></h2>
@@ -777,7 +798,7 @@ $collection_schema = [
             'title' => 'Infection Prevention and Control Code of Practice',
             'content' => 'The Health and Social Care Act 2008 code of practice on the prevention and control of infections sets out requirements for registered providers. This is a fundamental standard that CQC inspectors check during inspections. All staff must receive appropriate infection control training.',
             'link_url' => 'https://www.gov.uk/government/publications/the-health-and-social-care-act-2008-code-of-practice-on-the-prevention-and-control-of-infections-and-related-guidance/health-and-social-care-act-2008-code-of-practice-on-the-prevention-and-control-of-infections-and-related-guidance',
-            'link_text' => 'Read the infection control code of practice',
+            'link_text' => 'Read the code of practice',
             'highlight' => false,
           ],
           [
@@ -808,13 +829,34 @@ $collection_schema = [
           if (!empty($card['cta'])) $card_class .= ' cqc-regulatory-card-cta';
           
           $label_class = 'cqc-regulatory-label';
-          if (!empty($card['highlight'])) $label_class .= ' cqc-regulatory-label-important';
+          if (!empty($card['highlight'])) {
+            $label_class .= ' cqc-regulatory-label-important';
+          } else {
+            // Color coding based on label type
+            $label_lower = strtolower($card['label'] ?? '');
+            if (strpos($label_lower, 'framework') !== false || strpos($label_lower, 'new') !== false) {
+              $label_class .= ' cqc-regulatory-label-blue';
+            } elseif (strpos($label_lower, 'mandatory') !== false || strpos($label_lower, 'training') !== false) {
+              $label_class .= ' cqc-regulatory-label-teal';
+            } elseif (strpos($label_lower, 'timeline') !== false) {
+              $label_class .= ' cqc-regulatory-label-purple';
+            } elseif (strpos($label_lower, 'infection') !== false) {
+              $label_class .= ' cqc-regulatory-label-teal';
+            } elseif (strpos($label_lower, 'fundamental') !== false) {
+              $label_class .= ' cqc-regulatory-label-amber';
+            } elseif (strpos($label_lower, 'commitment') !== false || strpos($label_lower, 'cta') !== false) {
+              $label_class .= ' cqc-regulatory-label-gold';
+            }
+          }
           
           $list_class = !empty($card['timeline']) ? 'cqc-timeline-list' : '';
         ?>
         <div class="<?php echo esc_attr($card_class); ?>">
-          <?php if (!empty($card['link_url'])) : ?>
-          <a href="<?php echo esc_url($card['link_url']); ?>" class="cqc-regulatory-card-link" aria-label="<?php echo esc_attr($card['title'] . ' - ' . (!empty($card['link_text']) ? $card['link_text'] : 'Learn more')); ?>">
+          <?php 
+          // Only wrap entire card in link if there's no footer link text
+          $wrap_card = !empty($card['link_url']) && empty($card['link_text']);
+          if ($wrap_card) : ?>
+          <a href="<?php echo esc_url($card['link_url']); ?>" class="cqc-regulatory-card-link" aria-label="<?php echo esc_attr($card['title'] . ' - Learn more'); ?>">
           <?php endif; ?>
           
           <?php if (!empty($card['label'])) : ?>
@@ -841,14 +883,16 @@ $collection_schema = [
           
           <?php if (!empty($card['link_url']) && !empty($card['link_text'])) : ?>
           <div class="cqc-regulatory-card-footer">
-            <span class="cqc-regulatory-link-text"><?php echo esc_html($card['link_text']); ?></span>
+            <a href="<?php echo esc_url($card['link_url']); ?>" class="cqc-regulatory-link-text" <?php echo (strpos($card['link_url'], 'http') === 0) ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>>
+              <?php echo esc_html($card['link_text']); ?>
+            </a>
             <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path d="M7 17L17 7M7 7h10v10"></path>
             </svg>
           </div>
           <?php endif; ?>
           
-          <?php if (!empty($card['link_url'])) : ?>
+          <?php if ($wrap_card) : ?>
           </a>
           <?php endif; ?>
         </div>
@@ -858,7 +902,7 @@ $collection_schema = [
   </section>
 
   <!-- Oliver McGowan Training Section -->
-  <section class="content-section bg-light-cream" aria-labelledby="oliver-mcgowan-heading">
+  <section class="content-section" aria-labelledby="oliver-mcgowan-heading">
     <div class="container">
       <div class="section-header-center">
         <h2 id="oliver-mcgowan-heading" class="section-title">Oliver McGowan Mandatory Training</h2>
@@ -888,17 +932,17 @@ $collection_schema = [
 
         <!-- Training Structure -->
         <div class="cqc-regulatory-card">
-          <div class="cqc-regulatory-label">
-            <span>Training Structure</span>
+          <div class="cqc-regulatory-label cqc-regulatory-label-teal">
+            <span>Training</span>
           </div>
           <h3 class="cqc-regulatory-title">Two Tiers of Training</h3>
           <div>
-            <p>The training is delivered in two tiers, both consisting of two parts:</p>
+            <p>The training has two tiers:</p>
             <ul class="cqc-timeline-list">
-              <li><strong>Tier 1 (General Awareness):</strong> For staff who require general awareness of support needs. Includes elearning (1.5 hours) plus a 1-hour online interactive session co-delivered by experts by experience.</li>
-              <li><strong>Tier 2 (Direct Care):</strong> For staff who provide care and support. Includes the same elearning plus a 1-day face-to-face training session co-delivered by experts by experience.</li>
+              <li><strong>Tier 1 (General Awareness):</strong> For staff who need general awareness. Includes elearning (1.5 hours) plus a 1-hour online session.</li>
+              <li><strong>Tier 2 (Direct Care):</strong> For staff who provide care. Includes the same elearning plus a 1-day face-to-face session.</li>
             </ul>
-            <p><strong>Important:</strong> Everyone must complete the elearning regardless of tier. Tier 2 training includes Tier 1 material, so staff only need to complete one tier based on their role.</p>
+            <p><strong>Note:</strong> Everyone must complete the elearning. Tier 2 includes Tier 1 content, so staff only complete one tier based on their role.</p>
           </div>
           <div class="cqc-regulatory-card-footer">
             <a href="https://www.e-lfh.org.uk/programmes/the-oliver-mcgowan-mandatory-training-on-learning-disability-and-autism/" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-link-text">
@@ -912,8 +956,8 @@ $collection_schema = [
 
         <!-- Who Needs It -->
         <div class="cqc-regulatory-card">
-          <div class="cqc-regulatory-label">
-            <span>Requirements</span>
+          <div class="cqc-regulatory-label cqc-regulatory-label-teal">
+            <span>Who Needs It</span>
           </div>
           <h3 class="cqc-regulatory-title">Who Needs This Training?</h3>
           <div>
@@ -936,13 +980,13 @@ $collection_schema = [
 
         <!-- Compliance -->
         <div class="cqc-regulatory-card">
-          <div class="cqc-regulatory-label">
+          <div class="cqc-regulatory-label cqc-regulatory-label-amber">
             <span>Compliance</span>
           </div>
           <h3 class="cqc-regulatory-title">Meeting the Requirement</h3>
           <div>
             <p>The code of practice sets out standards for training and guidance for meeting those standards. CQC will assess whether registered providers are meeting this requirement during inspections.</p>
-            <p>Key points:</p>
+            <p style="font-weight: 600;">Key points:</p>
             <ul class="cqc-timeline-list">
               <li>Training must be standardised and meet the core capabilities frameworks</li>
               <li>Training must be co-delivered by experts by experience (people with learning disabilities or autistic people)</li>
@@ -964,7 +1008,7 @@ $collection_schema = [
   </section>
 
   <!-- CQC Official Resources Section -->
-  <section class="content-section" aria-labelledby="cqc-resources-heading">
+  <section class="content-section" aria-labelledby="cqc-resources-heading" style="padding-top: 4rem; padding-bottom: 4rem;">
     <div class="container">
       <div class="section-header-center">
         <h2 id="cqc-resources-heading" class="section-title">Official CQC Resources</h2>
@@ -991,7 +1035,7 @@ $collection_schema = [
               </ul>
             </div>
             <div class="cqc-regulatory-card-footer">
-              <span class="cqc-regulatory-link-text">Visit CQC Guidance & Regulation</span>
+              <a href="https://www.cqc.org.uk/guidance-regulation" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-link-text">Visit CQC Guidance & Regulation</a>
               <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M7 17L17 7M7 7h10v10"></path>
               </svg>
@@ -1069,7 +1113,7 @@ $collection_schema = [
               </ul>
             </div>
             <div class="cqc-regulatory-card-footer">
-              <span class="cqc-regulatory-link-text">Learn About CQC</span>
+              <a href="https://www.cqc.org.uk/about-us" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-link-text">Learn About CQC</a>
               <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M7 17L17 7M7 7h10v10"></path>
               </svg>
@@ -1081,7 +1125,7 @@ $collection_schema = [
   </section>
 
   <!-- Additional Government Guidance Section -->
-  <section class="content-section bg-light-cream" aria-labelledby="government-guidance-heading">
+  <section class="content-section bg-light-cream" aria-labelledby="government-guidance-heading" style="padding-top: 4rem; padding-bottom: 4rem;">
     <div class="container">
       <div class="section-header-center">
         <h2 id="government-guidance-heading" class="section-title">Additional Government Guidance</h2>
@@ -1100,7 +1144,7 @@ $collection_schema = [
               <p>The Health and Social Care Act 2008 code of practice on the prevention and control of infections sets out requirements for registered providers. This is a fundamental standard that CQC inspectors check during inspections.</p>
             </div>
             <div class="cqc-regulatory-card-footer">
-              <span class="cqc-regulatory-link-text">Read the code of practice</span>
+              <span class="cqc-regulatory-link-text">Read code of practice</span>
               <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M7 17L17 7M7 7h10v10"></path>
               </svg>
