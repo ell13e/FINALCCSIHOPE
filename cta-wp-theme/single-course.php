@@ -565,11 +565,8 @@ while (have_posts()) : the_post();
                 <?php endwhile; ?>
               </ul>
               <p class="course-dates-fallback">
-                Can't see a date that works for you?
+                Can't see a date that works for you? <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact'))); ?>" style="font-weight: 600; text-decoration: underline;">Get in touch</a> to discuss alternative dates.
               </p>
-              <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact'))); ?>" class="btn btn-secondary">
-                Enquire About This Course
-              </a>
             </div>
             <?php 
             wp_reset_postdata();
@@ -602,7 +599,7 @@ while (have_posts()) : the_post();
                 <i class="fas fa-phone" aria-hidden="true"></i>
                 <span><?php echo esc_html($contact['phone']); ?></span>
               </a>
-              <p class="course-detail-phone-hours">Mon-Fri 9am-5pm</p>
+              <p class="course-detail-phone-hours">Phone lines open: Mon-Fri 9am-5pm</p>
             </div>
 
           </div>
@@ -691,28 +688,23 @@ while (have_posts()) : the_post();
   ?>
 
   <!-- CTA Section Before Related Courses -->
-  <section class="course-detail-cta-section">
+  <section class="cta-section">
     <div class="container">
-      <div class="course-detail-cta-card">
-        <div class="course-detail-cta-content">
-          <h3>Ready to Get Started?</h3>
-          <p class="course-detail-cta-lead">Join hundreds of care professionals advancing their skills with this course.</p>
-          <ul class="course-detail-cta-benefits">
-            <li>CPD-accredited training</li>
-            <li>Expert-led sessions</li>
-            <li>Certificate upon completion</li>
-          </ul>
-        </div>
-        <div class="course-detail-cta-action">
+      <div class="cta-content">
+        <h2 class="cta-title">Ready to Get Started?</h2>
+        <p class="cta-description">Join hundreds of care professionals advancing their skills with this course. CPD-accredited training, expert-led sessions, and certificate upon completion.</p>
+        <div class="cta-buttons">
           <button 
             type="button"
             onclick="openBookingModal('<?php echo esc_js(get_the_title()); ?>', '<?php echo esc_js(get_the_ID()); ?>')"
-            class="primary-cta-button primary-cta-button-large"
+            class="btn btn-primary"
             aria-label="Book this course"
           >
             Book Your Place Now
           </button>
-          <p class="course-detail-cta-note">Spaces fill quickly - secure your place today</p>
+          <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact'))); ?>" class="btn btn-secondary">
+            Get in Touch
+          </a>
         </div>
       </div>
     </div>
