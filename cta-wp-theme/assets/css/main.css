@@ -40661,13 +40661,22 @@ fieldset.booking-modal-field legend.booking-modal-label {
   font-weight: 600;
   color: #4A3A2A;
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  flex: 1;
 }
 
 .course-detail-accordion-icon {
   flex-shrink: 0;
   transition: transform 0.3s ease;
   color: #4A3A2A;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 1rem;
 }
 
 .course-detail-accordion-trigger[aria-expanded="true"] .course-detail-accordion-icon {
@@ -51922,14 +51931,18 @@ a.article-cta-btn:focus-visible {
 .accordion-icon-inline {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   margin-right: 12px;
   vertical-align: middle;
   color: var(--teal-primary, #5BA8A0);
-}
-
-.accordion-icon-inline svg {
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
+}
+
+.accordion-icon-inline i {
+  font-size: 18px;
+  line-height: 1;
 }
 
 /* Section Backgrounds */
