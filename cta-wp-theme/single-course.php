@@ -146,28 +146,19 @@ while (have_posts()) : the_post();
       <div class="event-detail-hero-meta">
         <?php if ($duration) : ?>
         <div class="event-detail-hero-meta-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
-          </svg>
+          <i class="fas fa-clock" aria-hidden="true"></i>
           <span><?php echo esc_html($duration); ?><?php if ($hours) : ?> (<?php echo esc_html($hours); ?> hours)<?php endif; ?></span>
         </div>
         <?php endif; ?>
         <?php if ($level) : ?>
         <div class="event-detail-hero-meta-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-          </svg>
+          <i class="fas fa-layer-group" aria-hidden="true"></i>
           <span><?php echo esc_html($level); ?></span>
         </div>
         <?php endif; ?>
         <?php if ($accreditation && strtolower(trim($accreditation)) !== 'none') : ?>
         <div class="event-detail-hero-meta-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="8" r="7"></circle>
-            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-          </svg>
+          <i class="fas fa-award" aria-hidden="true"></i>
           <span><?php echo esc_html(cta_shorten_accreditation($accreditation)); ?></span>
         </div>
         <?php endif; ?>
@@ -220,11 +211,7 @@ while (have_posts()) : the_post();
             <?php if ($why_matters) : ?>
             <div class="course-why-matters-callout">
               <div class="course-callout-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                  <path d="M2 17l10 5 10-5"></path>
-                  <path d="M2 12l10 5 10-5"></path>
-                </svg>
+                <i class="fas fa-info-circle" aria-hidden="true"></i>
               </div>
               <div class="course-callout-content">
                 <h3>Why This Matters</h3>
@@ -261,10 +248,7 @@ while (have_posts()) : the_post();
               <?php if ($duration) : ?>
               <div class="course-format-card">
                 <div class="course-format-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                  </svg>
+                  <i class="fas fa-clock" aria-hidden="true"></i>
                 </div>
                 <div class="course-format-label">Duration</div>
                 <div class="course-format-value"><?php echo esc_html($duration); ?></div>
@@ -274,9 +258,7 @@ while (have_posts()) : the_post();
               <?php if ($level) : ?>
               <div class="course-format-card">
                 <div class="course-format-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                  </svg>
+                  <i class="fas fa-layer-group" aria-hidden="true"></i>
                 </div>
                 <div class="course-format-label">Level</div>
                 <div class="course-format-value"><?php echo esc_html($level); ?></div>
@@ -286,10 +268,7 @@ while (have_posts()) : the_post();
               <?php if ($certificate) : ?>
               <div class="course-format-card">
                 <div class="course-format-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="8" r="7"></circle>
-                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                  </svg>
+                  <i class="fas fa-certificate" aria-hidden="true"></i>
                 </div>
                 <div class="course-format-label">Certificate</div>
                 <div class="course-format-value"><?php echo esc_html($certificate); ?></div>
@@ -299,10 +278,7 @@ while (have_posts()) : the_post();
               <?php if ($accreditation && strtolower(trim($accreditation)) !== 'none') : ?>
               <div class="course-format-card">
                 <div class="course-format-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                  </svg>
+                  <i class="fas fa-award" aria-hidden="true"></i>
                 </div>
                 <div class="course-format-label">Accreditation</div>
                 <div class="course-format-value"><?php echo esc_html(cta_shorten_accreditation($accreditation)); ?> Accredited</div>
@@ -408,9 +384,7 @@ while (have_posts()) : the_post();
               <button type="button" class="course-content-show-more" id="course-content-toggle" onclick="toggleCourseContent()">
                 <span class="show-more-text">Show All <?php echo count($outcomes); ?> Topics</span>
                 <span class="show-less-text" style="display: none;">Show Less</span>
-                <svg class="toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
+                <i class="fas fa-chevron-down toggle-icon" aria-hidden="true"></i>
               </button>
               <?php endif; ?>
             </div>
@@ -479,9 +453,7 @@ while (have_posts()) : the_post();
               data-accordion="certification"
             >
               <h3 class="course-detail-accordion-title">Certification</h3>
-              <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
+              <i class="fas fa-chevron-down accordion-icon" aria-hidden="true"></i>
             </button>
             <div class="accordion-content" id="certification-content" aria-hidden="true">
               <div class="course-detail-certification">
@@ -512,9 +484,7 @@ while (have_posts()) : the_post();
               data-accordion="accessibility"
             >
               <h3 class="course-detail-accordion-title">Accessibility Support</h3>
-              <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
+              <i class="fas fa-chevron-down accordion-icon" aria-hidden="true"></i>
             </button>
             <div class="accordion-content" id="accessibility-content" aria-hidden="true">
               <p class="course-detail-text">
@@ -536,11 +506,7 @@ while (have_posts()) : the_post();
           ?>
           <div class="course-mandatory-card">
             <div class="course-mandatory-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                <line x1="12" y1="9" x2="12" y2="13"></line>
-                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-              </svg>
+              <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
             </div>
             <div class="course-mandatory-content">
               <h3>Mandatory Training</h3>
@@ -723,9 +689,7 @@ while (have_posts()) : the_post();
             <!-- Phone Number -->
             <div class="course-detail-phone">
               <a href="<?php echo esc_url($contact['phone_link']); ?>" class="course-detail-phone-link">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                </svg>
+                <i class="fas fa-phone" aria-hidden="true"></i>
                 <span><?php echo esc_html($contact['phone']); ?></span>
               </a>
             </div>
