@@ -100,12 +100,6 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  justify-content: flex-start;
-  text-align: left;
-}
-
-.accordion-trigger span:first-child > * {
-  text-align: left;
 }
 
 /* Accordion Icon (+ / - or chevron) */
