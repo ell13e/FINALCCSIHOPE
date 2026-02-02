@@ -50112,9 +50112,12 @@ a.article-cta-btn:focus-visible {
 }
 
 .course-covered-section h3 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #1e293b;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: #1a1a1a;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
 }
 
 .course-covered-grid {
@@ -50132,15 +50135,17 @@ a.article-cta-btn:focus-visible {
 
 .course-covered-item h4 {
   margin: 0 0 8px 0;
-  font-size: 16px;
-  color: #1e293b;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.4;
 }
 
 .course-covered-item p {
   margin: 0;
-  font-size: 14px;
-  color: #6b7280;
-  line-height: 1.5;
+  font-size: clamp(0.875rem, 1.25vw, 1rem);
+  color: #4a3a2a;
+  line-height: 1.6;
 }
 
 .course-format-cards {
