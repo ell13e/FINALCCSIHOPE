@@ -716,9 +716,8 @@ $collection_schema = [
       </div>
       
       <?php
-      // Get regulatory cards from ACF or use defaults
-      if (empty($regulatory_cards)) {
-      if (empty($regulatory_cards)) {
+      // Use ACF regulatory cards if available, otherwise use defaults
+      if (empty($regulatory_cards) || !is_array($regulatory_cards)) {
         // Default cards with links
         $regulatory_cards = [
           [
@@ -794,9 +793,11 @@ $collection_schema = [
           <a href="<?php echo esc_url($card['link_url']); ?>" class="cqc-regulatory-card-link" aria-label="<?php echo esc_attr($card['title'] . ' - ' . (!empty($card['link_text']) ? $card['link_text'] : 'Learn more')); ?>">
           <?php endif; ?>
           
+          <?php if (!empty($card['label'])) : ?>
           <div class="<?php echo esc_attr($label_class); ?>">
             <span><?php echo esc_html($card['label']); ?></span>
           </div>
+          <?php endif; ?>
           <h3 class="cqc-regulatory-title"><?php echo esc_html($card['title']); ?></h3>
           
           <?php if (!empty($card['content'])) : ?>
