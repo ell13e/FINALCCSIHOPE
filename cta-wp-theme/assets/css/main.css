@@ -40560,12 +40560,16 @@ fieldset.booking-modal-field legend.booking-modal-label {
 }
 
 .course-detail-section-heading {
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 700;
-  color: #4A3A2A;
-  margin: 0 0 1.5rem 0;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 900;
+  color: #1a1a1a;
+  margin: 2.5rem 0 1.75rem 0;
   line-height: 1.2;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
+}
+
+.course-detail-section-heading:first-of-type {
+  margin-top: 0;
 }
 
 /* Tablet: Full width when stacked - ensure no constraints */
@@ -50091,8 +50095,10 @@ a.article-cta-btn:focus-visible {
 
 .course-callout-content h3 {
   margin: 0 0 12px 0;
-  font-size: 20px;
-  color: #1e293b;
+  font-size: clamp(1.125rem, 2vw, 1.375rem);
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.3;
 }
 
 .course-callout-content p {
@@ -50198,9 +50204,12 @@ a.article-cta-btn:focus-visible {
 }
 
 .course-different-section h3 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #1e293b;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: #1a1a1a;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
 }
 
 .course-features-list {
@@ -50230,16 +50239,18 @@ a.article-cta-btn:focus-visible {
 }
 
 .course-feature-content h4 {
-  margin: 0 0 4px 0;
-  font-size: 16px;
-  color: #1e293b;
+  margin: 0 0 6px 0;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.4;
 }
 
 .course-feature-content p {
   margin: 0;
-  font-size: 14px;
-  color: #6b7280;
-  line-height: 1.5;
+  font-size: clamp(0.875rem, 1.25vw, 1rem);
+  color: #4a3a2a;
+  line-height: 1.6;
 }
 
 .course-after-box {
@@ -50470,10 +50481,27 @@ a.article-cta-btn:focus-visible {
 }
 
 .course-detail-subheading {
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
   font-weight: 700;
   color: #1a1a1a;
   margin-bottom: 1.25rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.course-detail-text {
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.7;
+  color: #4a3a2a;
+  margin-bottom: 1rem;
+}
+
+.course-detail-text p {
+  margin-bottom: 1rem;
+}
+
+.course-detail-text p:last-child {
+  margin-bottom: 0;
 }
 
 /* =========================================

@@ -243,50 +243,6 @@ while (have_posts()) : the_post();
             </div>
             <?php endif; ?>
             
-            <?php if ($duration || $hours || $level || $certificate || $accreditation || $format_details) : ?>
-            <div class="course-format-cards">
-              <?php if ($duration) : ?>
-              <div class="course-format-card">
-                <div class="course-format-icon">
-                  <i class="fas fa-clock" aria-hidden="true"></i>
-                </div>
-                <div class="course-format-label">Duration</div>
-                <div class="course-format-value"><?php echo esc_html($duration); ?></div>
-              </div>
-              <?php endif; ?>
-              
-              <?php if ($level) : ?>
-              <div class="course-format-card">
-                <div class="course-format-icon">
-                  <i class="fas fa-layer-group" aria-hidden="true"></i>
-                </div>
-                <div class="course-format-label">Level</div>
-                <div class="course-format-value"><?php echo esc_html($level); ?></div>
-              </div>
-              <?php endif; ?>
-              
-              <?php if ($certificate) : ?>
-              <div class="course-format-card">
-                <div class="course-format-icon">
-                  <i class="fas fa-certificate" aria-hidden="true"></i>
-                </div>
-                <div class="course-format-label">Certificate</div>
-                <div class="course-format-value"><?php echo esc_html($certificate); ?></div>
-              </div>
-              <?php endif; ?>
-              
-              <?php if ($accreditation && strtolower(trim($accreditation)) !== 'none') : ?>
-              <div class="course-format-card">
-                <div class="course-format-icon">
-                  <i class="fas fa-award" aria-hidden="true"></i>
-                </div>
-                <div class="course-format-label">Accreditation</div>
-                <div class="course-format-value"><?php echo esc_html(cta_shorten_accreditation($accreditation)); ?> Accredited</div>
-              </div>
-              <?php endif; ?>
-            </div>
-            <?php endif; ?>
-            
             <?php if ($format_details) : ?>
             <div class="course-format-details">
               <?php echo wp_kses_post(wp_trim_words($format_details, 100)); ?>
@@ -318,31 +274,6 @@ while (have_posts()) : the_post();
                 </div>
                 <?php endforeach; ?>
               </div>
-            </div>
-            <?php endif; ?>
-            
-            <?php if ($benefits && is_array($benefits)) : ?>
-            <div class="course-after-box">
-              <h3>What's Included</h3>
-              <ul class="course-benefits-list">
-                <?php 
-                // Limit to 4 benefits max
-                $display_benefits = array_slice($benefits, 0, 4);
-                foreach ($display_benefits as $benefit) : 
-                ?>
-                <li><?php echo esc_html($benefit['benefit']); ?></li>
-                <?php endforeach; ?>
-              </ul>
-              <?php if (count($benefits) > 4) : ?>
-              <p class="course-after-more">
-                <a href="#course-overview">See full benefits</a>
-              </p>
-              <?php endif; ?>
-              <?php if ($after_note) : ?>
-              <div class="course-after-note">
-                <?php echo wp_kses_post($after_note); ?>
-              </div>
-              <?php endif; ?>
             </div>
             <?php endif; ?>
           </div>
