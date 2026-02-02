@@ -151,6 +151,28 @@ while (have_posts()) : the_post();
     </div>
   </section>
 
+  <!-- Sticky Header CTA (appears after hero) -->
+  <div id="course-header-sticky-cta" class="course-header-sticky-cta" aria-hidden="true">
+    <div class="container">
+      <div class="course-header-sticky-content">
+        <div class="course-header-sticky-info">
+          <span class="course-header-sticky-title"><?php echo esc_html(get_the_title()); ?></span>
+          <?php if ($price) : ?>
+          <span class="course-header-sticky-price">From £<?php echo esc_html(number_format($price, 0)); ?></span>
+          <?php endif; ?>
+        </div>
+        <button 
+          type="button"
+          onclick="openBookingModal('<?php echo esc_js(get_the_title()); ?>', '<?php echo esc_js(get_the_ID()); ?>')"
+          class="course-header-sticky-button"
+          aria-label="Book this course"
+        >
+          Book Now
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Course Detail Content Section -->
   <section class="course-detail-content">
     <div class="container">
@@ -172,12 +194,6 @@ while (have_posts()) : the_post();
           if ($intro_paragraph || $why_matters || $covered_items || $format_details || $key_features || $benefits) :
           ?>
           <div class="course-expanded-content">
-            <?php if ($intro_paragraph) : ?>
-            <div class="course-intro-lead">
-              <?php echo wp_kses_post($intro_paragraph); ?>
-            </div>
-            <?php endif; ?>
-            
             <?php if ($why_matters) : ?>
             <div class="course-why-matters-callout">
               <div class="course-callout-icon">
@@ -308,7 +324,7 @@ while (have_posts()) : the_post();
             
             <?php if ($benefits && is_array($benefits)) : ?>
             <div class="course-after-box">
-              <h3>What You'll Get</h3>
+              <h3>What's Included</h3>
               <ul class="course-benefits-list">
                 <?php 
                 // Limit to 4 benefits max
@@ -330,6 +346,16 @@ while (have_posts()) : the_post();
               <?php endif; ?>
             </div>
             <?php endif; ?>
+            
+            <?php if ($intro_paragraph) : ?>
+            <div class="course-intro-lead course-intro-condensed">
+              <?php 
+              // Truncate to 2-3 sentences max (approximately 150 words)
+              $truncated_intro = wp_trim_words($intro_paragraph, 30, '');
+              echo wp_kses_post($truncated_intro);
+              ?>
+            </div>
+            <?php endif; ?>
           </div>
           <?php endif; ?>
           
@@ -342,13 +368,38 @@ while (have_posts()) : the_post();
           <h2 class="course-detail-section-heading" id="course-overview"><?php echo esc_html($section_heading); ?></h2>
           
           <?php if ($outcomes && is_array($outcomes) && count($outcomes) > 0) : ?>
-          <!-- What You'll Learn - EXPANDED (no accordion) -->
+          <!-- Course Content - EXPANDED (no accordion) -->
           <div class="course-detail-learn-section">
-            <h3 class="course-detail-subheading">What You'll Learn</h3>
-            <div class="course-detail-learn-grid">
-              <?php foreach ($outcomes as $outcome) : ?>
+            <h3 class="course-detail-subheading">Course Content</h3>
+            <div class="course-detail-learn-grid" id="course-content-list">
+              <?php 
+              // Show first 6-8 items, then progressive disclosure
+              $initial_count = min(8, count($outcomes));
+              $display_items = array_slice($outcomes, 0, $initial_count);
+              $has_more = count($outcomes) > $initial_count;
+              
+              foreach ($display_items as $outcome) : 
+              ?>
               <div class="course-detail-learn-item"><?php echo esc_html($outcome['outcome_text']); ?></div>
               <?php endforeach; ?>
+              
+              <?php if ($has_more) : ?>
+              <div class="course-detail-learn-more-wrapper" id="course-content-more" style="display: none;">
+                <?php 
+                $remaining_items = array_slice($outcomes, $initial_count);
+                foreach ($remaining_items as $outcome) : 
+                ?>
+                <div class="course-detail-learn-item"><?php echo esc_html($outcome['outcome_text']); ?></div>
+                <?php endforeach; ?>
+              </div>
+              <button type="button" class="course-content-show-more" id="course-content-toggle" onclick="toggleCourseContent()">
+                <span class="show-more-text">Show All <?php echo count($outcomes); ?> Topics</span>
+                <span class="show-less-text" style="display: none;">Show Less</span>
+                <svg class="toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <?php endif; ?>
             </div>
           </div>
           <?php endif; ?>
@@ -363,48 +414,33 @@ while (have_posts()) : the_post();
           </div>
           <?php endif; ?>
 
-          <?php if ($prerequisites) : ?>
-          <!-- Requirements Accordion -->
-          <div class="accordion" data-accordion-group="course-details">
-            <button 
-              type="button"
-              class="accordion-trigger" 
-              aria-expanded="false"
-              aria-controls="requirements-content"
-              data-accordion="requirements"
-            >
-              <h3 class="course-detail-accordion-title">Requirements</h3>
-              <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-            <div class="accordion-content" id="requirements-content" aria-hidden="true">
-              <div class="course-detail-text">
-                <?php echo wpautop(wp_kses_post($prerequisites)); ?>
-              </div>
+          <?php if ($suitable_for) : ?>
+          <!-- Who Should Attend - EXPANDED (no accordion) -->
+          <div class="course-detail-audience-section">
+            <h3 class="course-detail-subheading">Who Should Attend</h3>
+            <div class="course-detail-text">
+              <?php echo wpautop(wp_kses_post($suitable_for)); ?>
             </div>
           </div>
           <?php endif; ?>
 
-          <?php if ($suitable_for) : ?>
-          <!-- Who Should Attend Accordion -->
-          <div class="accordion" data-accordion-group="course-details">
-            <button 
-              type="button"
-              class="accordion-trigger" 
-              aria-expanded="false"
-              aria-controls="audience-content"
-              data-accordion="audience"
-            >
-              <h3 class="course-detail-accordion-title">Who Should Attend</h3>
-              <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-            <div class="accordion-content" id="audience-content" aria-hidden="true">
-              <div class="course-detail-text">
-                <?php echo wpautop(wp_kses_post($suitable_for)); ?>
-              </div>
+          <?php if ($prerequisites) : ?>
+          <!-- Requirements - EXPANDED (no accordion) -->
+          <div class="course-detail-requirements-section">
+            <h3 class="course-detail-subheading">Requirements</h3>
+            <div class="course-detail-text">
+              <?php 
+              // Check if prerequisites are minimal (like "No prerequisites required")
+              $prereq_text = strip_tags($prerequisites);
+              $is_minimal = strlen($prereq_text) < 100 || stripos($prereq_text, 'no prerequisite') !== false || stripos($prereq_text, 'none required') !== false;
+              
+              if ($is_minimal) {
+                // For minimal requirements, show as a highlighted summary
+                echo '<div class="course-requirements-summary">' . wp_kses_post($prerequisites) . '</div>';
+              } else {
+                echo wpautop(wp_kses_post($prerequisites));
+              }
+              ?>
             </div>
           </div>
           <?php endif; ?>
@@ -519,6 +555,9 @@ while (have_posts()) : the_post();
                 <div class="course-detail-price">From £<?php echo esc_html(number_format($price, 0)); ?></div>
               <?php endif; ?>
               <div class="course-detail-price-note">per person</div>
+              <div class="course-detail-price-includes">
+                Includes certificate<?php if ($accreditation && strtolower(trim($accreditation)) !== 'none') : ?>, <?php echo esc_html($accreditation); ?> accreditation<?php endif; ?>, materials & lifetime access to resources
+              </div>
             </div>
             <?php endif; ?>
 
@@ -721,6 +760,26 @@ while (have_posts()) : the_post();
   endif; 
   ?>
 
+  <!-- CTA Section Before Related Courses -->
+  <section class="course-detail-cta-section">
+    <div class="container">
+      <div class="course-detail-cta-inline">
+        <div class="course-detail-cta-content">
+          <h3>Ready to Get Started?</h3>
+          <p>Book your place today and join hundreds of care professionals advancing their skills.</p>
+        </div>
+        <button 
+          type="button"
+          onclick="openBookingModal('<?php echo esc_js(get_the_title()); ?>', '<?php echo esc_js(get_the_ID()); ?>')"
+          class="primary-cta-button primary-cta-button-inline"
+          aria-label="Book this course"
+        >
+          Book Now
+        </button>
+      </div>
+    </div>
+  </section>
+
   <!-- Related Courses Section -->
   <?php
   wp_reset_postdata();
@@ -912,6 +971,61 @@ while (have_posts()) : the_post();
     
     // Initial check
     handleScroll();
+  }
+  
+  // Sticky header CTA functionality
+  const headerStickyCTA = document.getElementById('course-header-sticky-cta');
+  if (headerStickyCTA) {
+    const heroSection = document.querySelector('.group-hero-section');
+    let ticking = false;
+    
+    function handleHeaderScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (heroSection) {
+            const heroBottom = heroSection.getBoundingClientRect().bottom;
+            // Show sticky header CTA when hero section scrolls out of view
+            if (heroBottom < 0) {
+              headerStickyCTA.setAttribute('aria-hidden', 'false');
+              headerStickyCTA.classList.add('visible');
+            } else {
+              headerStickyCTA.setAttribute('aria-hidden', 'true');
+              headerStickyCTA.classList.remove('visible');
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+    
+    window.addEventListener('scroll', handleHeaderScroll, { passive: true });
+    handleHeaderScroll();
+  }
+  
+  // Toggle course content (Show more/less)
+  function toggleCourseContent() {
+    const moreWrapper = document.getElementById('course-content-more');
+    const toggleButton = document.getElementById('course-content-toggle');
+    const showMoreText = toggleButton.querySelector('.show-more-text');
+    const showLessText = toggleButton.querySelector('.show-less-text');
+    const toggleIcon = toggleButton.querySelector('.toggle-icon');
+    
+    if (moreWrapper && toggleButton) {
+      const isHidden = moreWrapper.style.display === 'none' || !moreWrapper.style.display;
+      
+      if (isHidden) {
+        moreWrapper.style.display = 'block';
+        showMoreText.style.display = 'none';
+        showLessText.style.display = 'inline';
+        toggleIcon.style.transform = 'rotate(180deg)';
+      } else {
+        moreWrapper.style.display = 'none';
+        showMoreText.style.display = 'inline';
+        showLessText.style.display = 'none';
+        toggleIcon.style.transform = 'rotate(0deg)';
+      }
+    }
   }
 })();
 </script>
