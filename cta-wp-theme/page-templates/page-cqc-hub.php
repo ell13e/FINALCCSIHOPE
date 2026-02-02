@@ -495,6 +495,36 @@ $collection_schema = [
     </div>
   </section>
   
+  <!-- FAQ Section -->
+  <?php if (!empty($faqs)) : ?>
+  <section class="content-section bg-light-cream" aria-labelledby="cqc-faq-heading">
+    <div class="container">
+      <div class="section-header-center">
+        <h2 id="cqc-faq-heading" class="section-title">FAQs About CQC Compliance</h2>
+        <p class="section-description">Common questions about CQC requirements and training</p>
+      </div>
+      
+      <div class="cqc-faq-wrapper">
+        <?php foreach ($faqs as $index => $faq) :
+          if (!is_array($faq) || !isset($faq['question']) || !isset($faq['answer'])) {
+            continue;
+          }
+        ?>
+        <div class="accordion" data-accordion-group="cqc-faq">
+          <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="cqc-faq-<?php echo (int) $index; ?>">
+            <span><?php echo esc_html($faq['question']); ?></span>
+            <span class="accordion-icon" aria-hidden="true"></span>
+          </button>
+          <div id="cqc-faq-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
+            <?php echo wpautop(wp_kses_post($faq['answer'])); ?>
+          </div>
+        </div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  </section>
+  <?php endif; ?>
+
   <!-- CQC Training Requirements Section -->
   <?php get_template_part('template-parts/cqc-requirements-section'); ?>
 
@@ -1035,36 +1065,6 @@ $collection_schema = [
       
       <div class="cta-center large-spacing">
         <a href="<?php echo esc_url(get_post_type_archive_link('course')); ?>" class="btn btn-secondary">View All Courses</a>
-      </div>
-    </div>
-  </section>
-  <?php endif; ?>
-
-  <!-- FAQ Section -->
-  <?php if (!empty($faqs)) : ?>
-  <section class="content-section bg-light-cream" aria-labelledby="cqc-faq-heading">
-    <div class="container">
-      <div class="section-header-center">
-        <h2 id="cqc-faq-heading" class="section-title">FAQs About CQC Compliance</h2>
-        <p class="section-description">Common questions about CQC requirements and training</p>
-      </div>
-      
-      <div class="cqc-faq-wrapper">
-        <?php foreach ($faqs as $index => $faq) :
-          if (!is_array($faq) || !isset($faq['question']) || !isset($faq['answer'])) {
-            continue;
-          }
-        ?>
-        <div class="accordion" data-accordion-group="cqc-faq">
-          <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="cqc-faq-<?php echo (int) $index; ?>">
-            <span><?php echo esc_html($faq['question']); ?></span>
-            <span class="accordion-icon" aria-hidden="true"></span>
-          </button>
-          <div id="cqc-faq-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
-            <?php echo wpautop(wp_kses_post($faq['answer'])); ?>
-          </div>
-        </div>
-        <?php endforeach; ?>
       </div>
     </div>
   </section>
