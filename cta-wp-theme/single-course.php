@@ -965,9 +965,15 @@ while (have_posts()) : the_post();
   function toggleCourseContent() {
     const moreWrapper = document.getElementById('course-content-more');
     const toggleButton = document.getElementById('course-content-toggle');
+    
+    if (!moreWrapper || !toggleButton) {
+      console.error('Course content toggle: Required elements not found');
+      return;
+    }
+    
     const showMoreText = toggleButton.querySelector('.show-more-text');
     const showLessText = toggleButton.querySelector('.show-less-text');
-    const toggleIcon = toggleButton.querySelector('.toggle-icon');
+    const toggleIcon = toggleButton.querySelector('.fa-chevron-down');
     
     if (moreWrapper && toggleButton) {
       const isHidden = moreWrapper.style.display === 'none' || !moreWrapper.style.display;
@@ -984,9 +990,9 @@ while (have_posts()) : the_post();
         // Skip animation for very long content (>1000px) to prevent jankiness
         if (contentHeight > 1000) {
           moreWrapper.style.display = 'block';
-          showMoreText.style.display = 'none';
-          showLessText.style.display = 'inline';
-          toggleIcon.style.transform = 'rotate(180deg)';
+          if (showMoreText) showMoreText.style.display = 'none';
+          if (showLessText) showLessText.style.display = 'inline';
+          if (toggleIcon) toggleIcon.style.transform = 'rotate(180deg)';
           // Smooth scroll to toggle button
           toggleButton.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         } else {
@@ -1000,9 +1006,9 @@ while (have_posts()) : the_post();
           void moreWrapper.offsetHeight;
           
           moreWrapper.style.maxHeight = contentHeight + 'px';
-          showMoreText.style.display = 'none';
-          showLessText.style.display = 'inline';
-          toggleIcon.style.transform = 'rotate(180deg)';
+          if (showMoreText) showMoreText.style.display = 'none';
+          if (showLessText) showLessText.style.display = 'inline';
+          if (toggleIcon) toggleIcon.style.transform = 'rotate(180deg)';
           
           // Clean up after animation
           setTimeout(() => {
@@ -1027,9 +1033,9 @@ while (have_posts()) : the_post();
         void moreWrapper.offsetHeight;
         
         moreWrapper.style.maxHeight = '0';
-        showMoreText.style.display = 'inline';
-        showLessText.style.display = 'none';
-        toggleIcon.style.transform = 'rotate(0deg)';
+          if (showMoreText) showMoreText.style.display = 'inline';
+          if (showLessText) showLessText.style.display = 'none';
+          if (toggleIcon) toggleIcon.style.transform = 'rotate(0deg)';
         
         // Clean up after animation
         setTimeout(() => {

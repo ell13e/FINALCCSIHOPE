@@ -50479,10 +50479,20 @@ a.article-cta-btn:focus-visible {
    ========================================= */
 
 .course-detail-learn-section,
-.course-detail-description-section {
+.course-detail-description-section,
+.course-detail-audience-section,
+.course-detail-requirements-section {
   margin-bottom: 2.5rem;
   padding-bottom: 2rem;
   border-bottom: 1px solid #e5e5e5;
+}
+
+.course-detail-learn-section:last-child,
+.course-detail-description-section:last-child,
+.course-detail-audience-section:last-child,
+.course-detail-requirements-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .course-detail-subheading {
