@@ -560,31 +560,28 @@ while (have_posts()) : the_post();
                 </div>
               <?php endif; ?>
               <div class="course-detail-price-includes">
-                <?php
-                // Build includes array dynamically based on available fields
-                $includes = [];
-                
-                if ($certificate) {
-                  $includes[] = 'Certificate';
-                }
-                
-                if ($accreditation && strtolower(trim($accreditation)) !== 'none') {
-                  $includes[] = esc_html($accreditation) . ' accreditation';
-                }
-                
-                // Always include materials
-                $includes[] = 'Course materials';
-                
-                // Join with commas and "and" for last item
-                if (count($includes) > 1) {
-                  $last_item = array_pop($includes);
-                  $includes_text = implode(', ', $includes) . ' and ' . $last_item;
-                } else {
-                  $includes_text = $includes[0];
-                }
-                
-                echo '<span class="course-detail-price-includes-label">Includes:</span> ' . $includes_text;
-                ?>
+                <span class="course-detail-price-includes-label">Includes:</span>
+                <ul class="course-detail-price-includes-list">
+                  <?php
+                  // Build includes array dynamically based on available fields
+                  $includes = [];
+                  
+                  if ($certificate) {
+                    $includes[] = 'Certificate';
+                  }
+                  
+                  if ($accreditation && strtolower(trim($accreditation)) !== 'none') {
+                    $includes[] = esc_html($accreditation) . ' accreditation';
+                  }
+                  
+                  // Always include materials
+                  $includes[] = 'Course materials';
+                  
+                  foreach ($includes as $include) {
+                    echo '<li>' . esc_html($include) . '</li>';
+                  }
+                  ?>
+                </ul>
               </div>
             </div>
             <?php endif; ?>

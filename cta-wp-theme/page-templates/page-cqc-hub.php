@@ -126,6 +126,11 @@ function cta_get_cqc_icon($type) {
     'grid' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/></svg>',
     'question' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
     'book' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 003 3h7z"/></svg>',
+    'home' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+    'building' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><line x1="9" y1="9" x2="9" y2="9"/><line x1="9" y1="12" x2="9" y2="12"/><line x1="9" y1="15" x2="9" y2="15"/><line x1="9" y1="18" x2="9" y2="18"/></svg>',
+    'hospital' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><line x1="9" y1="9" x2="9" y2="9"/><line x1="9" y1="12" x2="9" y2="12"/><line x1="9" y1="15" x2="9" y2="15"/><line x1="9" y1="18" x2="9" y2="18"/><line x1="13" y1="9" x2="13" y2="9"/><line x1="13" y1="12" x2="13" y2="12"/><line x1="13" y1="15" x2="13" y2="15"/><line x1="13" y1="18" x2="13" y2="18"/></svg>',
+    'users' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
+    'activity' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
   ];
   
   return $icons[$type] ?? '';
@@ -304,20 +309,25 @@ $collection_schema = [
         <p class="cqc-selector-description">Select your care setting to see mandatory training requirements</p>
         
         <div class="cqc-setting-buttons">
-          <button type="button" class="cqc-setting-btn" data-setting="domiciliary" aria-label="Show training requirements for Domiciliary Care">
-            Domiciliary Care
+          <button type="button" class="cqc-setting-btn cqc-setting-domiciliary" data-setting="domiciliary" aria-label="Show training requirements for Domiciliary Care">
+            <span class="cqc-setting-icon"><?php echo cta_get_cqc_icon('home'); ?></span>
+            <span class="cqc-setting-text">Domiciliary Care</span>
           </button>
-          <button type="button" class="cqc-setting-btn" data-setting="residential" aria-label="Show training requirements for Residential Care">
-            Residential Care
+          <button type="button" class="cqc-setting-btn cqc-setting-residential" data-setting="residential" aria-label="Show training requirements for Residential Care">
+            <span class="cqc-setting-icon"><?php echo cta_get_cqc_icon('building'); ?></span>
+            <span class="cqc-setting-text">Residential Care</span>
           </button>
-          <button type="button" class="cqc-setting-btn" data-setting="nursing" aria-label="Show training requirements for Nursing Home">
-            Nursing Home
+          <button type="button" class="cqc-setting-btn cqc-setting-nursing" data-setting="nursing" aria-label="Show training requirements for Nursing Home">
+            <span class="cqc-setting-icon"><?php echo cta_get_cqc_icon('hospital'); ?></span>
+            <span class="cqc-setting-text">Nursing Home</span>
           </button>
-          <button type="button" class="cqc-setting-btn" data-setting="supported-living" aria-label="Show training requirements for Supported Living">
-            Supported Living
+          <button type="button" class="cqc-setting-btn cqc-setting-supported" data-setting="supported-living" aria-label="Show training requirements for Supported Living">
+            <span class="cqc-setting-icon"><?php echo cta_get_cqc_icon('users'); ?></span>
+            <span class="cqc-setting-text">Supported Living</span>
           </button>
-          <button type="button" class="cqc-setting-btn" data-setting="complex-care" aria-label="Show training requirements for Complex Care">
-            Complex Care
+          <button type="button" class="cqc-setting-btn cqc-setting-complex" data-setting="complex-care" aria-label="Show training requirements for Complex Care">
+            <span class="cqc-setting-icon"><?php echo cta_get_cqc_icon('activity'); ?></span>
+            <span class="cqc-setting-text">Complex Care</span>
           </button>
         </div>
         
@@ -366,20 +376,6 @@ $collection_schema = [
           <strong>New Provider?</strong>
           <span>Essential compliance guidance</span>
         </a>
-      </div>
-    </div>
-  </section>
-  
-  <!-- Critical Alert Banner -->
-  <section class="cqc-alert-banner" aria-label="Critical regulatory updates">
-    <div class="container">
-      <div class="cqc-alert-content">
-        <span class="cqc-alert-badge">NEW 2026</span>
-        <div class="cqc-alert-text">
-          <strong>Major Regulatory Changes:</strong>
-          Oliver McGowan Training becomes statutory • New Single Assessment Framework • Enhanced safeguarding requirements
-      </div>
-        <a href="#regulatory-updates" class="btn btn-alert">View All Changes →</a>
       </div>
     </div>
   </section>
@@ -1232,30 +1228,6 @@ $collection_schema = [
   <?php endif; ?>
 
   
-  <!-- Subscription Bar (Sticky Footer) -->
-  <aside class="cqc-subscription-bar" id="cqc-subscription-bar" aria-label="Subscribe for updates">
-    <div class="container">
-      <button type="button" class="cqc-subscription-close" aria-label="Close subscription bar">×</button>
-      <div class="cqc-subscription-content">
-        <strong class="cqc-subscription-title">Stay Updated on CQC Changes</strong>
-        <p class="cqc-subscription-description">Get notified when new regulations or guidance are published</p>
-        <form class="cqc-subscription-form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-          <input type="hidden" name="action" value="cqc_subscribe">
-          <?php wp_nonce_field('cqc_subscribe', 'cqc_subscribe_nonce'); ?>
-          <label for="cqc-email" class="sr-only">Email address</label>
-          <input 
-            type="email" 
-            id="cqc-email" 
-            name="email" 
-            placeholder="your@email.com"
-            required
-            class="cqc-subscription-input"
-          >
-          <button type="submit" class="btn btn-primary">Subscribe</button>
-        </form>
-      </div>
-    </div>
-  </aside>
 </main>
 
 <!-- Schema.org Structured Data -->
