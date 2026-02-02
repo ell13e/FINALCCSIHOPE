@@ -82,27 +82,27 @@ $cqc_standards = [
     'courses' => [
       [
         'name' => 'First Aid',
-        'explanation' => 'Ensures staff can respond immediately to medical emergencies, preventing avoidable harm and meeting CQC\'s requirement for emergency response capabilities.'
+        'explanation' => 'Emergency response training for medical emergencies.'
       ],
       [
         'name' => 'Moving & Handling',
-        'explanation' => 'Prevents injuries to both staff and service users during transfers, directly addressing CQC\'s focus on reducing avoidable harm.'
+        'explanation' => 'Prevents injuries during transfers and lifts.'
       ],
       [
         'name' => 'Safeguarding',
-        'explanation' => 'Protects vulnerable adults and children from abuse, neglect, and exploitation—a core CQC requirement for all care settings.'
+        'explanation' => 'Protects vulnerable people from abuse and neglect.'
       ],
       [
         'name' => 'Health & Safety',
-        'explanation' => 'Ensures safe working environments and practices, meeting CQC standards for risk management and accident prevention.'
+        'explanation' => 'Safe working practices and risk management.'
       ],
       [
         'name' => 'Fire Safety',
-        'explanation' => 'Critical for protecting lives and property, demonstrating compliance with fire safety regulations that CQC inspectors verify.'
+        'explanation' => 'Life safety and fire prevention compliance.'
       ],
       [
         'name' => 'Infection Control',
-        'explanation' => 'Prevents the spread of infections, essential for protecting vulnerable service users and meeting CQC infection prevention standards.'
+        'explanation' => 'Prevents infection spread in care settings.'
       ]
     ]
   ],
@@ -115,19 +115,19 @@ $cqc_standards = [
     'courses' => [
       [
         'name' => 'Care Certificate',
-        'explanation' => 'Mandatory induction training ensuring all new staff meet minimum competency standards, directly required by CQC for effective care delivery.'
+        'explanation' => 'Mandatory induction training for new care staff.'
       ],
       [
         'name' => 'Competency Assessments',
-        'explanation' => 'Demonstrates staff can perform their roles effectively, providing evidence CQC inspectors require to verify competency.'
+        'explanation' => 'Verifies staff can perform their roles effectively.'
       ],
       [
         'name' => 'Medication Management',
-        'explanation' => 'Ensures safe and effective administration of medicines, meeting CQC standards for medication competency and reducing medication errors.'
+        'explanation' => 'Safe administration and management of medicines.'
       ],
       [
         'name' => 'Clinical Skills',
-        'explanation' => 'Provides evidence-based clinical knowledge and skills, ensuring care delivery meets professional standards CQC expects.'
+        'explanation' => 'Evidence-based clinical knowledge and practice.'
       ]
     ]
   ],
@@ -140,19 +140,19 @@ $cqc_standards = [
     'courses' => [
       [
         'name' => 'Dignity & Respect',
-        'explanation' => 'Ensures staff understand how to maintain service users\' dignity and treat them with respect, a fundamental CQC expectation.'
+        'explanation' => 'Maintaining dignity and treating people with respect.'
       ],
       [
         'name' => 'Communication Skills',
-        'explanation' => 'Enables effective, compassionate communication with service users and families, demonstrating CQC\'s caring standard in practice.'
+        'explanation' => 'Effective, compassionate communication with service users.'
       ],
       [
         'name' => 'Person-Centred Care',
-        'explanation' => 'Focuses care on individual needs and preferences, aligning with CQC\'s requirement for personalized, compassionate care delivery.'
+        'explanation' => 'Care focused on individual needs and preferences.'
       ],
       [
         'name' => 'Equality & Diversity',
-        'explanation' => 'Ensures fair, non-discriminatory care that respects individual differences, meeting CQC standards for inclusive service provision.'
+        'explanation' => 'Fair, non-discriminatory care for all.'
       ]
     ]
   ],
@@ -165,19 +165,19 @@ $cqc_standards = [
     'courses' => [
       [
         'name' => 'Dementia Care',
-        'explanation' => 'Provides specialized knowledge for supporting people with dementia, ensuring services are responsive to their specific needs and preferences.'
+        'explanation' => 'Specialized support for people with dementia.'
       ],
       [
         'name' => 'Learning Disabilities',
-        'explanation' => 'Equips staff to understand and respond to the unique needs of people with learning disabilities, meeting CQC expectations for responsive care.'
+        'explanation' => 'Understanding and responding to unique needs.'
       ],
       [
         'name' => 'MCA & DoLS',
-        'explanation' => 'Ensures services respect mental capacity and use least restrictive practices, demonstrating responsiveness to individual rights and legal requirements.'
+        'explanation' => 'Mental capacity and least restrictive practices.'
       ],
       [
         'name' => 'End of Life Care',
-        'explanation' => 'Provides compassionate, responsive care for people at end of life, meeting CQC standards for supporting people through this sensitive time.'
+        'explanation' => 'Compassionate care at end of life.'
       ]
     ]
   ],
@@ -190,19 +190,19 @@ $cqc_standards = [
     'courses' => [
       [
         'name' => 'Leadership & Management',
-        'explanation' => 'Develops effective leadership skills that ensure high-quality service delivery and governance, directly supporting CQC\'s well-led standard.'
+        'explanation' => 'Effective leadership for quality service delivery.'
       ],
       [
         'name' => 'Supervision Skills',
-        'explanation' => 'Ensures managers can effectively support and develop staff, demonstrating strong leadership and governance that CQC expects.'
+        'explanation' => 'Supporting and developing staff effectively.'
       ],
       [
         'name' => 'Information Handling',
-        'explanation' => 'Ensures proper data management and confidentiality, meeting CQC requirements for information governance and record-keeping.'
+        'explanation' => 'Data management and confidentiality compliance.'
       ],
       [
         'name' => 'Governance',
-        'explanation' => 'Provides frameworks for quality assurance and compliance, directly supporting CQC\'s well-led standard through effective governance systems.'
+        'explanation' => 'Quality assurance and compliance frameworks.'
       ]
     ]
   ]
