@@ -18554,41 +18554,12 @@ input[type="email"].contact-form-input {
   border-width: 1px;
 }
 
+/* Circular arrow button removed per user request */
 .event-card::after {
-  content: '→';
-  position: absolute;
-  /* Align vertically with event-card-price section center */
-  /* Price section center: content padding-bottom (24px) - footer padding-top (0px) - half price height (~19px) */
-  /* Arrow center should align, so: bottom = 24px - 0px - 19px + 18px (half arrow height) = 23px */
-  bottom: 23px;
-  right: 20px;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--gold-primary);
-  color: var(--white);
-  border-radius: 50%;
-  font-size: 18px;
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(178, 148, 86, 0.2);
-  z-index: 10;
-  transition: all 0.2s ease;
-  opacity: 1;
+  display: none;
 }
 
 /* Event card shimmer animation removed per user request */
-
-@media (min-width: 640px) {
-  .event-card::after {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-    /* Adjust bottom position for larger arrow (half height is 20px instead of 18px) */
-    bottom: 25px; /* 24px - 0px - 19px + 20px */
-  }
-}
 
 .event-card:hover {
   transform: translateY(-2px);
@@ -18597,11 +18568,7 @@ input[type="email"].contact-form-input {
   box-shadow: var(--shadow-md);
 }
 
-.event-card:hover::after {
-  transform: translateY(-2px);
-  background: var(--gold-hover);
-  box-shadow: 0 4px 12px rgba(178, 148, 86, 0.3);
-}
+/* Circular arrow button hover removed */
 
 .event-card:focus-visible {
   outline: 3px solid rgba(53, 147, 141, 0.45);
@@ -18609,11 +18576,7 @@ input[type="email"].contact-form-input {
   border-radius: 16px;
 }
 
-@media (hover: none) {
-  .event-card::after {
-    opacity: 1;
-  }
-}
+/* Circular arrow button removed */
 
 /* Event Card Image Wrapper */
 .event-card-image-wrapper {
