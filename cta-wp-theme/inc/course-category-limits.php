@@ -103,7 +103,7 @@ function cta_get_secondary_category($course_id) {
  * @param int $course_id Course post ID
  * @return array Array of WP_Term objects (max 2)
  */
-function cta_get_course_categories($course_id) {
+function cta_get_course_category_terms($course_id) {
     $terms = get_the_terms($course_id, 'course_category');
     
     if (!$terms || is_wp_error($terms)) {
