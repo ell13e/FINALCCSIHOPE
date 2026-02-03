@@ -99,6 +99,7 @@ require_once CTA_THEME_DIR . '/inc/discount-codes.php';
 require_once CTA_THEME_DIR . '/inc/newsletter-subscribers.php';
 require_once CTA_THEME_DIR . '/inc/newsletter-automation.php';
 require_once CTA_THEME_DIR . '/inc/auto-populate-articles.php';
+require_once CTA_THEME_DIR . '/inc/populate-test-events.php';
 require_once CTA_THEME_DIR . '/inc/newsletter-automation-builder.php';
 require_once CTA_THEME_DIR . '/inc/event-management-ui.php';
 require_once CTA_THEME_DIR . '/inc/data-importer.php';
