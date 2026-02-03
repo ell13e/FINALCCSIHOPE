@@ -1,0 +1,81 @@
+/**
+ * Admin Styles
+ * 
+ * Styles for WordPress admin interface improvements
+ * 
+ * @package CTA_Theme
+ */
+
+/* ============================================
+   CSS Variables for Consistent Spacing
+   ============================================ */
+:root {
+    --admin-spacing-xs: 4px;
+    --admin-spacing-sm: 8px;
+    --admin-spacing-md: 16px;
+    --admin-spacing-lg: 24px;
+    --admin-spacing-xl: 32px;
+}
+
+/* ============================================
+   Form Submissions Admin Table Spacing
+   ============================================ */
+
+/* Wrapper for followup status dropdown */
+.cta-followup-status-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--admin-spacing-sm);
+    padding: var(--admin-spacing-xs) 0;
+    min-width: 200px;
+}
+
+/* Followup status select dropdown */
+.cta-followup-status-select {
+    padding: 6px 8px;
+    min-width: 180px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Wrapper for assigned to dropdown */
+.cta-assigned-to-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--admin-spacing-sm);
+    padding: var(--admin-spacing-xs) 0;
+    min-width: 150px;
+}
+
+/* Assigned to select dropdown */
+.cta-assigned-to-select {
+    padding: 6px 8px;
+    min-width: 120px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Ensure table columns have adequate width */
+.wp-list-table .column-followup_status {
+    min-width: 220px;
+}
+
+.wp-list-table .column-assigned_to {
+    min-width: 160px;
+}
+
+/* Responsive adjustments for mobile admin view */
+@media screen and (max-width: 782px) {
+    .cta-followup-status-wrapper,
+    .cta-assigned-to-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--admin-spacing-xs);
+    }
+    
+    .cta-followup-status-select,
+    .cta-assigned-to-select {
+        width: 100%;
+        min-width: auto;
+    }
+}

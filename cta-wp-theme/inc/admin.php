@@ -1312,6 +1312,39 @@ function cta_enqueue_review_picker($hook) {
 add_action('admin_enqueue_scripts', 'cta_enqueue_review_picker');
 
 /**
+ * Enqueue admin CSS for improved admin interface styling
+ */
+function cta_enqueue_admin_styles($hook) {
+    wp_enqueue_style(
+        'cta-admin-styles',
+        get_template_directory_uri() . '/assets/css/admin.css',
+        [],
+        CTA_THEME_VERSION
+    );
+}
+add_action('admin_enqueue_scripts', 'cta_enqueue_admin_styles');
+
+/**
+ * Enqueue universal AI assistant script
+ */
+function cta_enqueue_universal_ai_assistant($hook) {
+    // Enqueue on all admin pages
+    wp_enqueue_script(
+        'cta-universal-ai-assistant',
+        get_template_directory_uri() . '/assets/js/universal-ai-assistant.js',
+        ['jquery'],
+        CTA_THEME_VERSION,
+        true
+    );
+    
+    // Localize script
+    wp_localize_script('cta-universal-ai-assistant', 'ctaUniversalAI', [
+        'nonce' => wp_create_nonce('cta_ai_generate_field'),
+    ]);
+}
+add_action('admin_enqueue_scripts', 'cta_enqueue_universal_ai_assistant');
+
+/**
  * AJAX handler to save image for course or course event
  */
 function cta_save_image_ajax() {

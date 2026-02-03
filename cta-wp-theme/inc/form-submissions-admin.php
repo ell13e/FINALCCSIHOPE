@@ -1739,7 +1739,7 @@ function cta_form_submission_admin_column_content($column, $post_id) {
             
             $current_status = $status_labels[$followup_status] ?? null;
             
-            echo '<div class="cta-followup-status-wrapper" data-post-id="' . esc_attr($post_id) . '" style="display: flex; align-items: center; gap: 6px;">';
+            echo '<div class="cta-followup-status-wrapper" data-post-id="' . esc_attr($post_id) . '">';
             echo '<select class="cta-followup-status-select" data-post-id="' . esc_attr($post_id) . '">';
             echo '<option value="">No Status</option>';
             foreach ($status_labels as $key => $status) {
@@ -1786,7 +1786,7 @@ function cta_form_submission_admin_column_content($column, $post_id) {
             $email_sent = get_post_meta($post_id, '_submission_email_sent', true);
             $email_error = get_post_meta($post_id, '_submission_email_error', true);
             
-            echo '<div class="cta-email-status-wrapper" style="display: flex; align-items: center; gap: 6px;">';
+            echo '<div class="cta-email-status-wrapper">';
             if ($email_sent === 'yes' || $email_sent === '1') {
                 echo '<span class="cta-admin-email-sent">Sent</span>';
             } elseif ($email_error) {
@@ -2537,6 +2537,56 @@ function cta_form_submission_admin_styles() {
         
         .tablenav .actions {
             padding: 0;
+        }
+        
+        /* Form submission table column spacing */
+        .cta-followup-status-wrapper,
+        .cta-assigned-to-wrapper,
+        .cta-email-status-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            min-width: 200px;
+        }
+        
+        .cta-followup-status-select,
+        .cta-assigned-to-select {
+            padding: 4px 8px;
+            min-width: 180px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        /* Ensure table columns have adequate width */
+        .wp-list-table .column-followup_status,
+        .wp-list-table .column-assigned_to,
+        .wp-list-table .column-email_status {
+            width: 200px;
+        }
+        
+        /* Responsive adjustments for mobile admin view */
+        @media screen and (max-width: 782px) {
+            .cta-followup-status-wrapper,
+            .cta-assigned-to-wrapper,
+            .cta-email-status-wrapper {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+                min-width: auto;
+            }
+            
+            .cta-followup-status-select,
+            .cta-assigned-to-select {
+                width: 100%;
+                min-width: auto;
+            }
+            
+            .wp-list-table .column-followup_status,
+            .wp-list-table .column-assigned_to,
+            .wp-list-table .column-email_status {
+                width: auto;
+            }
         }
     </style>
     <?php

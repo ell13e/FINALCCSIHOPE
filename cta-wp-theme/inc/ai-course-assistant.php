@@ -1345,6 +1345,109 @@ function cta_generate_course_faqs_ajax() {
 add_action('wp_ajax_cta_generate_course_faqs', 'cta_generate_course_faqs_ajax');
 
 /**
+ * Enqueue universal AI assistant script
+ */
+function cta_enqueue_universal_ai_assistant($hook) {
+    // Only load in admin
+    if (!is_admin()) {
+        return;
+    }
+    
+    // Enqueue script
+    wp_enqueue_script(
+        'cta-universal-ai-assistant',
+        get_template_directory_uri() . '/assets/js/universal-ai-assistant.js',
+        ['jquery'],
+        filemtime(get_template_directory() . '/assets/js/universal-ai-assistant.js'),
+        true
+    );
+    
+    // Localize script
+    wp_localize_script('cta-universal-ai-assistant', 'ctaUniversalAI', [
+        'nonce' => wp_create_nonce('cta_universal_ai'),
+        'ajaxurl' => admin_url('admin-ajax.php')
+    ]);
+    
+    // Ensure ajaxurl is available globally (WordPress doesn't always provide it in admin)
+    wp_add_inline_script('cta-universal-ai-assistant', 'var ajaxurl = ajaxurl || "' . admin_url('admin-ajax.php') . '";', 'before');
+}
+add_action('admin_enqueue_scripts', 'cta_enqueue_universal_ai_assistant');
+
+/**
+ * Generic AJAX handler for field content generation
+ */
+function cta_generate_field_content_ajax() {
+    check_ajax_referer('cta_universal_ai', 'nonce');
+    
+    if (!current_user_can('edit_posts')) {
+        wp_send_json_error(['message' => 'Permission denied']);
+    }
+    
+    $field_id = sanitize_text_field($_POST['field_id'] ?? '');
+    $field_type = sanitize_text_field($_POST['field_type'] ?? 'textarea');
+    $field_name = sanitize_text_field($_POST['field_name'] ?? '');
+    $field_label = sanitize_text_field($_POST['field_label'] ?? '');
+    $page_context = sanitize_text_field($_POST['page_context'] ?? '');
+    $current_value = wp_kses_post($_POST['current_value'] ?? '');
+    
+    // Check if AI is configured
+    $provider = get_option('cta_ai_provider', 'groq');
+    if (empty(cta_ai_get_attemptable_providers($provider))) {
+        wp_send_json_error(['message' => 'AI API keys not configured. Go to Settings → AI Assistant and add your keys.']);
+    }
+    
+    // Build context-aware prompt based on field context
+    $context = cta_build_universal_ai_context($field_id, $field_name, $field_label, $page_context, $current_value);
+    
+    // Call AI API
+    $result = cta_call_ai_api_for_field('', $provider, $context['system_prompt'], $context['user_prompt'], $field_type);
+    
+    if (is_wp_error($result)) {
+        wp_send_json_error(['message' => 'AI generation failed: ' . $result->get_error_message()]);
+    }
+    
+    wp_send_json_success(['content' => $result]);
+}
+add_action('wp_ajax_cta_generate_field_content', 'cta_generate_field_content_ajax');
+
+/**
+ * Build context for universal AI generation
+ */
+function cta_build_universal_ai_context($field_id, $field_name, $field_label, $page_context, $current_value) {
+    $system_prompt = "You are an expert content writer for Continuity Training Academy, a care sector training provider in Kent, UK. Write clear, professional, and engaging content. Use British English only.";
+    
+    $user_prompt = '';
+    
+    // Detect field type from name/label
+    $field_lower = strtolower($field_label . ' ' . $field_name);
+    
+    if (strpos($field_lower, 'meta description') !== false || strpos($field_lower, 'seo') !== false) {
+        // SEO meta description
+        $system_prompt = "You are an expert SEO copywriter for Continuity Training Academy, a care sector training provider in Kent, UK. Write compelling, keyword-rich meta descriptions optimized for search engines (150-160 characters). Use British English only.";
+        $user_prompt = "Write a 150-160 character SEO meta description for " . ($field_label ?: 'this page') . ". Include: key information, location (Maidstone, Kent if relevant), and a call to action. Be concise and compelling.";
+    } elseif (strpos($field_lower, 'description') !== false) {
+        // General description
+        $user_prompt = "Write a comprehensive description for " . ($field_label ?: 'this content') . ". Include: what it covers, who it's for, key benefits. Target: UK care sector professionals. Location: Mention Maidstone, Kent if relevant. Aim for 200-400 words.";
+    } elseif (strpos($field_lower, 'excerpt') !== false) {
+        // Excerpt
+        $user_prompt = "Write a brief excerpt (2-3 sentences, ~30 words) for " . ($field_label ?: 'this content') . ". Make it engaging and informative.";
+    } else {
+        // Generic content
+        $user_prompt = "Write content for " . ($field_label ?: 'this field') . ". Make it clear, professional, and relevant to UK care sector training. Use British English only.";
+    }
+    
+    // Add current value as context if provided
+    if (!empty($current_value)) {
+        $user_prompt .= "\n\nCurrent content (for reference): " . wp_strip_all_tags($current_value);
+    }
+    
+    return [
+        'system_prompt' => $system_prompt,
+        'user_prompt' => $user_prompt
+    ];
+}
+
+/**
  * Add JavaScript for AI generation buttons in course and event editors
  */
 function cta_course_ai_assistant_script($hook) {
@@ -1661,3 +1764,142 @@ function cta_course_ai_assistant_script($hook) {
     <?php
 }
 add_action('admin_footer', 'cta_course_ai_assistant_script');
+
+/**
+ * Generic AJAX handler for field content generation
+ * Works with any textarea field on any admin page
+ */
+function cta_generate_field_content_ajax() {
+    check_ajax_referer('cta_ai_generate_field', 'nonce');
+    
+    if (!current_user_can('edit_posts')) {
+        wp_send_json_error(['message' => 'Permission denied']);
+    }
+    
+    // Check if AI is configured
+    $provider = get_option('cta_ai_provider', 'groq');
+    if (empty(cta_ai_get_attemptable_providers($provider))) {
+        wp_send_json_error(['message' => 'AI API keys not configured. Go to Settings → AI Assistant and add your keys.']);
+    }
+    
+    $field_name = sanitize_text_field($_POST['field_name'] ?? '');
+    $field_type = sanitize_text_field($_POST['field_type'] ?? 'textarea');
+    $field_label = sanitize_text_field($_POST['field_label'] ?? '');
+    $page_context = sanitize_text_field($_POST['page_context'] ?? '');
+    $post_id = absint($_POST['post_id'] ?? 0);
+    $max_chars = isset($_POST['max_chars']) ? absint($_POST['max_chars']) : null;
+    
+    // Build context-aware prompt based on field type and context
+    $system_prompt = "You are an expert content writer for Continuity Training Academy, a care sector training provider in Kent, UK. Write clear, engaging content that helps UK care sector professionals. Use British English only.";
+    
+    $prompt = '';
+    $context = [];
+    
+    // Get post context if available
+    if ($post_id) {
+        $post = get_post($post_id);
+        if ($post) {
+            $context['title'] = $post->post_title;
+            $context['post_type'] = $post->post_type;
+            
+            // Get course/event specific context
+            if ($post->post_type === 'course' || $post->post_type === 'course_event') {
+                $context = array_merge($context, cta_get_ai_context_for_field($field_name, $post_id));
+            }
+        }
+    }
+    
+    // Build prompt based on field type and context
+    $field_lower = strtolower($field_label . ' ' . $field_name);
+    
+    if (strpos($field_lower, 'meta description') !== false || strpos($field_lower, 'seo') !== false) {
+        // Meta description
+        $system_prompt = "You are an expert SEO copywriter for Continuity Training Academy, a care sector training provider in Kent, UK. Write compelling, keyword-rich meta descriptions optimized for search engines. Use British English only.";
+        
+        $title = $context['title'] ?? 'this page';
+        $prompt = "Write a 150-160 character SEO meta description for: {$title}\n\n";
+        
+        if (isset($context['level'])) {
+            $prompt .= "Level: {$context['level']}\n";
+        }
+        if (isset($context['duration'])) {
+            $prompt .= "Duration: {$context['duration']}\n";
+        }
+        if (isset($context['accreditation']) && strtolower(trim($context['accreditation'])) !== 'none') {
+            $prompt .= "Accreditation: {$context['accreditation']}\n";
+        }
+        
+        $prompt .= "\nRequirements:\n";
+        $prompt .= "- Exactly 150-160 characters\n";
+        $prompt .= "- Include: page/course name, location (Maidstone, Kent), key benefit, accreditation if relevant\n";
+        $prompt .= "- Target: UK care sector professionals searching for training\n";
+        $prompt .= "- Format: Compelling, keyword-rich, action-oriented\n";
+        $prompt .= "- Use British English only\n";
+        $prompt .= "- No quotes, no prefixes, just the meta description text\n\n";
+        $prompt .= "Write only the meta description, nothing else.";
+        
+        $max_chars = $max_chars ?: 160;
+    } elseif (strpos($field_lower, 'description') !== false) {
+        // General description
+        $title = $context['title'] ?? 'this content';
+        $prompt = "Write a comprehensive description for: {$title}\n\n";
+        
+        if (isset($context['level'])) {
+            $prompt .= "Level: {$context['level']}\n";
+        }
+        if (isset($context['duration'])) {
+            $prompt .= "Duration: {$context['duration']}\n";
+        }
+        
+        $prompt .= "\nRequirements:\n";
+        $prompt .= "- Comprehensive description (200-400 words)\n";
+        $prompt .= "- Include: what it covers, who it's for, key benefits\n";
+        $prompt .= "- Target: UK care sector professionals\n";
+        $prompt .= "- Tone: professional and informative\n";
+        $prompt .= "- Location: Mention Maidstone, Kent if relevant\n";
+        $prompt .= "- Use British English only\n";
+        $prompt .= "- Format: Well-structured paragraphs, easy to read\n\n";
+        $prompt .= "Write only the description text, nothing else.";
+    } elseif (strpos($field_lower, 'intro') !== false || strpos($field_lower, 'opening') !== false) {
+        // Introduction/opening paragraph
+        $title = $context['title'] ?? 'this content';
+        $prompt = "Write an engaging opening paragraph (100-120 words) for: {$title}\n\n";
+        
+        if (isset($context['level'])) {
+            $prompt .= "Level: {$context['level']}\n";
+        }
+        if (isset($context['duration'])) {
+            $prompt .= "Duration: {$context['duration']}\n";
+        }
+        
+        $prompt .= "\nRequirements:\n";
+        $prompt .= "- 100-120 words\n";
+        $prompt .= "- Engaging and SEO-optimized\n";
+        $prompt .= "- Include location (Maidstone, Kent)\n";
+        $prompt .= "- Mention CQC/compliance if relevant\n";
+        $prompt .= "- Use British English only\n";
+        $prompt .= "- Direct, conversational tone\n\n";
+        $prompt .= "Write only the paragraph text, nothing else.";
+    } else {
+        // Generic content
+        $title = $context['title'] ?? 'this content';
+        $prompt = "Write content for: {$field_label}\n\n";
+        $prompt .= "Context: {$title}\n\n";
+        $prompt .= "Requirements:\n";
+        $prompt .= "- Clear and informative\n";
+        $prompt .= "- Target: UK care sector professionals\n";
+        $prompt .= "- Use British English only\n";
+        $prompt .= "- Professional tone\n\n";
+        $prompt .= "Write only the content, nothing else.";
+    }
+    
+    // Generate content
+    $content = cta_call_ai_api_for_field('', $provider, $system_prompt, $prompt, $field_type, $max_chars);
+    
+    if (is_wp_error($content)) {
+        wp_send_json_error(['message' => 'AI generation failed: ' . $content->get_error_message()]);
+    }
+    
+    wp_send_json_success(['content' => $content]);
+}
+add_action('wp_ajax_cta_generate_field_content', 'cta_generate_field_content_ajax');
