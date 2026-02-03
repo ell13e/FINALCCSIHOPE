@@ -19,6 +19,33 @@
 defined('ABSPATH') || exit;
 
 /**
+ * Get post by title (replacement for deprecated get_page_by_title)
+ * 
+ * @param string $title Post title to search for
+ * @param string $post_type Post type to search
+ * @return WP_Post|null Post object if found, null otherwise
+ */
+function cta_get_post_by_title($title, $post_type = 'page') {
+    global $wpdb;
+    
+    $post = $wpdb->get_var($wpdb->prepare(
+        "SELECT ID FROM {$wpdb->posts} 
+        WHERE post_title = %s 
+        AND post_type = %s 
+        AND post_status != 'trash'
+        LIMIT 1",
+        $title,
+        $post_type
+    ));
+    
+    if ($post) {
+        return get_post($post);
+    }
+    
+    return null;
+}
+
+/**
  * Import course data on theme activation
  * 
  * IMPORTANT: This function NEVER deletes existing data.
@@ -289,7 +316,7 @@ function cta_import_courses() {
             update_field('course_code', sanitize_text_field($course_code), $post_id);
         }
         
-        // Set category
+        // Set category (limit to 1 category for import - can add secondary manually)
         if (!empty($course['category'])) {
             $category_slug = sanitize_title($course['category']);
             $term = get_term_by('slug', $category_slug, 'course_category');
@@ -300,10 +327,12 @@ function cta_import_courses() {
                     'slug' => $category_slug,
                 ]);
                 if (!is_wp_error($term_result)) {
-                    wp_set_object_terms($post_id, $term_result['term_id'], 'course_category');
+                    // Remove any existing categories first, then set primary
+                    wp_set_object_terms($post_id, [$term_result['term_id']], 'course_category', false);
                 }
             } else {
-                wp_set_object_terms($post_id, $term->term_id, 'course_category');
+                // Remove any existing categories first, then set primary
+                wp_set_object_terms($post_id, [$term->term_id], 'course_category', false);
             }
         }
         
@@ -498,7 +527,7 @@ function cta_populate_single_course_from_json($course_title) {
         update_field('course_code', sanitize_text_field($course_code), $post_id);
     }
     
-    // Set category
+    // Set category (limit to 1 category for import - can add secondary manually)
     if (!empty($course['category'])) {
         $category_slug = sanitize_title($course['category']);
         $term = get_term_by('slug', $category_slug, 'course_category');
@@ -508,10 +537,20 @@ function cta_populate_single_course_from_json($course_title) {
                 'slug' => $category_slug,
             ]);
             if (!is_wp_error($term_result)) {
-                wp_set_object_terms($post_id, $term_result['term_id'], 'course_category');
+                // Get existing categories to preserve secondary if exists
+                $existing_terms = wp_get_object_terms($post_id, 'course_category', ['fields' => 'ids']);
+                $new_terms = array_slice($existing_terms, 0, 1); // Keep secondary if exists
+                array_unshift($new_terms, $term_result['term_id']); // Add primary
+                $new_terms = array_slice($new_terms, 0, 2); // Limit to 2
+                wp_set_object_terms($post_id, $new_terms, 'course_category', false);
             }
         } else {
-            wp_set_object_terms($post_id, $term->term_id, 'course_category');
+            // Get existing categories to preserve secondary if exists
+            $existing_terms = wp_get_object_terms($post_id, 'course_category', ['fields' => 'ids']);
+            $new_terms = array_slice($existing_terms, 0, 1); // Keep secondary if exists
+            array_unshift($new_terms, $term->term_id); // Add primary
+            $new_terms = array_slice($new_terms, 0, 2); // Limit to 2
+            wp_set_object_terms($post_id, $new_terms, 'course_category', false);
         }
     }
     
@@ -541,7 +580,7 @@ function cta_import_scheduled_events() {
     
     foreach ($events_data as $event) {
         // Find the linked course - try exact match first, then fuzzy match
-        $course = get_page_by_title($event['title'], OBJECT, 'course');
+        $course = cta_get_post_by_title($event['title'], 'course');
         
         // If exact match fails, try fuzzy matching (handles variations like "&" vs "and")
         if (!$course && function_exists('cta_find_course_by_name')) {
@@ -609,7 +648,7 @@ function cta_import_scheduled_events() {
         $event_title = $event['title'] . ' - ' . date('j M Y', strtotime($date));
         
         // SAFETY: Check if event already exists - NEVER delete or overwrite existing data
-        $existing = get_page_by_title($event_title, OBJECT, 'course_event');
+        $existing = cta_get_post_by_title($event_title, 'course_event');
         
         if ($existing) {
             // SAFETY: Skip if already exists - preserve all existing data
@@ -766,7 +805,7 @@ function cta_import_news_articles() {
     
     foreach ($articles as $article) {
         // SAFETY: Check if article already exists - NEVER delete or overwrite existing data
-        $existing = get_page_by_title($article['title'], OBJECT, 'post');
+        $existing = cta_get_post_by_title($article['title'], 'post');
         
         if ($existing) {
             // SAFETY: Skip if already exists - preserve all existing data

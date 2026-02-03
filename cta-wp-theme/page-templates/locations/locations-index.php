@@ -275,13 +275,13 @@ echo '<script type="application/ld+json">' . wp_json_encode($schema_data, JSON_U
   </section>
   
   <!-- Opening -->
-  <section class="content-section">
+  <section class="content-section bg-light-cream">
     <div class="container">
-      <div class="content-intro">
-        <p class="content-lead">
+      <div class="section-header-center">
+        <p class="section-description">
           Hiring's down 56% year-on-year. One in three providers is considering leaving the sector. You can't fix the funding crisis. But you can keep the team you've got.
         </p>
-        <p class="content-lead">
+        <p class="section-description">
           Trained staff feel competent. Competent staff stay longer. That's not marketing speak: it's the only retention strategy that's working right now.
         </p>
       </div>
@@ -302,7 +302,7 @@ echo '<script type="application/ld+json">' . wp_json_encode($schema_data, JSON_U
             <i class="fas fa-building" aria-hidden="true"></i>
           </div>
           <h3 class="locations-delivery-title">At Our Centre</h3>
-          <p class="locations-delivery-address">The Maidstone Studios, New Cut Road,<br>Maidstone, Kent, ME14 5NZ</p>
+          <p class="locations-delivery-address">Maidstone, Kent</p>
           
           <ul class="locations-delivery-features">
             <li><i class="fas fa-check-circle" aria-hidden="true"></i> Free parking on site</li>
@@ -372,7 +372,7 @@ echo '<script type="application/ld+json">' . wp_json_encode($schema_data, JSON_U
         <p class="section-subtitle">Find location-specific information, travel times, and courses relevant to your area</p>
       </div>
       
-      <div class="cqc-requirements-grid">
+      <div class="categories-grid">
         <?php 
         $location_icons = [
           'Maidstone' => 'fa-map-marker-alt',
@@ -386,27 +386,29 @@ echo '<script type="application/ld+json">' . wp_json_encode($schema_data, JSON_U
           $icon = $location_icons[$location['name']] ?? 'fa-map-marker-alt';
           $is_primary = ($location['name'] === 'Maidstone');
         ?>
-          <article class="cqc-requirement-card">
+          <article class="locations-delivery-card">
             <?php if ($is_primary) : ?>
               <div class="badge badge-essential" style="position: absolute; top: 16px; right: 16px;">Our Training Centre</div>
             <?php endif; ?>
             
-            <div class="cqc-icon-wrapper cqc-icon-responsive">
+            <div class="locations-delivery-icon">
               <i class="fas <?php echo esc_attr($icon); ?>" aria-hidden="true"></i>
             </div>
             
-            <h3 class="cqc-requirement-title"><?php echo esc_html($location['name']); ?></h3>
-            <p class="cqc-requirement-description"><?php echo esc_html($location['description']); ?></p>
+            <h3 class="locations-delivery-title"><?php echo esc_html($location['name']); ?></h3>
+            <p class="locations-delivery-address"><?php echo esc_html($location['description']); ?></p>
             
-            <ul class="cqc-requirement-list" style="text-align: left; margin: 16px 0;">
+            <ul class="locations-delivery-features">
               <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> <strong>Areas covered:</strong> <?php echo esc_html($location['areas']); ?></li>
               <li><i class="fas fa-clock" aria-hidden="true"></i> <strong>Travel time:</strong> <?php echo esc_html($location['travel_time']); ?></li>
             </ul>
             
             <?php if ($location['page_url']) : ?>
-              <a href="<?php echo esc_url($location['page_url']); ?>" class="btn <?php echo $is_primary ? 'btn-primary' : 'btn-secondary'; ?>" style="margin-top: auto;">
-                <?php echo $is_primary ? 'View Our Centre' : 'View Location Details'; ?>
-              </a>
+              <div class="locations-delivery-actions">
+                <a href="<?php echo esc_url($location['page_url']); ?>" class="btn <?php echo $is_primary ? 'btn-primary' : 'btn-secondary'; ?>">
+                  <?php echo $is_primary ? 'View Our Centre' : 'View Location Details'; ?>
+                </a>
+              </div>
             <?php endif; ?>
           </article>
         <?php endforeach; ?>
@@ -422,148 +424,185 @@ echo '<script type="application/ld+json">' . wp_json_encode($schema_data, JSON_U
         <p class="section-subtitle">Regional context, hospital discharge pressures, and course priorities for your area</p>
       </div>
       
-      <div class="cqc-requirements-grid">
-        <a href="<?php echo esc_url(home_url('/locations/greater-manchester/')); ?>" class="cqc-requirement-card" style="text-decoration: none; color: inherit;">
-          <div class="cqc-icon-wrapper cqc-icon-safe">
-            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-          </div>
-          <h3 class="cqc-requirement-title">Greater Manchester & North West</h3>
-        </a>
+      <div class="categories-grid">
+        <?php
+        $uk_locations = [
+          [
+            'name' => 'Greater Manchester & North West',
+            'url' => home_url('/locations/greater-manchester/'),
+            'description' => 'Hospital discharge delays are pushing complex care packages your way. "Home First" assessments mean your team needs to be ready.',
+            'areas' => 'Manchester, Stockport, Salford, Bolton, Bury, Oldham, Rochdale, Wigan',
+            'hook' => '8.3% vacancy rate. Competition for staff is fierce.'
+          ],
+          [
+            'name' => 'London & Greater London',
+            'url' => home_url('/locations/london/'),
+            'description' => 'CQC scrutiny is tightest in London. Your team needs current training to meet the highest standards.',
+            'areas' => 'All London boroughs, Greater London, Home Counties',
+            'hook' => 'Highest inspection standards. Zero margin for error.'
+          ],
+          [
+            'name' => 'West Yorkshire & Yorkshire',
+            'url' => home_url('/locations/west-yorkshire/'),
+            'description' => 'Bed occupancy above 91%. Discharge pressure means sicker patients, more medications, more risk.',
+            'areas' => 'Leeds, Sheffield, Bradford, Wakefield, Huddersfield, York',
+            'hook' => 'Urban markets. Retention depends on competence.'
+          ],
+          [
+            'name' => 'Midlands (Birmingham & Coventry)',
+            'url' => home_url('/locations/midlands/'),
+            'description' => 'UHB serves one of the largest populations. When discharge happens, it\'s complex—more meds, more monitoring, more risk.',
+            'areas' => 'Birmingham, Coventry, Solihull, Wolverhampton, Dudley, Walsall',
+            'hook' => '8.3% vacancy rate. Urban competition for staff.'
+          ],
+          [
+            'name' => 'South West (Bristol, Devon & Cornwall)',
+            'url' => home_url('/locations/south-west/'),
+            'description' => 'Rural and coastal areas need flexible training. We come to you—no travel time for your team.',
+            'areas' => 'Bristol, Plymouth, Exeter, Truro, Taunton, Bath',
+            'hook' => 'On-site delivery. We bring everything to you.'
+          ],
+          [
+            'name' => 'Lancashire & South Cumbria',
+            'url' => home_url('/locations/lancashire/'),
+            'description' => 'Budget pressures are real. Training becomes your market advantage when commissioners scrutinise every contract.',
+            'areas' => 'Preston, Blackburn, Lancaster, Burnley, Barrow-in-Furness, Carlisle',
+            'hook' => 'Training as commissioning proof. Quality matters.'
+          ],
+          [
+            'name' => 'East of England (Norfolk, Suffolk, Cambs)',
+            'url' => home_url('/locations/east-england/'),
+            'description' => 'Rural and coastal care providers need accessible training. We deliver on-site across the region.',
+            'areas' => 'Norwich, Ipswich, Cambridge, Peterborough, Great Yarmouth, Lowestoft',
+            'hook' => 'Flexible delivery. We work around your rota.'
+          ],
+          [
+            'name' => 'Merseyside & Cheshire',
+            'url' => home_url('/locations/merseyside/'),
+            'description' => 'Urban care providers managing high-acuity cases. Your team needs current skills to handle complex discharges.',
+            'areas' => 'Liverpool, Wirral, Chester, Warrington, Birkenhead, Ellesmere Port',
+            'hook' => 'Complex care. Training keeps staff confident.'
+          ],
+          [
+            'name' => 'Scotland',
+            'url' => home_url('/locations/scotland/'),
+            'description' => 'Scottish care standards require current training. We deliver on-site across Scotland—from the Borders to the Highlands.',
+            'areas' => 'Glasgow, Edinburgh, Aberdeen, Dundee, Inverness, Perth',
+            'hook' => 'UK-wide delivery. Same quality, same standards.'
+          ],
+          [
+            'name' => 'Wales',
+            'url' => home_url('/locations/wales/'),
+            'description' => 'Welsh care providers need CQC-equivalent training. We deliver on-site across Wales—from Cardiff to rural areas.',
+            'areas' => 'Cardiff, Swansea, Newport, Wrexham, Bangor, Carmarthen',
+            'hook' => 'On-site anywhere. We come to you.'
+          ]
+        ];
         
-        <a href="<?php echo esc_url(home_url('/locations/london/')); ?>" class="cqc-requirement-card" style="text-decoration: none; color: inherit;">
-          <div class="cqc-icon-wrapper cqc-icon-effective">
+        foreach ($uk_locations as $location) :
+        ?>
+        <article class="locations-delivery-card">
+          <div class="locations-delivery-icon">
             <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
           </div>
-          <h3 class="cqc-requirement-title">London & Greater London</h3>
-        </a>
-        
-        <a href="<?php echo esc_url(home_url('/locations/west-yorkshire/')); ?>" class="cqc-requirement-card" style="text-decoration: none; color: inherit;">
-          <div class="cqc-icon-wrapper cqc-icon-caring">
-            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+          
+          <h3 class="locations-delivery-title"><?php echo esc_html($location['name']); ?></h3>
+          <p class="locations-delivery-address"><?php echo esc_html($location['description']); ?></p>
+          
+          <ul class="locations-delivery-features">
+            <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> <strong>Areas:</strong> <?php echo esc_html($location['areas']); ?></li>
+            <li><i class="fas fa-info-circle" aria-hidden="true"></i> <strong>Why it matters:</strong> <?php echo esc_html($location['hook']); ?></li>
+          </ul>
+          
+          <div class="locations-delivery-actions">
+            <a href="<?php echo esc_url($location['url']); ?>" class="btn btn-primary">View Location Details</a>
           </div>
-          <h3 class="cqc-requirement-title">West Yorkshire & Yorkshire</h3>
-        </a>
-        
-        <a href="<?php echo esc_url(home_url('/locations/midlands/')); ?>" class="cqc-requirement-card" style="text-decoration: none; color: inherit;">
-          <div class="cqc-icon-wrapper cqc-icon-responsive">
-            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-          </div>
-          <h3 class="cqc-requirement-title">Midlands (Birmingham & Coventry)</h3>
-        </a>
-        
-        <a href="<?php echo esc_url(home_url('/locations/south-west/')); ?>" class="cqc-requirement-card" style="text-decoration: none; color: inherit;">
-          <div class="cqc-icon-wrapper cqc-icon-wellled">
-            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-          </div>
-          <h3 class="cqc-requirement-title">South West (Bristol, Devon & Cornwall)</h3>
-        </a>
-        
-        <a href="<?php echo esc_url(home_url('/locations/lancashire/')); ?>" class="cqc-requirement-card" style="text-decoration: none; color: inherit;">
-          <div class="cqc-icon-wrapper cqc-icon-safe">
-            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-          </div>
-          <h3 class="cqc-requirement-title">Lancashire & South Cumbria</h3>
-        </a>
-        
-        <a href="<?php echo esc_url(home_url('/locations/east-england/')); ?>" class="cqc-requirement-card" style="text-decoration: none; color: inherit;">
-          <div class="cqc-icon-wrapper cqc-icon-effective">
-            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-          </div>
-          <h3 class="cqc-requirement-title">East of England (Norfolk, Suffolk, Cambs)</h3>
-        </a>
-        
-        <a href="<?php echo esc_url(home_url('/locations/merseyside/')); ?>" class="cqc-requirement-card" style="text-decoration: none; color: inherit;">
-          <div class="cqc-icon-wrapper cqc-icon-caring">
-            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-          </div>
-          <h3 class="cqc-requirement-title">Merseyside & Cheshire</h3>
-        </a>
-        
-        <a href="<?php echo esc_url(home_url('/locations/scotland/')); ?>" class="cqc-requirement-card" style="text-decoration: none; color: inherit;">
-          <div class="cqc-icon-wrapper cqc-icon-responsive">
-            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-          </div>
-          <h3 class="cqc-requirement-title">Scotland</h3>
-        </a>
-        
-        <a href="<?php echo esc_url(home_url('/locations/wales/')); ?>" class="cqc-requirement-card" style="text-decoration: none; color: inherit;">
-          <div class="cqc-icon-wrapper cqc-icon-wellled">
-            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-          </div>
-          <h3 class="cqc-requirement-title">Wales</h3>
-        </a>
+        </article>
+        <?php endforeach; ?>
       </div>
       
-      <div style="max-width: 700px; margin: 48px auto 0; text-align: center; padding: 32px; background: white; border-radius: 8px;">
-        <p style="font-size: 1.05rem; margin: 0;"><strong>Elsewhere in the UK?</strong> We deliver on-site anywhere. <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact'))); ?>" style="font-weight: 600;">Give us your postcode</a> and we'll sort it.</p>
+      <div class="locations-contact-prompt">
+        <p class="locations-contact-text"><strong>Elsewhere in the UK?</strong> We deliver on-site anywhere. <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact'))); ?>">Give us your postcode</a> and we'll sort it.</p>
       </div>
     </div>
   </section>
 
   <!-- Why Choose Continuity Training Academy -->
-  <section class="content-section bg-light-cream" aria-labelledby="why-choose-heading">
+  <section class="why-us-blended" aria-labelledby="why-choose-heading">
     <div class="container">
-      <div class="section-header-center">
+      <div class="why-us-blended-header">
         <h2 id="why-choose-heading" class="section-title">What Makes Us Different</h2>
         <p class="section-subtitle">We get it. You're stretched. Here's why providers book us anyway.</p>
       </div>
       
-      <div class="cqc-requirements-grid">
-        <article class="cqc-requirement-card">
-          <div class="cqc-icon-wrapper cqc-icon-safe">
-            <i class="fas fa-clock" aria-hidden="true"></i>
+      <div class="why-us-blended-grid">
+        <div class="why-us-blended-card">
+          <div class="why-us-blended-card-header">
+            <div class="why-us-blended-icon-wrapper why-us-blended-icon-1">
+              <i class="fas fa-clock why-us-blended-icon" aria-hidden="true"></i>
+            </div>
           </div>
-          <h3 class="cqc-requirement-title">Flexible Scheduling</h3>
-          <p class="cqc-requirement-description">Morning, afternoon, evening, weekend sessions. We work around your rota. Night shift finishing at 8am? Book them on a morning course. Need emergency training before CQC visits? We'll find space.</p>
-        </article>
+          <h3 class="why-us-blended-title">Flexible Scheduling</h3>
+          <p class="why-us-blended-description">Morning, afternoon, evening, weekend sessions. We work around your rota. Night shift finishing at 8am? Book them on a morning course. Need emergency training before CQC visits? We'll find space.</p>
+        </div>
         
-        <article class="cqc-requirement-card">
-          <div class="cqc-icon-wrapper cqc-icon-effective">
-            <i class="fas fa-user-md" aria-hidden="true"></i>
+        <div class="why-us-blended-card">
+          <div class="why-us-blended-card-header">
+            <div class="why-us-blended-icon-wrapper why-us-blended-icon-2">
+              <i class="fas fa-user-md why-us-blended-icon" aria-hidden="true"></i>
+            </div>
           </div>
-          <h3 class="cqc-requirement-title">Trainers Who Work in Care</h3>
-          <p class="cqc-requirement-description">Not academics. Working care professionals. They know what "discharge-ready" means when someone rocks up at 9pm with a carrier bag of meds and no notes. DBS-checked, clinically current, professionally insured.</p>
-        </article>
+          <h3 class="why-us-blended-title">Trainers Who Work in Care</h3>
+          <p class="why-us-blended-description">Not academics. Working care professionals. They know what "discharge-ready" means when someone rocks up at 9pm with a carrier bag of meds and no notes. DBS-checked, clinically current, professionally insured.</p>
+        </div>
         
-        <article class="cqc-requirement-card">
-          <div class="cqc-icon-wrapper cqc-icon-wellled">
-            <i class="fas fa-certificate" aria-hidden="true"></i>
+        <div class="why-us-blended-card">
+          <div class="why-us-blended-card-header">
+            <div class="why-us-blended-icon-wrapper why-us-blended-icon-3">
+              <i class="fas fa-certificate why-us-blended-icon" aria-hidden="true"></i>
+            </div>
           </div>
-          <h3 class="cqc-requirement-title">Instant Certificates</h3>
-          <p class="cqc-requirement-description">Digital certificates hit inboxes before your team leaves the building. Physical copies posted same day. Automatic renewal reminders. CQC audit tomorrow? You're covered.</p>
-        </article>
+          <h3 class="why-us-blended-title">Instant Certificates</h3>
+          <p class="why-us-blended-description">Digital certificates hit inboxes before your team leaves the building. Physical copies posted same day. Automatic renewal reminders. CQC audit tomorrow? You're covered.</p>
+        </div>
         
-        <article class="cqc-requirement-card">
-          <div class="cqc-icon-wrapper cqc-icon-effective">
-            <i class="fas fa-clipboard-check" aria-hidden="true"></i>
+        <div class="why-us-blended-card">
+          <div class="why-us-blended-card-header">
+            <div class="why-us-blended-icon-wrapper why-us-blended-icon-1">
+              <i class="fas fa-clipboard-check why-us-blended-icon" aria-hidden="true"></i>
+            </div>
           </div>
-          <h3 class="cqc-requirement-title">No Scrambling for Records</h3>
-          <p class="cqc-requirement-description">Every course documented. Every attendee tracked. Every certificate automatic. When CQC inspects, your training compliance is ready. No scrambling through files. No gaps.</p>
-        </article>
+          <h3 class="why-us-blended-title">No Scrambling for Records</h3>
+          <p class="why-us-blended-description">Every course documented. Every attendee tracked. Every certificate automatic. When CQC inspects, your training compliance is ready. No scrambling through files. No gaps.</p>
+        </div>
         
-        <article class="cqc-requirement-card">
-          <div class="cqc-icon-wrapper cqc-icon-caring">
-            <i class="fas fa-hands-helping" aria-hidden="true"></i>
+        <div class="why-us-blended-card">
+          <div class="why-us-blended-card-header">
+            <div class="why-us-blended-icon-wrapper why-us-blended-icon-2">
+              <i class="fas fa-hands-helping why-us-blended-icon" aria-hidden="true"></i>
+            </div>
           </div>
-          <h3 class="cqc-requirement-title">Actual Practical Training</h3>
-          <p class="cqc-requirement-description">Not death by PowerPoint. Your team learns by doing. Real scenarios. Real equipment. Real situations they'll face on shift.</p>
-        </article>
+          <h3 class="why-us-blended-title">Actual Practical Training</h3>
+          <p class="why-us-blended-description">Not death by PowerPoint. Your team learns by doing. Real scenarios. Real equipment. Real situations they'll face on shift.</p>
+        </div>
         
-        <article class="cqc-requirement-card">
-          <div class="cqc-icon-wrapper cqc-icon-responsive">
-            <i class="fas fa-star" aria-hidden="true"></i>
+        <div class="why-us-blended-card">
+          <div class="why-us-blended-card-header">
+            <div class="why-us-blended-icon-wrapper why-us-blended-icon-3">
+              <i class="fas fa-star why-us-blended-icon" aria-hidden="true"></i>
+            </div>
           </div>
-          <h3 class="cqc-requirement-title">200+ Providers Trust Us</h3>
-          <p class="cqc-requirement-description">4.6★ on Trustpilot. All 5-star reviews. 100% CQC-compliant courses. CPD-accredited. On-site delivery anywhere in the UK.</p>
-        </article>
+          <h3 class="why-us-blended-title">200+ Providers Trust Us</h3>
+          <p class="why-us-blended-description">4.6★ on Trustpilot. All 5-star reviews. 100% CQC-compliant courses. CPD-accredited. On-site delivery anywhere in the UK.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Most Booked Courses -->
-  <section class="content-section" aria-labelledby="courses-heading">
+  <section class="courses-listing-section" aria-labelledby="courses-heading">
     <div class="container">
-      <div class="section-header-center">
+      <div class="courses-listing-header">
         <h2 id="courses-heading" class="section-title">What Providers Are Booking</h2>
         <p class="section-subtitle">Most popular courses right now</p>
       </div>
@@ -769,13 +808,13 @@ echo '<script type="application/ld+json">' . wp_json_encode($schema_data, JSON_U
       </div>
       
       <!-- Specialist Courses Section -->
-      <div class="content-section" style="margin-top: 64px;">
+      <div class="specialist-courses-section">
         <div class="section-header-center">
           <h3 class="section-title">Plus Specialist Courses</h3>
           <p class="section-subtitle">Additional training for complex care needs and regulatory compliance</p>
         </div>
         
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 32px 0;">
+        <div class="badge-container">
           <span class="badge badge-essential">Catheter Care</span>
           <span class="badge badge-advanced">Sepsis Awareness</span>
           <span class="badge badge-clinical">End-of-Life Care</span>
@@ -790,7 +829,7 @@ echo '<script type="application/ld+json">' . wp_json_encode($schema_data, JSON_U
           <span class="badge badge-practical">Oxygen Therapy</span>
         </div>
         
-        <div class="cta-center" style="margin-top: 32px;">
+        <div class="cta-center">
           <a href="<?php echo esc_url(get_post_type_archive_link('course_event')); ?>" class="btn btn-primary btn-large">View All Course Dates</a>
           <a href="<?php echo esc_url(get_permalink(get_page_by_path('courses'))); ?>" class="btn btn-secondary btn-large">Browse Full Course List</a>
         </div>

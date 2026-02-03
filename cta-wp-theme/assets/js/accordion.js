@@ -32,30 +32,11 @@
     if (triggers.length === 0) return;
 
     triggers.forEach(trigger => {
-      // If accordion is already open (aria-expanded="true"), ensure content is visible
-      const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
-      if (isExpanded) {
-        const contentId = trigger.getAttribute('aria-controls');
-        const content = contentId ? document.getElementById(contentId) : null;
-        if (content) {
-          content.setAttribute('aria-hidden', 'false');
-          // Ensure content is visible for pre-opened accordions
-          if (content.style.maxHeight === '0' || !content.style.maxHeight) {
-            content.style.maxHeight = 'none';
-          }
-        }
-      }
       // Prevent double-binding
       if (trigger.dataset.accordionInit === 'true') return;
       trigger.dataset.accordionInit = 'true';
 
-      // Get accordion container and configuration
-      const accordion = trigger.closest('.accordion');
-      const group = accordion?.dataset.accordionGroup || 'default';
-      const allowMultiple = accordion?.dataset.accordionAllowMultiple === 'true';
-      const animation = accordion?.dataset.accordionAnimation || 'height';
-
-      // Get content panel
+      // Get content panel first
       const contentId = trigger.getAttribute('aria-controls');
       const content = contentId ? document.getElementById(contentId) : null;
       
@@ -63,6 +44,30 @@
         console.warn('Accordion trigger missing aria-controls or content not found:', trigger);
         return;
       }
+
+      // If accordion is already open (aria-expanded="true"), ensure content is visible
+      const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+      if (isExpanded) {
+        // Ensure attributes are correct
+        trigger.setAttribute('aria-expanded', 'true');
+        content.setAttribute('aria-hidden', 'false');
+        
+        // Remove any inline styles that might interfere with CSS
+        content.style.maxHeight = '';
+        content.style.paddingTop = '';
+        content.style.paddingBottom = '';
+        content.style.opacity = '';
+        content.style.display = '';
+        
+        // Force a reflow to ensure CSS applies
+        void content.offsetHeight;
+      }
+
+      // Get accordion container and configuration
+      const accordion = trigger.closest('.accordion');
+      const group = accordion?.dataset.accordionGroup || 'default';
+      const allowMultiple = accordion?.dataset.accordionAllowMultiple === 'true';
+      const animation = accordion?.dataset.accordionAnimation || 'height';
 
       // Click handler
       trigger.addEventListener('click', function(e) {

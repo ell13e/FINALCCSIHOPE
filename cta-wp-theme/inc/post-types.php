@@ -519,7 +519,18 @@ function cta_course_admin_column_content($column, $post_id) {
         case 'course_category':
             $terms = get_the_terms($post_id, 'course_category');
             if ($terms && !is_wp_error($terms)) {
-                echo '<span class="cta-admin-category">' . esc_html(implode(', ', wp_list_pluck($terms, 'name'))) . '</span>';
+                // Limit to 2 categories (primary and secondary)
+                $limited_terms = array_slice($terms, 0, 2);
+                $category_names = wp_list_pluck($limited_terms, 'name');
+                
+                // Show primary and secondary labels
+                if (count($limited_terms) === 2) {
+                    echo '<span class="cta-admin-category"><strong>Primary:</strong> ' . esc_html($category_names[0]) . '<br><strong>Secondary:</strong> ' . esc_html($category_names[1]) . '</span>';
+                } elseif (count($limited_terms) === 1) {
+                    echo '<span class="cta-admin-category"><strong>Primary:</strong> ' . esc_html($category_names[0]) . '</span>';
+                } else {
+                    echo '<span class="cta-admin-empty">-</span>';
+                }
             } else {
                 echo '<span class="cta-admin-empty">-</span>';
             }

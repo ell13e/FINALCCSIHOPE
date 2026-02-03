@@ -12,6 +12,18 @@ get_header();
 $contact = cta_get_contact_info();
 
 /**
+ * Helper function to safely get page URL with fallback
+ */
+function cta_safe_page_url($slug, $fallback = null) {
+  $page = get_page_by_path($slug);
+  if ($page) {
+    return get_permalink($page->ID);
+  }
+  // Fallback to home URL if page doesn't exist
+  return $fallback ?: home_url('/');
+}
+
+/**
  * Helper function to find course page URL by title/keywords
  */
 function cta_find_course_link($keywords) {
@@ -99,9 +111,9 @@ function cta_get_label_color_class($label, $is_highlight = false) {
     return 'cqc-regulatory-label-important';
   } elseif (strpos($label_lower, 'training') !== false || strpos($label_lower, 'educational') !== false || strpos($label_lower, 'course') !== false) {
     return 'cqc-regulatory-label-teal';
-  } elseif (strpos($label_lower, 'timeline') !== false || strpos($label_lower, 'update') !== false || strpos($label_lower, 'change') !== false || strpos($label_lower, 'news') !== false || strpos($label_lower, 'regulatory') !== false) {
+  } elseif (strpos($label_lower, 'timeline') !== false || strpos($label_lower, 'update') !== false || strpos($label_lower, 'change') !== false || strpos($label_lower, 'news') !== false || strpos($label_lower, 'regulatory') !== false || strpos($label_lower, 'guidance') !== false) {
     return 'cqc-regulatory-label-purple';
-  } elseif (strpos($label_lower, 'compliance') !== false || strpos($label_lower, 'standard') !== false || strpos($label_lower, 'fundamental') !== false) {
+  } elseif (strpos($label_lower, 'compliance') !== false || strpos($label_lower, 'standard') !== false || strpos($label_lower, 'fundamental') !== false || strpos($label_lower, 'code of practice') !== false || strpos($label_lower, 'practice') !== false) {
     return 'cqc-regulatory-label-amber';
   } elseif (strpos($label_lower, 'framework') !== false || strpos($label_lower, 'new') !== false || strpos($label_lower, 'system') !== false) {
     return 'cqc-regulatory-label-blue';
@@ -126,8 +138,8 @@ if (empty($hero_subtitle)) {
     $hero_subtitle = 'Everything care providers need to know about training requirements, inspection preparation, and regulatory changes.';
 }
 if (empty($intro_text)) {
-    $intro_text = 'The Care Quality Commission (CQC) sets standards for health and social care services in England. Our <a href="' . esc_url(get_post_type_archive_link('course')) . '">CQC-compliant training courses</a> help care providers meet these requirements and prepare for inspections. <a href="https://www.cqc.org.uk/about-us/fundamental-standards" target="_blank" rel="noopener noreferrer">Learn more about CQC fundamental standards</a>.';
-}
+    $intro_text = 'The Care Quality Commission (CQC) sets standards for health and social care services in England. Our <a href="' . esc_url(get_post_type_archive_link('course') ?: home_url('/courses/')) . '">CQC-compliant training courses</a> help care providers meet these requirements and prepare for inspections.';
+  }
 
 // Get CQC-related posts
 $cqc_category_ids = function_exists('get_field') ? (get_field('cqc_post_categories') ?: []) : [];
@@ -213,17 +225,17 @@ if (empty($faqs)) {
         [
             'category' => 'general',
             'question' => 'How do I prepare staff for a CQC inspection?',
-            'answer' => 'Ensure all staff have completed <a href="' . esc_url(get_permalink(get_page_by_path('faqs')) . '?category=general') . '">mandatory training</a>, <a href="' . esc_url(get_permalink(get_page_by_path('downloadable-resources'))) . '">training records</a> are up to date, policies and procedures are current, and staff understand their roles. Our <a href="' . esc_url(get_post_type_archive_link('course')) . '">CQC-compliant training courses</a> cover everything you need to know.',
+            'answer' => 'Ensure all staff have completed <a href="' . esc_url(cta_safe_page_url('faqs') . '?category=general') . '">mandatory training</a>, <a href="' . esc_url(cta_safe_page_url('downloadable-resources')) . '">training records</a> are up to date, policies and procedures are current, and staff understand their roles. Our <a href="' . esc_url(get_post_type_archive_link('course') ?: home_url('/courses/')) . '">CQC-compliant training courses</a> cover everything you need to know.',
         ],
         [
             'category' => 'training',
             'question' => 'How often does CQC training need to be refreshed?',
-            'answer' => 'Most CQC <a href="' . esc_url(get_permalink(get_page_by_path('faqs')) . '?category=general') . '">mandatory training</a> should be refreshed annually. <a href="' . esc_url(cta_find_course_link('First Aid') ?: get_post_type_archive_link('course')) . '">First Aid at Work</a> certificates typically last 3 years. <a href="' . esc_url(cta_find_course_link('Safeguarding') ?: get_post_type_archive_link('course')) . '">Safeguarding</a> training should be refreshed every 2-3 years. Check specific <a href="' . esc_url(get_post_type_archive_link('course')) . '">course requirements</a> for exact refresh periods.',
+            'answer' => 'Most CQC <a href="' . esc_url(cta_safe_page_url('faqs') . '?category=general') . '">mandatory training</a> should be refreshed annually. <a href="' . esc_url(cta_find_course_link('First Aid') ?: (get_post_type_archive_link('course') ?: home_url('/courses/'))) . '">First Aid at Work</a> certificates typically last 3 years. <a href="' . esc_url(cta_find_course_link('Safeguarding') ?: (get_post_type_archive_link('course') ?: home_url('/courses/'))) . '">Safeguarding</a> training should be refreshed every 2-3 years. Check specific <a href="' . esc_url(get_post_type_archive_link('course') ?: home_url('/courses/')) . '">course requirements</a> for exact refresh periods.',
         ],
         [
             'category' => 'training',
             'question' => 'Is online training accepted by CQC?',
-            'answer' => 'CQC accepts a mix of online and face-to-face training, but some topics (like <a href="' . esc_url(cta_find_course_link('First Aid') ?: get_post_type_archive_link('course')) . '">practical first aid</a>) require hands-on training. Our <a href="' . esc_url(get_permalink(get_page_by_path('group-training'))) . '">face-to-face courses</a> ensure all practical elements are covered to CQC standards.',
+            'answer' => 'CQC accepts a mix of online and face-to-face training, but some topics (like <a href="' . esc_url(cta_find_course_link('First Aid') ?: (get_post_type_archive_link('course') ?: home_url('/courses/'))) . '">practical first aid</a>) require hands-on training. Our <a href="' . esc_url(cta_safe_page_url('group-training')) . '">face-to-face courses</a> ensure all practical elements are covered to CQC standards.',
         ],
     ];
 }
@@ -284,7 +296,7 @@ $collection_schema = [
       <h1 id="cqc-heading" class="hero-title"><?php echo esc_html($hero_title); ?></h1>
       <p class="hero-subtitle"><?php echo esc_html($hero_subtitle); ?></p>
       <div class="group-hero-cta">
-        <a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>" class="btn btn-primary group-hero-btn-primary">Download CQC Training Checklist</a>
+        <a href="<?php echo esc_url(cta_safe_page_url('downloadable-resources')); ?>" class="btn btn-primary group-hero-btn-primary">Download CQC Training Checklist</a>
       </div>
     </div>
   </section>
@@ -352,7 +364,10 @@ $collection_schema = [
         <div class="accordion" data-accordion-group="cqc-settings">
           <button type="button" class="accordion-trigger" aria-expanded="<?php echo $is_first ? 'true' : 'false'; ?>" aria-controls="cqc-setting-<?php echo esc_attr($setting_id); ?>">
             <span><?php echo esc_html($setting_name); ?></span>
-            <span class="accordion-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
           </button>
           <div id="cqc-setting-<?php echo esc_attr($setting_id); ?>" class="accordion-content" role="region" aria-hidden="<?php echo $is_first ? 'false' : 'true'; ?>">
             <p><strong>Required courses:</strong></p>
@@ -385,7 +400,10 @@ $collection_schema = [
         <div class="accordion" data-accordion-group="cqc-settings">
           <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="cqc-setting-domiciliary">
             <span>Domiciliary Care</span>
-            <span class="accordion-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
           </button>
           <div id="cqc-setting-domiciliary" class="accordion-content" role="region" aria-hidden="true">
             <p><strong>Required courses:</strong></p>
@@ -407,7 +425,10 @@ $collection_schema = [
         <div class="accordion" data-accordion-group="cqc-settings">
           <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="cqc-setting-residential">
             <span>Residential Care Home</span>
-            <span class="accordion-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
           </button>
           <div id="cqc-setting-residential" class="accordion-content" role="region" aria-hidden="true">
             <p><strong>Required courses:</strong></p>
@@ -430,7 +451,10 @@ $collection_schema = [
         <div class="accordion" data-accordion-group="cqc-settings">
           <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="cqc-setting-nursing">
             <span>Nursing Home</span>
-            <span class="accordion-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
           </button>
           <div id="cqc-setting-nursing" class="accordion-content" role="region" aria-hidden="true">
             <p><strong>Required courses:</strong></p>
@@ -450,7 +474,10 @@ $collection_schema = [
         <div class="accordion" data-accordion-group="cqc-settings">
           <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="cqc-setting-supported-living">
             <span>Supported Living</span>
-            <span class="accordion-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
           </button>
           <div id="cqc-setting-supported-living" class="accordion-content" role="region" aria-hidden="true">
             <p><strong>Required courses:</strong></p>
@@ -472,11 +499,14 @@ $collection_schema = [
         <div class="accordion" data-accordion-group="cqc-settings">
           <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="cqc-setting-complex-care">
             <span>Complex Care</span>
-            <span class="accordion-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
           </button>
           <div id="cqc-setting-complex-care" class="accordion-content" role="region" aria-hidden="true">
             <p><strong>Required courses:</strong></p>
-            <p>All <a href="<?php echo esc_url(get_permalink(get_page_by_path('faqs')) . '?category=general'); ?>">core care training</a> plus:</p>
+            <p>All <a href="<?php echo esc_url(cta_safe_page_url('faqs') . '?category=general'); ?>">core care training</a> plus:</p>
             <ul>
               <li><?php echo cta_course_link('Clinical Skills') ?: 'Clinical Skills'; ?></li>
               <li><?php echo cta_course_link('Ventilator Care') ?: 'Ventilator Care'; ?></li>
@@ -510,13 +540,13 @@ $collection_schema = [
     $inspection_title = 'CQC Inspection Preparation';
   }
   if (empty($inspection_description)) {
-    $inspection_description = 'Be inspection-ready with organized <a href="' . esc_url(get_permalink(get_page_by_path('downloadable-resources'))) . '">training records</a> and documentation';
+    $inspection_description = 'Be inspection-ready with organized <a href="' . esc_url(cta_safe_page_url('downloadable-resources')) . '">training records</a> and documentation';
   }
   if (empty($inspection_highlight_title)) {
     $inspection_highlight_title = 'What Inspectors Check';
   }
   if (empty($inspection_highlight_text)) {
-    $inspection_highlight_text = 'CQC inspectors verify all staff have completed <a href="' . esc_url(get_permalink(get_page_by_path('faqs')) . '?category=general') . '">mandatory training</a>, certificates are current, and competency is documented.';
+    $inspection_highlight_text = 'CQC inspectors verify all staff have completed <a href="' . esc_url(cta_safe_page_url('faqs') . '?category=general') . '">mandatory training</a>, certificates are current, and competency is documented.';
   }
   if (empty($inspection_cta_title)) {
     $inspection_cta_title = 'Get Inspection Ready';
@@ -528,7 +558,7 @@ $collection_schema = [
     $inspection_cta_button_text = 'Download Inspection Readiness Checklist';
   }
   if (empty($inspection_cta_link)) {
-    $inspection_cta_link = get_permalink(get_page_by_path('downloadable-resources'));
+    $inspection_cta_link = cta_safe_page_url('downloadable-resources');
   }
   ?>
   <section class="content-section" aria-labelledby="inspection-prep-heading">
@@ -583,7 +613,10 @@ $collection_schema = [
               <?php endif; ?>
               <?php echo esc_html($accordion_title); ?>
             </span>
-            <span class="accordion-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
           </button>
           <div id="<?php echo esc_attr($accordion_id); ?>" class="accordion-content" role="region" aria-hidden="<?php echo $accordion_expanded ? 'false' : 'true'; ?>">
             <div class="cqc-checklist-grid">
@@ -616,7 +649,10 @@ $collection_schema = [
               <i class="fas fa-search" aria-hidden="true" style="margin-right: 12px; color: #3182ce;"></i>
               What Inspectors Look For in Training Records
             </span>
-            <span class="accordion-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
           </button>
           <div id="inspection-look-for" class="accordion-content" role="region" aria-hidden="false">
             <div class="cqc-checklist-grid">
@@ -626,11 +662,11 @@ $collection_schema = [
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
-                <span><a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">Training matrix</a> recording who has completed what training</span>
+                <span><a href="<?php echo esc_url(cta_safe_page_url('downloadable-resources')); ?>">Training matrix</a> recording who has completed what training</span>
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
-                <span>Evidence of <a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">competency assessments</a></span>
+                <span>Evidence of <a href="<?php echo esc_url(cta_safe_page_url('downloadable-resources')); ?>">competency assessments</a></span>
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
@@ -650,21 +686,24 @@ $collection_schema = [
               <i class="fas fa-folder-open" aria-hidden="true" style="margin-right: 12px; color: #805ad5;"></i>
               How to Organize Your Training Evidence
             </span>
-            <span class="accordion-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
           </button>
           <div id="inspection-organize" class="accordion-content" role="region" aria-hidden="true">
             <div class="cqc-checklist-grid">
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
-                <span>Maintain a central <a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">training matrix</a> for all staff</span>
+                <span>Maintain a central <a href="<?php echo esc_url(cta_safe_page_url('downloadable-resources')); ?>">training matrix</a> for all staff</span>
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
-                <span>Store <a href="<?php echo esc_url(get_permalink(get_page_by_path('faqs')) . '?category=certification'); ?>">certificates</a> digitally with expiry date tracking</span>
+                <span>Store <a href="<?php echo esc_url(cta_safe_page_url('faqs') . '?category=certification'); ?>">certificates</a> digitally with expiry date tracking</span>
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
-                <span>Document <a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">competency assessments</a> alongside certificates</span>
+                <span>Document <a href="<?php echo esc_url(cta_safe_page_url('downloadable-resources')); ?>">competency assessments</a> alongside certificates</span>
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
@@ -672,7 +711,7 @@ $collection_schema = [
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
-                <span>Ensure managers can quickly access <a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">training records</a> during inspections</span>
+                <span>Ensure managers can quickly access <a href="<?php echo esc_url(cta_safe_page_url('downloadable-resources')); ?>">training records</a> during inspections</span>
               </div>
             </div>
           </div>
@@ -684,29 +723,32 @@ $collection_schema = [
               <i class="fas fa-exclamation-triangle" aria-hidden="true" style="margin-right: 12px; color: #d53f8c;"></i>
               Common Training-Related Inadequate Ratings
             </span>
-            <span class="accordion-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
           </button>
           <div id="inspection-inadequate" class="accordion-content" role="region" aria-hidden="true">
             <div class="cqc-checklist-grid">
               <div class="cqc-checklist-item cqc-warning">
                 <i class="fas fa-times-circle" aria-hidden="true"></i>
-                <span>Staff have not completed <a href="<?php echo esc_url(get_permalink(get_page_by_path('faqs')) . '?category=general'); ?>">mandatory training</a> within required timeframes</span>
+                <span>Staff have not completed <a href="<?php echo esc_url(cta_safe_page_url('faqs') . '?category=general'); ?>">mandatory training</a> within required timeframes</span>
               </div>
               <div class="cqc-checklist-item cqc-warning">
                 <i class="fas fa-times-circle" aria-hidden="true"></i>
-                <span><a href="<?php echo esc_url(get_permalink(get_page_by_path('faqs')) . '?category=certification'); ?>">Training certificates</a> have expired and not been renewed</span>
+                <span><a href="<?php echo esc_url(cta_safe_page_url('faqs') . '?category=certification'); ?>">Training certificates</a> have expired and not been renewed</span>
               </div>
               <div class="cqc-checklist-item cqc-warning">
                 <i class="fas fa-times-circle" aria-hidden="true"></i>
-                <span><a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">Competency assessments</a> are missing or incomplete</span>
+                <span><a href="<?php echo esc_url(cta_safe_page_url('downloadable-resources')); ?>">Competency assessments</a> are missing or incomplete</span>
               </div>
               <div class="cqc-checklist-item cqc-warning">
                 <i class="fas fa-times-circle" aria-hidden="true"></i>
-                <span><a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">Training records</a> are disorganized or inaccessible</span>
+                <span><a href="<?php echo esc_url(cta_safe_page_url('downloadable-resources')); ?>">Training records</a> are disorganized or inaccessible</span>
               </div>
               <div class="cqc-checklist-item cqc-warning">
                 <i class="fas fa-times-circle" aria-hidden="true"></i>
-                <span>New staff have not completed <a href="<?php echo esc_url(cta_find_course_link('Care Certificate') ?: get_post_type_archive_link('course')); ?>">induction training</a></span>
+                <span>New staff have not completed <a href="<?php echo esc_url(cta_find_course_link('Care Certificate') ?: (get_post_type_archive_link('course') ?: home_url('/courses/'))); ?>">induction training</a></span>
               </div>
             </div>
           </div>
@@ -718,17 +760,20 @@ $collection_schema = [
               <i class="fas fa-star" aria-hidden="true" style="margin-right: 12px; color: #d69e2e;"></i>
               Best Practice Documentation
             </span>
-            <span class="accordion-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
           </button>
           <div id="inspection-best-practice" class="accordion-content" role="region" aria-hidden="true">
             <div class="cqc-checklist-grid">
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
-                <span>Individual <a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">training records</a> for each staff member</span>
+                <span>Individual <a href="<?php echo esc_url(cta_safe_page_url('downloadable-resources')); ?>">training records</a> for each staff member</span>
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
-                <span>Organizational <a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">training matrix</a> showing all staff and courses</span>
+                <span>Organizational <a href="<?php echo esc_url(cta_safe_page_url('downloadable-resources')); ?>">training matrix</a> showing all staff and courses</span>
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
@@ -740,7 +785,7 @@ $collection_schema = [
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
-                <span><a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>">Competency assessment records</a></span>
+                <span><a href="<?php echo esc_url(cta_safe_page_url('downloadable-resources')); ?>">Competency assessment records</a></span>
               </div>
               <div class="cqc-checklist-item">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
@@ -794,7 +839,7 @@ $collection_schema = [
           [
             'label' => 'New Framework',
             'title' => 'Single Assessment Framework Updates',
-            'content' => 'CQC has introduced a new Single Assessment Framework that simplifies the inspection process and focuses on care outcomes. The framework is being fully implemented throughout 2026. Training evidence remains essential, with greater emphasis on demonstrating staff competency and ongoing professional development. <a href="https://www.cqc.org.uk/guidance-regulation/providers/assessment/assessing-quality-and-performance" target="_blank" rel="noopener noreferrer">Learn how CQC assesses quality and performance</a> and <a href="https://www.cqc.org.uk/guidance-regulation/providers/assessment/evidence-categories" target="_blank" rel="noopener noreferrer">understand the evidence categories</a> they consider.',
+            'content' => 'CQC has introduced a new Single Assessment Framework that simplifies the inspection process and focuses on care outcomes. The framework is being fully implemented throughout 2026. Training evidence remains essential, with greater emphasis on demonstrating staff competency and ongoing professional development.',
             'link_url' => 'https://www.cqc.org.uk/guidance-regulation/providers/assessment/assessment-framework',
             'link_text' => 'Read CQC framework guidance',
             'highlight' => false,
@@ -805,18 +850,18 @@ $collection_schema = [
             'content' => 'Several mandatory training requirements are being updated throughout 2026:',
             'list_items' => [
               'Oliver McGowan Mandatory Training on Learning Disability and Autism (becoming statutory in Q2 2026)',
-              '<a href="' . esc_url(cta_find_course_link('Safeguarding') ?: get_post_type_archive_link('course')) . '">Enhanced safeguarding training</a> requirements (coming in Q3 2026)',
-              'Updated <a href="' . esc_url(cta_find_course_link('Medication Management') ?: get_post_type_archive_link('course')) . '">medication management</a> competencies (coming in Q4 2026)',
-              'Refreshed <a href="' . esc_url(cta_find_course_link('Infection Control') ?: get_post_type_archive_link('course')) . '">infection prevention and control</a> standards (see <a href="https://www.gov.uk/government/publications/the-health-and-social-care-act-2008-code-of-practice-on-the-prevention-and-control-of-infections-and-related-guidance/health-and-social-care-act-2008-code-of-practice-on-the-prevention-and-control-of-infections-and-related-guidance" target="_blank" rel="noopener noreferrer">code of practice</a>)',
+              '<a href="' . esc_url(cta_find_course_link('Safeguarding') ?: (get_post_type_archive_link('course') ?: home_url('/courses/'))) . '">Enhanced safeguarding training</a> requirements (coming in Q3 2026)',
+              'Updated <a href="' . esc_url(cta_find_course_link('Medication Management') ?: (get_post_type_archive_link('course') ?: home_url('/courses/'))) . '">medication management</a> competencies (coming in Q4 2026)',
+              'Refreshed infection prevention and control standards',
             ],
-            'link_url' => get_permalink(get_page_by_path('faqs')) . '?category=general',
+            'link_url' => cta_safe_page_url('faqs') . '?category=general',
             'link_text' => 'View mandatory training FAQs',
             'highlight' => false,
           ],
           [
             'label' => 'Statutory Requirement',
             'title' => 'Oliver McGowan Training Becoming Statutory',
-            'content' => 'The Oliver McGowan Mandatory Training on Learning Disability and Autism will become a legal requirement for all health and social care staff in Q2 2026 (April-June). The code of practice became final on 6 September 2025 under the Health and Care Act 2022. This training is essential for services supporting people with learning disabilities and autism. The training consists of two tiers: Tier 1 (general awareness) includes elearning plus a 1-hour online interactive session, while Tier 2 (direct care roles) includes elearning plus a 1-day face-to-face session. <a href="https://www.e-lfh.org.uk/programmes/the-oliver-mcgowan-mandatory-training-on-learning-disability-and-autism/" target="_blank" rel="noopener noreferrer">Access the training via e-Learning for Healthcare</a>.',
+            'content' => 'The Oliver McGowan Mandatory Training on Learning Disability and Autism will become a legal requirement for all health and social care staff in Q2 2026 (April-June). The code of practice became final on 6 September 2025 under the Health and Care Act 2022. This training is essential for services supporting people with learning disabilities and autism. The training consists of two tiers: Tier 1 (general awareness) includes elearning plus a 1-hour online interactive session, while Tier 2 (direct care roles) includes elearning plus a 1-day face-to-face session.',
             'link_url' => 'https://www.gov.uk/government/publications/oliver-mcgowan-code-of-practice/the-oliver-mcgowan-draft-code-of-practice-on-statutory-learning-disability-and-autism-training',
             'link_text' => 'Read the code of practice',
             'highlight' => true,
@@ -826,22 +871,14 @@ $collection_schema = [
             'title' => 'Timeline of Regulatory Changes',
             'list_items' => [
               '<strong>Q1 2026 (Jan-Mar):</strong> Single Assessment Framework is being fully implemented',
-              '<strong>Q2 2026 (Apr-Jun):</strong> <a href="https://www.gov.uk/government/publications/oliver-mcgowan-code-of-practice/the-oliver-mcgowan-draft-code-of-practice-on-statutory-learning-disability-and-autism-training" target="_blank" rel="noopener noreferrer">Oliver McGowan training</a> will become statutory (code of practice finalised 6 September 2025)',
-              '<strong>Q3 2026 (Jul-Sep):</strong> Updated <a href="' . esc_url(cta_find_course_link('Safeguarding') ?: get_post_type_archive_link('course')) . '">safeguarding</a> requirements will come into effect',
-              '<strong>Q4 2026 (Oct-Dec):</strong> Enhanced <a href="' . esc_url(cta_find_course_link('Medication Management') ?: get_post_type_archive_link('course')) . '">medication competency</a> standards will be introduced',
+              '<strong>Q2 2026 (Apr-Jun):</strong> Oliver McGowan training will become statutory (code of practice finalised 6 September 2025)',
+              '<strong>Q3 2026 (Jul-Sep):</strong> Updated <a href="' . esc_url(cta_find_course_link('Safeguarding') ?: (get_post_type_archive_link('course') ?: home_url('/courses/'))) . '">safeguarding</a> requirements will come into effect',
+              '<strong>Q4 2026 (Oct-Dec):</strong> Enhanced <a href="' . esc_url(cta_find_course_link('Medication Management') ?: (get_post_type_archive_link('course') ?: home_url('/courses/'))) . '">medication competency</a> standards will be introduced',
             ],
-            'link_url' => get_post_type_archive_link('course'),
+            'link_url' => get_post_type_archive_link('course') ?: home_url('/courses/'),
             'link_text' => 'Browse all courses',
             'highlight' => false,
             'timeline' => true,
-          ],
-          [
-            'label' => 'Infection Control',
-            'title' => 'Infection Prevention and Control Code of Practice',
-            'content' => 'The Health and Social Care Act 2008 code of practice on the prevention and control of infections sets out requirements for registered providers. This is a fundamental standard that CQC inspectors check during inspections. All staff must receive appropriate infection control training.',
-            'link_url' => 'https://www.gov.uk/government/publications/the-health-and-social-care-act-2008-code-of-practice-on-the-prevention-and-control-of-infections-and-related-guidance/health-and-social-care-act-2008-code-of-practice-on-the-prevention-and-control-of-infections-and-related-guidance',
-            'link_text' => 'Read the code of practice',
-            'highlight' => false,
           ],
           [
             'label' => 'Fundamental Standard',
@@ -855,7 +892,7 @@ $collection_schema = [
             'label' => 'Our Commitment',
             'title' => 'How CTA Courses Meet New Standards',
             'content' => 'All Continuity Training Academy courses are designed to meet current and upcoming CQC requirements. We regularly update our course content to align with regulatory changes and ensure your training remains compliant and up-to-date.',
-            'link_url' => get_post_type_archive_link('course'),
+            'link_url' => get_post_type_archive_link('course') ?: home_url('/courses/'),
             'link_text' => 'Browse all courses',
             'highlight' => false,
             'cta' => true,
@@ -1022,7 +1059,7 @@ $collection_schema = [
             </ul>
           </div>
           <div class="cqc-regulatory-card-footer">
-            <a href="<?php echo esc_url(get_post_type_archive_link('course')); ?>" class="cqc-regulatory-link-text">
+            <a href="<?php echo esc_url(get_post_type_archive_link('course') ?: home_url('/courses/')); ?>" class="cqc-regulatory-link-text">
               Browse our courses
               <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M7 17L17 7M7 7h10v10"></path>
@@ -1046,23 +1083,15 @@ $collection_schema = [
         <!-- Guidance & Regulation -->
         <div class="cqc-regulatory-card">
           <a href="https://www.cqc.org.uk/guidance-regulation" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
-            <div class="cqc-regulatory-label">
+            <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Guidance')); ?>">
               <span>Guidance</span>
             </div>
             <h3 class="cqc-regulatory-title">CQC Guidance & Regulation</h3>
             <div>
-              <p>Comprehensive guidance for health and social care providers, including:</p>
-              <ul class="cqc-timeline-list">
-                <li><a href="https://www.cqc.org.uk/guidance-regulation/providers/registration" target="_blank" rel="noopener noreferrer">Registration requirements</a></li>
-                <li><a href="https://www.cqc.org.uk/guidance-regulation/providers/assessment/assessment-framework" target="_blank" rel="noopener noreferrer">Assessment framework</a></li>
-                <li><a href="https://www.cqc.org.uk/guidance-regulation/providers/regulations" target="_blank" rel="noopener noreferrer">Regulations and fundamental standards</a></li>
-                <li><a href="https://www.cqc.org.uk/guidance-regulation/providers/enforcement" target="_blank" rel="noopener noreferrer">Enforcement actions</a></li>
-                <li><a href="https://www.cqc.org.uk/guidance-regulation/providers/notifications" target="_blank" rel="noopener noreferrer">Notification requirements</a></li>
-                <li><a href="https://www.cqc.org.uk/guidance-regulation/providers/fees" target="_blank" rel="noopener noreferrer">Registration fees</a></li>
-              </ul>
+              <p>Comprehensive guidance for health and social care providers, including registration requirements, assessment framework, regulations and fundamental standards, enforcement actions, notification requirements, and registration fees.</p>
             </div>
             <div class="cqc-regulatory-card-footer">
-              <a href="https://www.cqc.org.uk/guidance-regulation" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-link-text">Visit CQC Guidance & Regulation</a>
+              <span class="cqc-regulatory-link-text">Visit CQC Guidance & Regulation</span>
               <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M7 17L17 7M7 7h10v10"></path>
               </svg>
@@ -1134,13 +1163,13 @@ $collection_schema = [
               <ul class="cqc-timeline-list">
                 <li><strong>Purpose:</strong> Regulate health and adult social care to protect people and improve quality</li>
                 <li><strong>Vision:</strong> Everyone receives safe, effective and compassionate care</li>
-                <li><a href="https://www.cqc.org.uk/about-us/fundamental-standards" target="_blank" rel="noopener noreferrer">Fundamental standards of care</a></li>
+                <li>Fundamental standards of care</li>
                 <li>How CQC monitors, inspects and rates services</li>
                 <li>Who CQC regulates and works with</li>
               </ul>
             </div>
             <div class="cqc-regulatory-card-footer">
-              <a href="https://www.cqc.org.uk/about-us" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-link-text">Learn About CQC</a>
+              <span class="cqc-regulatory-link-text">Learn About CQC</span>
               <svg class="cqc-regulatory-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M7 17L17 7M7 7h10v10"></path>
               </svg>
@@ -1163,7 +1192,7 @@ $collection_schema = [
         <!-- Infection Control Code of Practice -->
         <div class="cqc-regulatory-card">
           <a href="https://www.gov.uk/government/publications/the-health-and-social-care-act-2008-code-of-practice-on-the-prevention-and-control-of-infections-and-related-guidance/health-and-social-care-act-2008-code-of-practice-on-the-prevention-and-control-of-infections-and-related-guidance" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
-            <div class="cqc-regulatory-label">
+            <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Code of Practice')); ?>">
               <span>Code of Practice</span>
             </div>
             <h3 class="cqc-regulatory-title">Infection Prevention and Control</h3>
@@ -1182,7 +1211,7 @@ $collection_schema = [
         <!-- Restraint and Restrictive Intervention -->
         <div class="cqc-regulatory-card">
           <a href="https://assets.publishing.service.gov.uk/media/5d1387e240f0b6350e1ab567/reducing-the-need-for-restraint-and-restrictive-intervention.pdf" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
-            <div class="cqc-regulatory-label">
+            <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Guidance')); ?>">
               <span>Guidance</span>
             </div>
             <h3 class="cqc-regulatory-title">Reducing Restraint and Restrictive Intervention</h3>
@@ -1201,7 +1230,7 @@ $collection_schema = [
         <!-- Training Tariff -->
         <div class="cqc-regulatory-card">
           <a href="https://www.gov.uk/government/publications/healthcare-education-and-training-tariff-2025-to-2026/education-and-training-tariffs-2025-to-2026" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
-            <div class="cqc-regulatory-label">
+            <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Funding')); ?>">
               <span>Funding</span>
             </div>
             <h3 class="cqc-regulatory-title">Healthcare Education and Training Tariff</h3>
@@ -1220,7 +1249,7 @@ $collection_schema = [
         <!-- Naloxone Guidance -->
         <div class="cqc-regulatory-card">
           <a href="https://www.gov.uk/guidance/supplying-take-home-naloxone-without-a-prescription" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
-            <div class="cqc-regulatory-label">
+            <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Guidance')); ?>">
               <span>Guidance</span>
             </div>
             <h3 class="cqc-regulatory-title">Supplying Take-Home Naloxone</h3>
@@ -1239,7 +1268,7 @@ $collection_schema = [
         <!-- Down Syndrome Act Guidance -->
         <div class="cqc-regulatory-card">
           <a href="https://www.gov.uk/government/consultations/down-syndrome-act-2022-draft-statutory-guidance-easy-read" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
-            <div class="cqc-regulatory-label">
+            <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Statutory Guidance', true)); ?>">
               <span>Statutory Guidance</span>
             </div>
             <h3 class="cqc-regulatory-title">Down Syndrome Act 2022</h3>
@@ -1409,17 +1438,24 @@ $collection_schema = [
       </div>
       
       <div class="cqc-faq-wrapper">
-        <?php foreach ($faqs as $index => $faq) :
+        <?php 
+        $first_faq = true;
+        foreach ($faqs as $index => $faq) :
           if (!is_array($faq) || !isset($faq['question']) || !isset($faq['answer'])) {
             continue;
           }
+          $is_expanded = $first_faq;
+          $first_faq = false;
         ?>
         <div class="accordion" data-accordion-group="cqc-faq">
-          <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="cqc-faq-<?php echo (int) $index; ?>">
+          <button type="button" class="accordion-trigger" aria-expanded="<?php echo $is_expanded ? 'true' : 'false'; ?>" aria-controls="cqc-faq-<?php echo (int) $index; ?>">
             <span><?php echo esc_html($faq['question']); ?></span>
-            <span class="accordion-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
           </button>
-          <div id="cqc-faq-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
+          <div id="cqc-faq-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="<?php echo $is_expanded ? 'false' : 'true'; ?>">
             <?php echo wpautop(wp_kses_post($faq['answer'])); ?>
           </div>
         </div>
@@ -1489,8 +1525,8 @@ $collection_schema = [
         <h2 id="cqc-cta-heading" class="cqc-cta-title">Need Help With CQC Training?</h2>
         <p class="cqc-cta-description">Our team can help you understand CQC requirements and ensure your staff have the right training to achieve a positive inspection outcome.</p>
         <div class="cqc-cta-buttons">
-          <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact'))); ?>" class="btn btn-primary btn-large">Book a Free Training Consultation</a>
-          <a href="<?php echo esc_url(get_post_type_archive_link('course')); ?>" class="btn btn-secondary btn-large">View All Courses</a>
+          <a href="<?php echo esc_url(cta_safe_page_url('contact')); ?>" class="btn btn-primary btn-large">Book a Free Training Consultation</a>
+          <a href="<?php echo esc_url(get_post_type_archive_link('course') ?: home_url('/courses/')); ?>" class="btn btn-secondary btn-large">View All Courses</a>
         </div>
       </div>
     </div>

@@ -427,7 +427,10 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
             <div class="accordion" data-accordion-group="group-training-faq" data-category="<?php echo esc_attr($faq['category']); ?>">
               <button type="button" class="accordion-trigger" aria-expanded="<?php echo $is_first ? 'true' : 'false'; ?>" aria-controls="faq-answer-<?php echo $index + 1; ?>">
                 <span><?php echo esc_html($faq['question']); ?></span>
-                <span class="accordion-icon" aria-hidden="true"></span>
+                <span class="accordion-icon" aria-hidden="true">
+                  <i class="fas fa-plus" aria-hidden="true"></i>
+                  <i class="fas fa-minus" aria-hidden="true"></i>
+                </span>
               </button>
               <div id="faq-answer-<?php echo $index + 1; ?>" class="accordion-content" role="region" aria-hidden="<?php echo $is_first ? 'false' : 'true'; ?>">
                 <?php echo wpautop(wp_kses_post($faq['answer'])); ?>

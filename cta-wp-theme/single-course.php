@@ -546,21 +546,30 @@ while (have_posts()) : the_post();
                   $event_date = get_field('event_date');
                   $event_location = get_field('event_location');
                   $spaces_available = get_field('spaces_available');
-                  $eventbrite_url = get_field('eventbrite_url');
+                  $linked_course = get_field('linked_course');
+                  $event_id = get_the_ID();
+                  $course_title = $linked_course ? $linked_course->post_title : get_the_title();
+                  $course_id = $linked_course ? $linked_course->ID : get_the_ID();
+                  $formatted_event_date = date('j M Y', strtotime($event_date));
                 ?>
                 <li class="course-date-item">
-                  <div class="course-date-info">
-                    <div class="course-date-date"><?php echo esc_html(date('j M Y', strtotime($event_date))); ?></div>
-                    <?php if ($event_location) : ?>
-                    <div class="course-date-location"><?php echo esc_html($event_location); ?></div>
-                    <?php endif; ?>
-                    <?php if ($spaces_available !== '' && $spaces_available <= 5) : ?>
-                    <div class="course-date-spaces"><?php echo esc_html($spaces_available); ?> spaces left</div>
-                    <?php endif; ?>
-                  </div>
-                  <?php if ($eventbrite_url) : ?>
-                  <a href="<?php echo esc_url($eventbrite_url); ?>" class="course-date-book" target="_blank" rel="noopener">Book</a>
-                  <?php endif; ?>
+                  <button 
+                    type="button"
+                    onclick="openBookingModal('<?php echo esc_js($course_title); ?>', '<?php echo esc_js($event_id); ?>', '<?php echo esc_js($formatted_event_date); ?>')"
+                    class="course-date-item-button"
+                    aria-label="Book <?php echo esc_attr($course_title); ?> on <?php echo esc_attr($formatted_event_date); ?>"
+                  >
+                    <div class="course-date-info">
+                      <div class="course-date-date"><?php echo esc_html($formatted_event_date); ?></div>
+                      <?php if ($event_location) : ?>
+                      <div class="course-date-location"><?php echo esc_html($event_location); ?></div>
+                      <?php endif; ?>
+                      <?php if ($spaces_available !== '' && $spaces_available <= 5) : ?>
+                      <div class="course-date-spaces"><?php echo esc_html($spaces_available); ?> spaces left</div>
+                      <?php endif; ?>
+                    </div>
+                    <span class="course-date-book">Book</span>
+                  </button>
                 </li>
                 <?php endwhile; ?>
               </ul>
@@ -630,7 +639,10 @@ while (have_posts()) : the_post();
           <div class="accordion faq-item" data-accordion-group="course-faqs">
             <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="course-faq-<?php echo (int) $index; ?>">
               <span><?php echo esc_html($faq['question']); ?></span>
-              <span class="accordion-icon" aria-hidden="true"></span>
+              <span class="accordion-icon" aria-hidden="true">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                <i class="fas fa-minus" aria-hidden="true"></i>
+              </span>
             </button>
             <div id="course-faq-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
               <?php echo wpautop(wp_kses_post($faq['answer'])); ?>

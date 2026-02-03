@@ -113,29 +113,56 @@
   color: #9b8560;
   font-size: 20px;
   font-weight: 700;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
   margin-left: auto;
 }
 
-/* For SVG icons (chevron) */
+/* Font Awesome icon styling */
+.accordion-icon i {
+  font-size: inherit;
+  line-height: 1;
+}
+
+/* Default: show plus icon */
+.accordion-icon .fa-plus {
+  display: inline-block;
+}
+
+.accordion-icon .fa-minus {
+  display: none;
+}
+
+/* When expanded: show minus icon, hide plus */
+.accordion-trigger[aria-expanded="true"] .accordion-icon .fa-plus {
+  display: none;
+}
+
+.accordion-trigger[aria-expanded="true"] .accordion-icon .fa-minus {
+  display: inline-block;
+}
+
+/* Remove the old ::before pseudo-element approach */
+.accordion-icon::before {
+  content: none;
+}
+
+.accordion-trigger[aria-expanded="true"] .accordion-icon::before {
+  content: none;
+}
+
+/* Remove rotation for Font Awesome icons (only needed for SVG chevrons) */
+.accordion-trigger[aria-expanded="true"] .accordion-icon {
+  transform: none;
+}
+
+/* For SVG icons (chevron) - keep rotation for SVG-based accordions */
 .accordion-icon svg {
   width: 100%;
   height: 100%;
   color: inherit;
 }
 
-/* For text-based icons (+ / -) */
-.accordion-icon::before {
-  content: "+";
-  font-family: system-ui, -apple-system, sans-serif;
-  line-height: 1;
-}
-
-.accordion-trigger[aria-expanded="true"] .accordion-icon::before {
-  content: "−";
-}
-
-.accordion-trigger[aria-expanded="true"] .accordion-icon {
+.accordion-trigger[aria-expanded="true"] .accordion-icon svg {
   transform: rotate(180deg);
 }
 
@@ -241,33 +268,97 @@
 
 /* FAQ Answer Lists - Enhanced formatting for structured lists */
 .accordion-content .faq-answer-list {
-  margin: 0;
+  margin: 20px 0;
   padding: 0;
   list-style: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding-top: 16px;
+  padding-bottom: 16px;
 }
 
 .accordion-content .faq-answer-list li {
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   padding-left: 0;
-  line-height: 1.75;
+  padding-right: 0;
+  line-height: 1.7;
   color: #5a4a3a;
+  font-size: 15px;
 }
 
 .accordion-content .faq-answer-list li:last-child {
   margin-bottom: 0;
 }
 
-.accordion-content .faq-answer-list li strong {
+.accordion-content .faq-answer-list li .faq-list-title {
   color: #4A3A2A;
   font-weight: 600;
-  display: inline-block;
-  margin-right: 6px;
+  display: inline;
+  margin-right: 4px;
+}
+
+.accordion-content .faq-answer-list li .faq-list-description {
+  color: #5a4a3a;
+  display: inline;
+}
+
+/* FAQ intro/outro paragraphs */
+.accordion-content .faq-intro {
+  margin-bottom: 16px !important;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #5a4a3a;
+}
+
+.accordion-content .faq-outro {
+  margin-top: 20px !important;
+  margin-bottom: 0 !important;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #5a4a3a;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Regular FAQ paragraphs */
+.accordion-content .faq-paragraph {
+  margin-bottom: 16px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #5a4a3a;
+}
+
+.accordion-content .faq-paragraph:last-child {
+  margin-bottom: 0;
 }
 
 @media (min-width: 768px) {
+  .accordion-content .faq-answer-list {
+    margin: 24px 0;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
   .accordion-content .faq-answer-list li {
-    margin-bottom: 16px;
+    margin-bottom: 18px;
     line-height: 1.8;
+    font-size: 16px;
+  }
+  
+  .accordion-content .faq-intro {
+    font-size: 16px;
+    margin-bottom: 20px !important;
+  }
+  
+  .accordion-content .faq-outro {
+    font-size: 16px;
+    margin-top: 24px !important;
+    padding-top: 20px;
+  }
+  
+  .accordion-content .faq-paragraph {
+    font-size: 16px;
+    margin-bottom: 18px;
   }
 }
 

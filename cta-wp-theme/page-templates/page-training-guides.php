@@ -608,7 +608,10 @@ if (empty($hero_cta_url)) {
         <div class="accordion" data-accordion-group="training-pathways">
           <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="training-pathway-clinical-staff">
             <span>Nursing & Clinical Staff</span>
-            <span class="accordion-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
           </button>
           <div id="training-pathway-clinical-staff" class="accordion-content" role="region" aria-hidden="true">
             <p>All core care training plus clinical skills:</p>
@@ -629,7 +632,10 @@ if (empty($hero_cta_url)) {
         <div class="accordion" data-accordion-group="training-pathways">
           <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="training-pathway-specialist-roles">
             <span>Specialist Roles (LD, Complex Care, etc.)</span>
-            <span class="accordion-icon" aria-hidden="true"></span>
+            <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
           </button>
           <div id="training-pathway-specialist-roles" class="accordion-content" role="region" aria-hidden="true">
             <p>Additional specialist training requirements:</p>
@@ -775,7 +781,10 @@ if (empty($hero_cta_url)) {
           <div class="accordion" data-accordion-group="funding-faq">
             <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="funding-wdf-apply">
               <span><i class="fas fa-clipboard-list" aria-hidden="true"></i> How do I apply for WDF funding?</span>
-              <span class="accordion-icon" aria-hidden="true"></span>
+              <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
             </button>
             <div id="funding-wdf-apply" class="accordion-content" role="region" aria-hidden="true">
               <ol class="funding-faq-steps">
@@ -793,7 +802,10 @@ if (empty($hero_cta_url)) {
           <div class="accordion" data-accordion-group="funding-faq">
             <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="funding-eligible-courses">
               <span><i class="fas fa-certificate" aria-hidden="true"></i> Which CTA courses are WDF-eligible?</span>
-              <span class="accordion-icon" aria-hidden="true"></span>
+              <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
             </button>
             <div id="funding-eligible-courses" class="accordion-content" role="region" aria-hidden="true">
               <p><strong>Most of our CPD-accredited courses qualify for WDF funding, including:</strong></p>
@@ -814,7 +826,10 @@ if (empty($hero_cta_url)) {
           <div class="accordion" data-accordion-group="funding-faq">
             <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="funding-payment">
               <span><i class="fas fa-pound-sign" aria-hidden="true"></i> Do I pay upfront and get reimbursed?</span>
-              <span class="accordion-icon" aria-hidden="true"></span>
+              <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
             </button>
             <div id="funding-payment" class="accordion-content" role="region" aria-hidden="true">
               <p><strong>Yes, with WDF you pay for the training upfront and claim reimbursement afterwards.</strong></p>
@@ -827,7 +842,10 @@ if (empty($hero_cta_url)) {
           <div class="accordion" data-accordion-group="funding-faq">
             <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="funding-not-eligible">
               <span><i class="fas fa-question-circle" aria-hidden="true"></i> What if I'm not eligible for WDF funding?</span>
-              <span class="accordion-icon" aria-hidden="true"></span>
+              <span class="accordion-icon" aria-hidden="true">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <i class="fas fa-minus" aria-hidden="true"></i>
+            </span>
             </button>
             <div id="funding-not-eligible" class="accordion-content" role="region" aria-hidden="true">
               <p><strong>You still have options:</strong></p>

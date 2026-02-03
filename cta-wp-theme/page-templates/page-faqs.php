@@ -21,11 +21,9 @@ function cta_format_faq_answer($text) {
     }
     
     // Look for patterns like: "intro text: Item : Description; Item : Description; closing text"
-    // Pattern: Find sequences where we have "Item : Description;" repeated 2+ times
-    
-    // Match pattern: "Item : Description;" where Item starts with capital and has reasonable length
-    // Description should be substantial (at least 15 chars)
-    $pattern = '/([A-Z][^:;]{4,}?)\s*:\s*([^;]{15,}?)(?:;\s*(?=[A-Z])|;\s*$|$)/';
+    // Improved pattern to catch more variations
+    // Match: "Title : Description;" where Title starts with capital letter
+    $pattern = '/([A-Z][A-Za-z\s&\-\'()]{3,}?)\s*:\s*([^;]{10,}?)(?:;\s*(?=[A-Z])|;\s*$|$)/';
     
     $matches = [];
     if (preg_match_all($pattern, $text, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
@@ -36,8 +34,8 @@ function cta_format_faq_answer($text) {
             $list_span = $last_end - $first_pos;
             $text_length = strlen($text);
             
-            // If list spans at least 25% of text, format as list
-            if ($list_span >= $text_length * 0.25) {
+            // If list spans at least 20% of text, format as list
+            if ($list_span >= $text_length * 0.2) {
                 $before_text = trim(substr($text, 0, $first_pos));
                 $after_text = trim(substr($text, $last_end));
                 
@@ -47,9 +45,9 @@ function cta_format_faq_answer($text) {
                     $description = trim($match[2][0]);
                     $description = rtrim($description, '; ');
                     
-                    // Validate item
+                    // Validate item - more lenient
                     if (!empty($title) && !empty($description) && 
-                        strlen($title) >= 4 && strlen($description) >= 15) {
+                        strlen($title) >= 3 && strlen($description) >= 10) {
                         $list_items[] = ['title' => $title, 'description' => $description];
                     }
                 }
@@ -61,17 +59,17 @@ function cta_format_faq_answer($text) {
                     if (!empty($before_text)) {
                         // Remove trailing colon/space
                         $before_text = preg_replace('/:\s*$/', '', trim($before_text));
-                        $output .= wpautop(wp_kses_post($before_text));
+                        $output .= '<p class="faq-intro">' . wp_kses_post($before_text) . '</p>';
                     }
                     
                     $output .= '<ul class="faq-answer-list">';
                     foreach ($list_items as $item) {
-                        $output .= '<li><strong>' . esc_html($item['title']) . ':</strong> ' . esc_html($item['description']) . '</li>';
+                        $output .= '<li><strong class="faq-list-title">' . esc_html($item['title']) . ':</strong> <span class="faq-list-description">' . esc_html($item['description']) . '</span></li>';
                     }
                     $output .= '</ul>';
                     
                     if (!empty($after_text)) {
-                        $output .= wpautop(wp_kses_post($after_text));
+                        $output .= '<p class="faq-outro">' . wp_kses_post($after_text) . '</p>';
                     }
                     
                     return $output;
@@ -80,8 +78,13 @@ function cta_format_faq_answer($text) {
         }
     }
     
-    // Default: standard formatting
-    return wpautop(wp_kses_post($text));
+    // Default: standard formatting with improved paragraph spacing
+    $formatted = wpautop(wp_kses_post($text));
+    
+    // Add classes to paragraphs for better styling
+    $formatted = preg_replace('/<p>/', '<p class="faq-paragraph">', $formatted);
+    
+    return $formatted;
 }
 
 // ACF fields
@@ -228,7 +231,12 @@ foreach ($faqs as $faq) {
             class="faqs-search-input"
             placeholder="Search FAQs..." 
             aria-label="Search frequently asked questions"
+            autocomplete="off"
+            aria-autocomplete="list"
+            aria-expanded="false"
+            aria-controls="faq-suggestions"
           />
+          <div id="faq-suggestions" class="faq-suggestions" role="listbox" aria-label="FAQ search suggestions"></div>
         </div>
       </div>
     </div>
@@ -276,7 +284,10 @@ foreach ($faqs as $faq) {
           <div class="accordion faq-item" data-accordion-group="faqs" data-faq-category="general">
             <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="faq-general-<?php echo (int) $index; ?>">
               <span><?php echo esc_html($faq['question']); ?></span>
-              <span class="accordion-icon" aria-hidden="true"></span>
+              <span class="accordion-icon" aria-hidden="true">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                <i class="fas fa-minus" aria-hidden="true"></i>
+              </span>
             </button>
             <div id="faq-general-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
               <?php echo cta_format_faq_answer($faq['answer']); ?>
@@ -299,7 +310,10 @@ foreach ($faqs as $faq) {
           <div class="accordion faq-item" data-accordion-group="faqs" data-faq-category="booking">
             <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="faq-booking-<?php echo (int) $index; ?>">
               <span><?php echo esc_html($faq['question']); ?></span>
-              <span class="accordion-icon" aria-hidden="true"></span>
+              <span class="accordion-icon" aria-hidden="true">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                <i class="fas fa-minus" aria-hidden="true"></i>
+              </span>
             </button>
             <div id="faq-booking-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
               <?php echo cta_format_faq_answer($faq['answer']); ?>
@@ -322,7 +336,10 @@ foreach ($faqs as $faq) {
           <div class="accordion faq-item" data-accordion-group="faqs" data-faq-category="certification">
             <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="faq-certification-<?php echo (int) $index; ?>">
               <span><?php echo esc_html($faq['question']); ?></span>
-              <span class="accordion-icon" aria-hidden="true"></span>
+              <span class="accordion-icon" aria-hidden="true">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                <i class="fas fa-minus" aria-hidden="true"></i>
+              </span>
             </button>
             <div id="faq-certification-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
               <?php echo cta_format_faq_answer($faq['answer']); ?>
@@ -345,7 +362,10 @@ foreach ($faqs as $faq) {
           <div class="accordion faq-item" data-accordion-group="faqs">
             <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="faq-course-specific-<?php echo (int) $index; ?>">
               <span><?php echo esc_html($faq['question']); ?></span>
-              <span class="accordion-icon" aria-hidden="true"></span>
+              <span class="accordion-icon" aria-hidden="true">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                <i class="fas fa-minus" aria-hidden="true"></i>
+              </span>
             </button>
             <div id="faq-course-specific-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
               <?php echo cta_format_faq_answer($faq['answer']); ?>
@@ -368,7 +388,10 @@ foreach ($faqs as $faq) {
           <div class="accordion faq-item" data-accordion-group="faqs" data-faq-category="payment">
             <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="faq-payment-<?php echo (int) $index; ?>">
               <span><?php echo esc_html($faq['question']); ?></span>
-              <span class="accordion-icon" aria-hidden="true"></span>
+              <span class="accordion-icon" aria-hidden="true">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                <i class="fas fa-minus" aria-hidden="true"></i>
+              </span>
             </button>
             <div id="faq-payment-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
               <?php echo cta_format_faq_answer($faq['answer']); ?>
@@ -391,7 +414,10 @@ foreach ($faqs as $faq) {
           <div class="accordion faq-item" data-accordion-group="faqs" data-faq-category="group-training">
             <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="faq-group-training-<?php echo (int) $index; ?>">
               <span><?php echo esc_html($faq['question']); ?></span>
-              <span class="accordion-icon" aria-hidden="true"></span>
+              <span class="accordion-icon" aria-hidden="true">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                <i class="fas fa-minus" aria-hidden="true"></i>
+              </span>
             </button>
             <div id="faq-group-training-<?php echo (int) $index; ?>" class="accordion-content" role="region" aria-hidden="true">
               <?php echo cta_format_faq_answer($faq['answer']); ?>
@@ -593,13 +619,207 @@ foreach ($faqs as $faq) {
     });
   });
   
+  // FAQ Search Suggestions
+  const suggestionsContainer = document.getElementById('faq-suggestions');
+  let allFAQQuestions = [];
+  let selectedSuggestionIndex = -1;
+  
+  // Build FAQ questions list from DOM
+  function buildFAQQuestionsList() {
+    allFAQQuestions = [];
+    faqItems.forEach((item, index) => {
+      const questionEl = item.querySelector('.accordion-trigger span');
+      if (questionEl) {
+        const question = questionEl.textContent.trim();
+        const category = item.getAttribute('data-faq-category') || 'general';
+        allFAQQuestions.push({
+          question: question,
+          category: category,
+          element: item
+        });
+      }
+    });
+  }
+  
+  // Get matching suggestions
+  function getSuggestions(query) {
+    if (!query || query.length < 2) {
+      return [];
+    }
+    
+    const queryLower = query.toLowerCase().trim();
+    const matches = allFAQQuestions
+      .filter(faq => {
+        const questionLower = faq.question.toLowerCase();
+        return questionLower.includes(queryLower);
+      })
+      .slice(0, 5); // Limit to 5 suggestions
+    
+    return matches;
+  }
+  
+  // Render suggestions
+  function renderSuggestions(suggestions) {
+    if (!suggestionsContainer) return;
+    
+    if (suggestions.length === 0) {
+      suggestionsContainer.innerHTML = '';
+      suggestionsContainer.style.display = 'none';
+      searchInput.setAttribute('aria-expanded', 'false');
+      return;
+    }
+    
+    suggestionsContainer.innerHTML = suggestions.map((faq, index) => {
+      // Highlight matching text
+      const questionLower = faq.question.toLowerCase();
+      const queryLower = searchInput.value.toLowerCase().trim();
+      const matchIndex = questionLower.indexOf(queryLower);
+      
+      let highlightedQuestion = faq.question;
+      if (matchIndex !== -1) {
+        const before = faq.question.substring(0, matchIndex);
+        const match = faq.question.substring(matchIndex, matchIndex + queryLower.length);
+        const after = faq.question.substring(matchIndex + queryLower.length);
+        highlightedQuestion = `${before}<mark>${match}</mark>${after}`;
+      }
+      
+      return `
+        <button 
+          type="button"
+          class="faq-suggestion-item ${index === selectedSuggestionIndex ? 'selected' : ''}"
+          role="option"
+          data-index="${index}"
+          aria-selected="${index === selectedSuggestionIndex}"
+        >
+          <span class="faq-suggestion-text">${highlightedQuestion}</span>
+        </button>
+      `;
+    }).join('');
+    
+    suggestionsContainer.style.display = 'block';
+    searchInput.setAttribute('aria-expanded', 'true');
+    
+    // Add click handlers
+    suggestionsContainer.querySelectorAll('.faq-suggestion-item').forEach((btn, index) => {
+      btn.addEventListener('click', () => {
+        selectSuggestion(suggestions[index]);
+      });
+    });
+  }
+  
+  // Select a suggestion
+  function selectSuggestion(faq) {
+    searchInput.value = faq.question;
+    searchInput.setAttribute('aria-expanded', 'false');
+    suggestionsContainer.style.display = 'none';
+    selectedSuggestionIndex = -1;
+    
+    // Trigger search
+    searchFAQs(faq.question);
+    
+    // Scroll to FAQ item
+    setTimeout(() => {
+      if (faq.element) {
+        faq.element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Open accordion if closed
+        const trigger = faq.element.querySelector('.accordion-trigger');
+        if (trigger && trigger.getAttribute('aria-expanded') === 'false') {
+          trigger.click();
+        }
+      }
+    }, 100);
+  }
+  
+  // Initialize FAQ questions list
+  buildFAQQuestionsList();
+  
   if (searchInput) {
     let searchTimeout;
+    let suggestionsTimeout;
+    
+    // Handle input
     searchInput.addEventListener('input', (e) => {
+      const query = e.target.value;
+      
+      // Clear previous timeouts
       clearTimeout(searchTimeout);
+      clearTimeout(suggestionsTimeout);
+      
+      // Show suggestions immediately
+      suggestionsTimeout = setTimeout(() => {
+        const suggestions = getSuggestions(query);
+        renderSuggestions(suggestions);
+        selectedSuggestionIndex = -1;
+      }, 150);
+      
+      // Debounce search
       searchTimeout = setTimeout(() => {
-        searchFAQs(e.target.value);
-      }, 300); // Debounce search
+        searchFAQs(query);
+      }, 300);
+    });
+    
+    // Handle keyboard navigation
+    searchInput.addEventListener('keydown', (e) => {
+      const suggestions = Array.from(suggestionsContainer.querySelectorAll('.faq-suggestion-item'));
+      
+      if (suggestions.length === 0) return;
+      
+      switch(e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, suggestions.length - 1);
+          updateSuggestionSelection(suggestions);
+          break;
+          
+        case 'ArrowUp':
+          e.preventDefault();
+          selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, -1);
+          updateSuggestionSelection(suggestions);
+          break;
+          
+        case 'Enter':
+          e.preventDefault();
+          if (selectedSuggestionIndex >= 0 && selectedSuggestionIndex < suggestions.length) {
+            const currentSuggestions = getSuggestions(searchInput.value);
+            if (currentSuggestions[selectedSuggestionIndex]) {
+              selectSuggestion(currentSuggestions[selectedSuggestionIndex]);
+            }
+          } else {
+            // Just trigger search with current value
+            searchFAQs(searchInput.value);
+            suggestionsContainer.style.display = 'none';
+            searchInput.setAttribute('aria-expanded', 'false');
+          }
+          break;
+          
+        case 'Escape':
+          suggestionsContainer.style.display = 'none';
+          searchInput.setAttribute('aria-expanded', 'false');
+          selectedSuggestionIndex = -1;
+          break;
+      }
+    });
+    
+    // Close suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+        suggestionsContainer.style.display = 'none';
+        searchInput.setAttribute('aria-expanded', 'false');
+        selectedSuggestionIndex = -1;
+      }
+    });
+  }
+  
+  // Update suggestion selection highlighting
+  function updateSuggestionSelection(suggestions) {
+    suggestions.forEach((btn, index) => {
+      const isSelected = index === selectedSuggestionIndex;
+      btn.classList.toggle('selected', isSelected);
+      btn.setAttribute('aria-selected', isSelected);
+      
+      if (isSelected) {
+        btn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
     });
   }
 })();
