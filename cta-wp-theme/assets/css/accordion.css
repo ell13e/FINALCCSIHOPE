@@ -221,7 +221,7 @@
 /* Lists in accordion content */
 .accordion-content ul,
 .accordion-content ol {
-  margin: 20px 0;
+  margin: 0;
   padding-left: 24px;
   line-height: 1.7;
   color: #5a4a3a;
@@ -291,7 +291,7 @@
 @media (min-width: 768px) {
   .accordion-content ul,
   .accordion-content ol {
-    margin: 24px 0;
+    margin: 0;
     padding-left: 28px;
   }
   

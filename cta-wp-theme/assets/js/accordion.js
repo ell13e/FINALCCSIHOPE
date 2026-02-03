@@ -32,6 +32,19 @@
     if (triggers.length === 0) return;
 
     triggers.forEach(trigger => {
+      // If accordion is already open (aria-expanded="true"), ensure content is visible
+      const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+      if (isExpanded) {
+        const contentId = trigger.getAttribute('aria-controls');
+        const content = contentId ? document.getElementById(contentId) : null;
+        if (content) {
+          content.setAttribute('aria-hidden', 'false');
+          // Ensure content is visible for pre-opened accordions
+          if (content.style.maxHeight === '0' || !content.style.maxHeight) {
+            content.style.maxHeight = 'none';
+          }
+        }
+      }
       // Prevent double-binding
       if (trigger.dataset.accordionInit === 'true') return;
       trigger.dataset.accordionInit = 'true';

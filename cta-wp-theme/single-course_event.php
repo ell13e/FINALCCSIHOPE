@@ -24,6 +24,30 @@ get_header();
 
 $contact = cta_get_contact_info();
 
+/**
+ * Shorten accreditation text for display
+ */
+function cta_shorten_accreditation($accreditation) {
+  if (empty($accreditation)) {
+    return $accreditation;
+  }
+  // Shorten "Skills for Health UK Core Skills Training Framework" to "Skills For Health UK"
+  $accreditation = str_ireplace('Skills for Health UK Core Skills Training Framework', 'Skills For Health UK', $accreditation);
+  return $accreditation;
+}
+
+/**
+ * Shorten accreditation text for "What's Included" section
+ */
+function cta_shorten_accreditation_for_includes($accreditation) {
+  if (empty($accreditation)) {
+    return $accreditation;
+  }
+  // Shorten "Skills for Health UK Core Skills Training Framework" to "Skills for Health UK Core Framework Accreditation"
+  $accreditation = str_ireplace('Skills for Health UK Core Skills Training Framework', 'Skills for Health UK Core Framework', $accreditation);
+  return $accreditation;
+}
+
 while (have_posts()) : the_post();
   
   // Get event fields
@@ -209,7 +233,7 @@ while (have_posts()) : the_post();
   </section>
 
   <!-- Course Detail Content Section -->
-  <section class="course-detail-content">
+  <section class="course-detail-content content-section">
     <div class="container">
       <div class="course-detail-grid">
         
@@ -222,98 +246,89 @@ while (have_posts()) : the_post();
             $section_heading = cta_safe_get_field('seo_default_section_heading', 'option', 'Event Overview');
           }
           ?>
-          <h2 class="course-detail-section-heading"><?php echo esc_html($section_heading); ?></h2>
+          <h2 class="course-detail-section-heading" id="course-overview"><?php echo esc_html($section_heading); ?></h2>
           
           <?php if ($outcomes && is_array($outcomes) && count($outcomes) > 0) : ?>
-          <!-- What You'll Learn Accordion (opens by default) -->
-          <div class="accordion" data-accordion-group="course-details">
-            <button 
-              type="button"
-              class="accordion-trigger" 
-              aria-expanded="true"
-              aria-controls="learn-content"
-              data-accordion="learn"
-            >
-              <h3 class="course-detail-accordion-title">What You'll Learn</h3>
-              <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-            <div class="accordion-content" id="learn-content" aria-hidden="false">
-              <div class="course-detail-learn-grid">
-                <?php foreach ($outcomes as $outcome) : ?>
+          <!-- Course Content - EXPANDED (no accordion) -->
+          <div class="course-detail-learn-section">
+            <h3 class="course-detail-subheading">Course Content</h3>
+            <div class="course-detail-learn-grid" id="course-content-list">
+              <?php 
+              // Show first 6-8 items, then progressive disclosure
+              $initial_count = min(8, count($outcomes));
+              $display_items = array_slice($outcomes, 0, $initial_count);
+              $has_more = count($outcomes) > $initial_count;
+              
+              foreach ($display_items as $outcome) : 
+              ?>
+              <div class="course-detail-learn-item"><?php echo esc_html($outcome['outcome_text']); ?></div>
+              <?php endforeach; ?>
+              
+              <?php if ($has_more) : ?>
+              <div class="course-detail-learn-more-wrapper" id="course-content-more" style="display: none;">
+                <?php 
+                $remaining_items = array_slice($outcomes, $initial_count);
+                foreach ($remaining_items as $outcome) : 
+                ?>
                 <div class="course-detail-learn-item"><?php echo esc_html($outcome['outcome_text']); ?></div>
                 <?php endforeach; ?>
               </div>
+              <button type="button" class="course-content-show-more" id="course-content-toggle" onclick="toggleCourseContent()">
+                <span class="show-more-text">Show All <?php echo count($outcomes); ?> Topics</span>
+                <span class="show-less-text" style="display: none;">Show Less</span>
+                <i class="fas fa-chevron-down toggle-icon" aria-hidden="true"></i>
+              </button>
+              <?php endif; ?>
             </div>
           </div>
           <?php endif; ?>
 
           <?php if ($description) : ?>
-          <!-- Description Accordion -->
-          <div class="accordion" data-accordion-group="course-details">
-            <button 
-              type="button"
-              class="accordion-trigger" 
-              aria-expanded="<?php echo (!$outcomes || count($outcomes) === 0) ? 'true' : 'false'; ?>"
-              aria-controls="description-content"
-              data-accordion="description"
-            >
-              <h3 class="course-detail-accordion-title">Description</h3>
-              <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-            <div class="accordion-content" id="description-content" aria-hidden="<?php echo (!$outcomes || count($outcomes) === 0) ? 'false' : 'true'; ?>">
-              <div class="course-detail-description">
-                <?php echo wpautop(wp_kses_post($description)); ?>
-              </div>
-            </div>
-          </div>
-          <?php endif; ?>
-
-          <?php if ($prerequisites) : ?>
-          <!-- Requirements Accordion -->
-          <div class="accordion" data-accordion-group="course-details">
-            <button 
-              type="button"
-              class="accordion-trigger" 
-              aria-expanded="false"
-              aria-controls="requirements-content"
-              data-accordion="requirements"
-            >
-              <h3 class="course-detail-accordion-title">Requirements</h3>
-              <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-            <div class="accordion-content" id="requirements-content" aria-hidden="true">
-              <div class="course-detail-text">
-                <?php echo wpautop(wp_kses_post($prerequisites)); ?>
-              </div>
+          <!-- Description - EXPANDED (no accordion) -->
+          <div class="course-detail-description-section">
+            <h3 class="course-detail-subheading">Course Description</h3>
+            <div class="course-detail-description">
+              <?php echo wpautop(wp_kses_post($description)); ?>
             </div>
           </div>
           <?php endif; ?>
 
           <?php if ($suitable_for) : ?>
-          <!-- Who Should Attend Accordion -->
-          <div class="accordion" data-accordion-group="course-details">
-            <button 
-              type="button"
-              class="accordion-trigger" 
-              aria-expanded="false"
-              aria-controls="audience-content"
-              data-accordion="audience"
-            >
-              <h3 class="course-detail-accordion-title">Who Should Attend</h3>
-              <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-            <div class="accordion-content" id="audience-content" aria-hidden="true">
-              <div class="course-detail-text">
-                <?php echo wpautop(wp_kses_post($suitable_for)); ?>
-              </div>
+          <!-- Who Should Attend - EXPANDED (no accordion) -->
+          <div class="course-detail-audience-section">
+            <h3 class="course-detail-subheading">Who Should Attend</h3>
+            <?php 
+            // Check if content already has list markup
+            $has_list_markup = strpos($suitable_for, '<ul>') !== false || strpos($suitable_for, '<li>') !== false;
+            
+            if ($has_list_markup) {
+              // Display as-is if already formatted as a list
+              echo '<div class="course-detail-text">' . wp_kses_post($suitable_for) . '</div>';
+            } else {
+              // Wrap in div with styling for paragraph format
+              echo '<div class="course-detail-text course-audience-text">' . wpautop(wp_kses_post($suitable_for)) . '</div>';
+            }
+            ?>
+          </div>
+          <?php endif; ?>
+
+          <?php if ($prerequisites) : ?>
+          <!-- Requirements - EXPANDED (no accordion) -->
+          <div class="course-detail-requirements-section">
+            <h3 class="course-detail-subheading">Requirements</h3>
+            <div class="course-detail-text">
+              <?php 
+              // Check if prerequisites are minimal (like "No prerequisites required")
+              $prereq_text = strip_tags($prerequisites);
+              $is_minimal = strlen($prereq_text) < 100 || stripos($prereq_text, 'no prerequisite') !== false || stripos($prereq_text, 'none required') !== false;
+              
+              if ($is_minimal) {
+                // For minimal requirements, show as a highlighted summary
+                echo '<div class="course-requirements-summary">' . wp_kses_post($prerequisites) . '</div>';
+              } else {
+                echo wpautop(wp_kses_post($prerequisites));
+              }
+              ?>
             </div>
           </div>
           <?php endif; ?>
@@ -329,17 +344,21 @@ while (have_posts()) : the_post();
               data-accordion="certification"
             >
               <h3 class="course-detail-accordion-title">Certification</h3>
-              <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
+              <i class="fas fa-chevron-down accordion-icon" aria-hidden="true"></i>
             </button>
             <div class="accordion-content" id="certification-content" aria-hidden="true">
               <div class="course-detail-certification">
                 <?php if ($certificate) : ?>
-                <p><?php echo esc_html($certificate); ?></p>
+                <div class="course-detail-certification-item">
+                  <div class="course-detail-certification-label">Certificate</div>
+                  <div class="course-detail-certification-value"><?php echo esc_html($certificate); ?></div>
+                </div>
                 <?php endif; ?>
                 <?php if ($accreditation && strtolower(trim($accreditation)) !== 'none') : ?>
-                <span class="course-detail-certification-badge"><?php echo esc_html($accreditation); ?></span>
+                <div class="course-detail-certification-item">
+                  <div class="course-detail-certification-label">Accreditation</div>
+                  <div class="course-detail-certification-badge"><?php echo esc_html($accreditation); ?></div>
+                </div>
                 <?php endif; ?>
               </div>
             </div>
@@ -356,9 +375,7 @@ while (have_posts()) : the_post();
               data-accordion="accessibility"
             >
               <h3 class="course-detail-accordion-title">Accessibility Support</h3>
-              <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
+              <i class="fas fa-chevron-down accordion-icon" aria-hidden="true"></i>
             </button>
             <div class="accordion-content" id="accessibility-content" aria-hidden="true">
               <p class="course-detail-text">
@@ -375,42 +392,66 @@ while (have_posts()) : the_post();
             
             <!-- Price Display -->
             <?php if ($price) : ?>
-            <div class="course-detail-price-wrapper">
-              <?php if ($has_discount || $requires_code) : ?>
-                <div style="margin-bottom: 8px;">
-                  <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                    <span class="badge badge-discount">Save <?php echo esc_html($discount_percent); ?>%</span>
-                    <?php if ($discount_label) : ?>
-                      <span class="badge badge-discount-subtle"><?php echo esc_html($discount_label); ?></span>
-                    <?php endif; ?>
-                  </div>
-                </div>
-                <?php if ($requires_code && !empty($discount_code)) : ?>
-                  <div style="background: #fff3cd; border: 2px solid #ffc107; padding: 16px; border-radius: 4px; margin-bottom: 12px;">
-                    <p style="margin: 0 0 8px 0; font-weight: 600; color: #856404; font-size: 14px;">
-                      💳 Discount Code Required
-                    </p>
-                    <p style="margin: 0 0 12px 0; color: #856404; font-size: 13px; line-height: 1.5;">
-                      Use code <strong style="font-size: 16px; letter-spacing: 1px; background: #ffe69c; padding: 4px 8px; border-radius: 3px;"><?php echo esc_html($discount_code); ?></strong> at checkout to get <?php echo esc_html($discount_percent); ?>% off.
-                    </p>
-                    <p style="margin: 0; color: #856404; font-size: 12px;">
-                      Original price: <span style="text-decoration: line-through;">£<?php echo esc_html(number_format($original_price, 0)); ?></span> 
-                      → Discounted price: <strong style="color: #dc3232;">£<?php echo esc_html(number_format(cta_apply_course_discount($course->ID, floatval($original_price)), 0)); ?></strong>
-                    </p>
-                  </div>
-                <?php endif; ?>
-                <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 4px;">
-                  <div style="text-decoration: line-through; color: #8c8f94; font-size: 18px; font-weight: 400;">
-                    £<?php echo esc_html(number_format($original_price, 0)); ?>
-                  </div>
-                  <div class="course-detail-price" style="color: #dc3232; font-weight: 700;">
-                    From £<?php echo esc_html(number_format($price, 0)); ?>
+            <?php
+              $discount_percent = ($course_discount_active ? $course_discount_percent : $site_wide_discount_percent);
+              $show_discount_ui = ($has_discount || $discount_type === 'course-code');
+            ?>
+
+            <?php if ($show_discount_ui) : ?>
+              <div class="course-detail-discount-badges" aria-label="Offer details">
+                <span class="badge badge-discount">Save <?php echo esc_html($discount_percent); ?>%</span>
+                <span class="badge badge-critical"><?php echo esc_html($discount_label); ?></span>
+              </div>
+            <?php endif; ?>
+
+            <?php if ($discount_type === 'course-code') : ?>
+              <div class="course-detail-discount-callout" role="note" aria-label="Discount code required">
+                <p class="course-detail-discount-callout-title">Discount code required</p>
+                <p class="course-detail-discount-callout-body">
+                  Use code <code class="course-detail-discount-code"><?php echo esc_html($discount_code); ?></code> at checkout to get <?php echo esc_html($discount_percent); ?>% off.
+                </p>
+              </div>
+            <?php endif; ?>
+
+            <div class="course-detail-price-wrapper course-detail-price-prominent">
+              <?php if ($has_discount) : ?>
+                <div class="course-detail-price-line">
+                  <span class="course-detail-price-original" aria-label="Original price">£<?php echo esc_html(number_format($original_price, 0)); ?></span>
+                  <div class="course-detail-price-container">
+                    <span class="course-detail-price is-discounted">From £<?php echo esc_html(number_format($price, 0)); ?></span>
+                    <span class="course-detail-price-unit">per person</span>
                   </div>
                 </div>
               <?php else : ?>
-                <div class="course-detail-price">From £<?php echo esc_html(number_format($price, 0)); ?></div>
+                <div class="course-detail-price-container">
+                  <span class="course-detail-price">From £<?php echo esc_html(number_format($price, 0)); ?></span>
+                  <span class="course-detail-price-unit">per person</span>
+                </div>
               <?php endif; ?>
-              <div class="course-detail-price-note">per person</div>
+              <div class="course-detail-price-includes">
+                <span class="course-detail-price-includes-label">Includes:</span>
+                <ul class="course-detail-price-includes-list">
+                  <?php
+                  // Build includes array dynamically based on available fields
+                  $includes = [];
+                  
+                  if ($certificate) {
+                    $includes[] = 'Certificate';
+                  }
+                  
+                  if ($accreditation && strtolower(trim($accreditation)) !== 'none') {
+                    $includes[] = esc_html(cta_shorten_accreditation_for_includes($accreditation)) . ' Accreditation';
+                  }
+                  
+                  // Always include materials
+                  $includes[] = 'Course materials';
+                  
+                  foreach ($includes as $include) {
+                    echo '<li>' . esc_html($include) . '</li>';
+                  }
+                  ?>
+                </ul>
+              </div>
             </div>
             <?php endif; ?>
 
@@ -422,9 +463,20 @@ while (have_posts()) : the_post();
                 <span class="course-detail-meta-value"><?php echo esc_html($formatted_date); ?></span>
               </li>
               <?php endif; ?>
+              <?php if ($start_time && $end_time) : ?>
+              <li class="course-detail-meta-item">
+                <span class="course-detail-meta-label">Times</span>
+                <span class="course-detail-meta-value"><?php echo esc_html($start_time); ?> - <?php echo esc_html($end_time); ?></span>
+              </li>
+              <?php elseif ($start_time) : ?>
+              <li class="course-detail-meta-item">
+                <span class="course-detail-meta-label">Start Time</span>
+                <span class="course-detail-meta-value"><?php echo esc_html($start_time); ?></span>
+              </li>
+              <?php endif; ?>
               <?php if ($spaces !== '' && $spaces > 0) : ?>
               <li class="course-detail-meta-item">
-                <span class="course-detail-meta-label">Enrolled</span>
+                <span class="course-detail-meta-label">Spaces</span>
                 <span class="course-detail-meta-value"><?php echo esc_html($spaces); ?> spots left</span>
               </li>
               <?php endif; ?>
@@ -461,7 +513,7 @@ while (have_posts()) : the_post();
             <button 
               type="button"
               onclick="openBookingModal('<?php echo esc_js($course_title); ?>', '<?php echo esc_js(get_the_ID()); ?>', '<?php echo esc_js($formatted_date); ?>')"
-              class="primary-cta-button"
+              class="primary-cta-button primary-cta-button-large"
               aria-label="Book this course"
             >
               Book Now
@@ -470,11 +522,10 @@ while (have_posts()) : the_post();
             <!-- Phone Number -->
             <div class="course-detail-phone">
               <a href="<?php echo esc_url($contact['phone_link']); ?>" class="course-detail-phone-link">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                </svg>
+                <i class="fas fa-phone" aria-hidden="true"></i>
                 <span><?php echo esc_html($contact['phone']); ?></span>
               </a>
+              <p class="course-detail-phone-hours">Phone lines open: Mon-Fri 9am-5pm</p>
             </div>
 
           </div>
@@ -621,27 +672,25 @@ while (have_posts()) : the_post();
 <?php endwhile; ?>
 
 <script>
-(function() {
-  'use strict';
+function toggleCourseContent() {
+  const moreWrapper = document.getElementById('course-content-more');
+  const toggle = document.getElementById('course-content-toggle');
+  const showMore = toggle.querySelector('.show-more-text');
+  const showLess = toggle.querySelector('.show-less-text');
+  const icon = toggle.querySelector('.toggle-icon');
   
-  // Course detail accordion functionality
-  const accordionTriggers = document.querySelectorAll('.course-detail-accordion-trigger');
-  
-  accordionTriggers.forEach(trigger => {
-    trigger.addEventListener('click', function(e) {
-      e.preventDefault();
-      const isExpanded = this.getAttribute('aria-expanded') === 'true';
-      const contentId = this.getAttribute('aria-controls');
-      const content = document.getElementById(contentId);
-      
-      if (content) {
-        // Toggle this accordion
-        this.setAttribute('aria-expanded', !isExpanded);
-        content.setAttribute('aria-hidden', isExpanded);
-      }
-    });
-  });
-})();
+  if (moreWrapper.style.display === 'none') {
+    moreWrapper.style.display = 'grid';
+    showMore.style.display = 'none';
+    showLess.style.display = 'inline';
+    icon.style.transform = 'rotate(180deg)';
+  } else {
+    moreWrapper.style.display = 'none';
+    showMore.style.display = 'inline';
+    showLess.style.display = 'none';
+    icon.style.transform = 'rotate(0deg)';
+  }
+}
 </script>
 
 <?php get_footer(); ?>

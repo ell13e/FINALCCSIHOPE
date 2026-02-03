@@ -71,7 +71,7 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
-  max-width: 900px;
+  max-width: 90rem;
   margin: 0 auto;
 }
 
@@ -85,7 +85,7 @@
   .cqc-standards-grid {
     grid-template-columns: repeat(6, 1fr);
     gap: 2rem;
-    max-width: 900px;
+    max-width: 1200px;
   }
   
   /* First 3 items: each spans 2 columns */

@@ -76,6 +76,43 @@ function cta_course_link($course_name, $display_text = null) {
   return $link ? '<a href="' . esc_url($link) . '">' . esc_html($text) . '</a>' : esc_html($text);
 }
 
+/**
+ * Helper to get logical color class for regulatory labels
+ * Color coding system:
+ * 1. Statutory/Legal → Important (pink) - highest priority
+ * 2. Training/Educational → Teal - training content
+ * 3. Timeline/Updates → Purple - time-based info
+ * 4. Compliance/Standards → Amber - compliance info
+ * 5. Framework/New → Blue - new systems/frameworks
+ * 6. Resources/Information → Default (cream) - general resources
+ * 7. Commitment/CTA → Gold - company commitments
+ */
+function cta_get_label_color_class($label, $is_highlight = false) {
+  if ($is_highlight) {
+    return 'cqc-regulatory-label-important';
+  }
+  
+  $label_lower = strtolower($label);
+  
+  // Priority order matters - check most specific first
+  if (strpos($label_lower, 'statutory') !== false || strpos($label_lower, 'legal') !== false || strpos($label_lower, 'requirement') !== false) {
+    return 'cqc-regulatory-label-important';
+  } elseif (strpos($label_lower, 'training') !== false || strpos($label_lower, 'educational') !== false || strpos($label_lower, 'course') !== false) {
+    return 'cqc-regulatory-label-teal';
+  } elseif (strpos($label_lower, 'timeline') !== false || strpos($label_lower, 'update') !== false || strpos($label_lower, 'change') !== false || strpos($label_lower, 'news') !== false || strpos($label_lower, 'regulatory') !== false) {
+    return 'cqc-regulatory-label-purple';
+  } elseif (strpos($label_lower, 'compliance') !== false || strpos($label_lower, 'standard') !== false || strpos($label_lower, 'fundamental') !== false) {
+    return 'cqc-regulatory-label-amber';
+  } elseif (strpos($label_lower, 'framework') !== false || strpos($label_lower, 'new') !== false || strpos($label_lower, 'system') !== false) {
+    return 'cqc-regulatory-label-blue';
+  } elseif (strpos($label_lower, 'commitment') !== false || strpos($label_lower, 'cta') !== false || strpos($label_lower, 'our') !== false) {
+    return 'cqc-regulatory-label-gold';
+  }
+  
+  // Default (cream) - no additional class
+  return '';
+}
+
 // ACF fields
 $hero_title = function_exists('get_field') ? get_field('hero_title') : '';
 $hero_subtitle = function_exists('get_field') ? get_field('hero_subtitle') : '';
@@ -299,6 +336,7 @@ $collection_schema = [
       <div class="cqc-accordion-wrapper">
         <?php if (!empty($mandatory_training_settings) && is_array($mandatory_training_settings)) : 
           // Use ACF fields if available
+          $first_item = true;
           foreach ($mandatory_training_settings as $setting) :
             $setting_name = $setting['setting_name'] ?? '';
             $setting_id = $setting['setting_id'] ?? '';
@@ -306,13 +344,17 @@ $collection_schema = [
             $setting_courses = $setting['setting_courses'] ?? '';
             
             if (empty($setting_name) || empty($setting_id) || empty($setting_courses)) continue;
+            
+            // First accordion is open by default
+            $is_first = $first_item;
+            $first_item = false;
         ?>
         <div class="accordion" data-accordion-group="cqc-settings">
-          <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="cqc-setting-<?php echo esc_attr($setting_id); ?>">
+          <button type="button" class="accordion-trigger" aria-expanded="<?php echo $is_first ? 'true' : 'false'; ?>" aria-controls="cqc-setting-<?php echo esc_attr($setting_id); ?>">
             <span><?php echo esc_html($setting_name); ?></span>
             <span class="accordion-icon" aria-hidden="true"></span>
           </button>
-          <div id="cqc-setting-<?php echo esc_attr($setting_id); ?>" class="accordion-content" role="region" aria-hidden="true">
+          <div id="cqc-setting-<?php echo esc_attr($setting_id); ?>" class="accordion-content" role="region" aria-hidden="<?php echo $is_first ? 'false' : 'true'; ?>">
             <p><strong>Required courses:</strong></p>
             <?php if (!empty($setting_intro)) : ?>
             <p><?php echo wp_kses_post($setting_intro); ?></p>
@@ -829,24 +871,9 @@ $collection_schema = [
           if (!empty($card['cta'])) $card_class .= ' cqc-regulatory-card-cta';
           
           $label_class = 'cqc-regulatory-label';
-          if (!empty($card['highlight'])) {
-            $label_class .= ' cqc-regulatory-label-important';
-          } else {
-            // Color coding based on label type
-            $label_lower = strtolower($card['label'] ?? '');
-            if (strpos($label_lower, 'framework') !== false || strpos($label_lower, 'new') !== false) {
-              $label_class .= ' cqc-regulatory-label-blue';
-            } elseif (strpos($label_lower, 'mandatory') !== false || strpos($label_lower, 'training') !== false) {
-              $label_class .= ' cqc-regulatory-label-teal';
-            } elseif (strpos($label_lower, 'timeline') !== false) {
-              $label_class .= ' cqc-regulatory-label-purple';
-            } elseif (strpos($label_lower, 'infection') !== false) {
-              $label_class .= ' cqc-regulatory-label-teal';
-            } elseif (strpos($label_lower, 'fundamental') !== false) {
-              $label_class .= ' cqc-regulatory-label-amber';
-            } elseif (strpos($label_lower, 'commitment') !== false || strpos($label_lower, 'cta') !== false) {
-              $label_class .= ' cqc-regulatory-label-gold';
-            }
+          $color_class = cta_get_label_color_class($card['label'] ?? '', !empty($card['highlight']));
+          if (!empty($color_class)) {
+            $label_class .= ' ' . $color_class;
           }
           
           $list_class = !empty($card['timeline']) ? 'cqc-timeline-list' : '';
@@ -912,7 +939,7 @@ $collection_schema = [
       <div class="cqc-regulatory-grid">
         <!-- What is Oliver McGowan Training -->
         <div class="cqc-regulatory-card cqc-regulatory-card-highlight">
-          <div class="cqc-regulatory-label cqc-regulatory-label-important">
+          <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Statutory Requirement', true)); ?>">
             <span>Statutory Requirement</span>
           </div>
           <h3 class="cqc-regulatory-title">What is Oliver McGowan Training?</h3>
@@ -932,8 +959,8 @@ $collection_schema = [
 
         <!-- Training Structure -->
         <div class="cqc-regulatory-card">
-          <div class="cqc-regulatory-label cqc-regulatory-label-teal">
-            <span>Training</span>
+          <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Training Structure')); ?>">
+            <span>Training Structure</span>
           </div>
           <h3 class="cqc-regulatory-title">Two Tiers of Training</h3>
           <div>
@@ -956,7 +983,7 @@ $collection_schema = [
 
         <!-- Who Needs It -->
         <div class="cqc-regulatory-card">
-          <div class="cqc-regulatory-label cqc-regulatory-label-teal">
+          <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Who Needs It')); ?>">
             <span>Who Needs It</span>
           </div>
           <h3 class="cqc-regulatory-title">Who Needs This Training?</h3>
@@ -980,7 +1007,7 @@ $collection_schema = [
 
         <!-- Compliance -->
         <div class="cqc-regulatory-card">
-          <div class="cqc-regulatory-label cqc-regulatory-label-amber">
+          <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Compliance')); ?>">
             <span>Compliance</span>
           </div>
           <h3 class="cqc-regulatory-title">Meeting the Requirement</h3>
@@ -1046,7 +1073,7 @@ $collection_schema = [
         <!-- Publications -->
         <div class="cqc-regulatory-card">
           <a href="https://www.cqc.org.uk/publications" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
-            <div class="cqc-regulatory-label">
+            <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Reports')); ?>">
               <span>Reports</span>
             </div>
             <h3 class="cqc-regulatory-title">CQC Publications</h3>
@@ -1072,7 +1099,7 @@ $collection_schema = [
         <!-- News & Updates -->
         <div class="cqc-regulatory-card">
           <a href="https://www.cqc.org.uk/news" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
-            <div class="cqc-regulatory-label">
+            <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Updates')); ?>">
               <span>Updates</span>
             </div>
             <h3 class="cqc-regulatory-title">CQC News & Updates</h3>
@@ -1098,7 +1125,7 @@ $collection_schema = [
         <!-- About CQC -->
         <div class="cqc-regulatory-card">
           <a href="https://www.cqc.org.uk/about-us" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
-            <div class="cqc-regulatory-label">
+            <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('About')); ?>">
               <span>About</span>
             </div>
             <h3 class="cqc-regulatory-title">About the Care Quality Commission</h3>
