@@ -6,6 +6,89 @@
 (function() {
   'use strict';
 
+  // ============================================
+  // Suppress Browser Extension Errors
+  // ============================================
+  // These errors are caused by browser extensions (ad blockers, password managers, etc.)
+  // They are harmless and don't affect functionality, but clutter the console
+  // Suppress them to keep the console clean during development
+  // MUST be at the top to catch errors early
+
+  const handleError = function(event) {
+    const errorMessage = event.message || event.error?.message || event.error?.toString() || '';
+    const errorStack = event.error?.stack || event.filename || '';
+    const fullErrorText = (errorMessage + ' ' + errorStack).toLowerCase();
+    
+    const isExtensionError =
+      fullErrorText.includes('message channel closed') ||
+      fullErrorText.includes('asynchronous response') ||
+      fullErrorText.includes('listener indicated an asynchronous response') ||
+      fullErrorText.includes('extension context invalidated') ||
+      fullErrorText.includes('receiving end does not exist') ||
+      fullErrorText.includes('chrome-extension://') ||
+      fullErrorText.includes('moz-extension://') ||
+      fullErrorText.includes('safari-extension://');
+
+    if (isExtensionError) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      return false;
+    }
+  };
+
+  const handleUnhandledRejection = function(event) {
+    const errorMessage = event.reason?.message || event.reason?.toString() || String(event.reason || '');
+    const errorStack = event.reason?.stack || '';
+    const fullErrorText = (errorMessage + ' ' + errorStack).toLowerCase();
+    
+    const isExtensionError =
+      fullErrorText.includes('message channel closed') ||
+      fullErrorText.includes('asynchronous response') ||
+      fullErrorText.includes('listener indicated an asynchronous response') ||
+      fullErrorText.includes('extension context invalidated') ||
+      fullErrorText.includes('receiving end does not exist') ||
+      fullErrorText.includes('chrome-extension://') ||
+      fullErrorText.includes('moz-extension://') ||
+      fullErrorText.includes('safari-extension://');
+
+    if (isExtensionError) {
+      event.preventDefault();
+      return false;
+    }
+  };
+
+  // Add error listeners with capture phase to catch errors early
+  // Use capture phase and passive:false to ensure we can prevent default
+  window.addEventListener('error', handleError, { capture: true, passive: false });
+  window.addEventListener('unhandledrejection', handleUnhandledRejection, { capture: true, passive: false });
+
+  // ============================================
+  // Suppress Console Warnings from WordPress Core
+  // ============================================
+  // WordPress core (admin-bar.min.js) uses non-passive touchstart listeners
+  // This is a performance warning, not an error, and can't be fixed in the theme
+  // Suppress it to keep the console clean
+
+  if (typeof console !== 'undefined' && console.warn) {
+    const originalWarn = console.warn;
+    console.warn = function(...args) {
+      const message = args.join(' ').toLowerCase();
+      
+      // Suppress WordPress admin bar passive listener warnings
+      const isWordPressWarning =
+        message.includes('[violation]') &&
+        (message.includes('non-passive event listener') ||
+         message.includes('scroll-blocking') ||
+         message.includes('touchstart') ||
+         message.includes('admin-bar.min.js'));
+      
+      if (!isWordPressWarning) {
+        originalWarn.apply(console, args);
+      }
+    };
+  }
+
   // Development mode flag - set to false in production
   const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   
@@ -50,46 +133,6 @@
       button.setAttribute('aria-expanded', 'true');
     }
   };
-
-  // ============================================
-  // Suppress Browser Extension Errors
-  // ============================================
-  // These errors are caused by browser extensions (ad blockers, password managers, etc.)
-  // They are harmless and don't affect functionality, but clutter the console
-  // Suppress them to keep the console clean during development
-
-  const handleError = function(event) {
-    const errorMessage = event.message || event.error?.message || '';
-    const isExtensionError =
-      errorMessage.includes('message channel closed') ||
-      errorMessage.includes('asynchronous response') ||
-      errorMessage.includes('Extension context invalidated') ||
-      errorMessage.includes('Receiving end does not exist');
-
-    if (isExtensionError) {
-      event.preventDefault();
-      event.stopPropagation();
-      return false;
-    }
-  };
-
-  const handleUnhandledRejection = function(event) {
-    const errorMessage = event.reason?.message || String(event.reason || '');
-    const isExtensionError =
-      errorMessage.includes('message channel closed') ||
-      errorMessage.includes('asynchronous response') ||
-      errorMessage.includes('Extension context invalidated') ||
-      errorMessage.includes('Receiving end does not exist');
-
-    if (isExtensionError) {
-      event.preventDefault();
-      return false;
-    }
-  };
-
-  // Add error listeners with capture phase to catch errors early
-  window.addEventListener('error', handleError, true);
-  window.addEventListener('unhandledrejection', handleUnhandledRejection);
 
   // ============================================
   // State Management

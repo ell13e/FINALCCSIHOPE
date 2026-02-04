@@ -169,6 +169,33 @@
   let jsonDatabaseLoading = false;
 
   /**
+   * Get the theme base URL for loading JSON files
+   * Constructs path from script location or uses wp_localize_script data
+   */
+  function getThemeDataUrl(filename) {
+    // Check if theme URL was passed via wp_localize_script
+    if (window.ctaThemeData && window.ctaThemeData.themeUri) {
+      return window.ctaThemeData.themeUri + '/assets/data/' + filename;
+    }
+    
+    // Fallback: construct from script location
+    // Find the script tag that loaded this file
+    const scripts = document.getElementsByTagName('script');
+    for (let i = 0; i < scripts.length; i++) {
+      const src = scripts[i].src;
+      if (src && src.includes('course-data-manager.js')) {
+        // Extract base path: /wp-content/themes/cta-theme/assets/js/data/course-data-manager.js
+        // Need: /wp-content/themes/cta-theme/assets/data/courses-database.json
+        const basePath = src.substring(0, src.lastIndexOf('/assets/js/data/'));
+        return basePath + '/assets/data/' + filename;
+      }
+    }
+    
+    // Last resort: relative path (may not work in all contexts)
+    return 'assets/data/' + filename;
+  }
+
+  /**
    * Load course database from JSON file and merge with existing CourseData
    * JSON file takes precedence (it's the source of truth)
    */
@@ -182,7 +209,8 @@
     
     // Try loading from JSON file
     try {
-      const response = await fetch('assets/data/courses-database.json');
+      const jsonUrl = getThemeDataUrl('courses-database.json');
+      const response = await fetch(jsonUrl);
       if (response.ok) {
         const database = await response.json();
         // Ensure CourseData exists

@@ -11145,7 +11145,7 @@ textarea:focus-visible,
   justify-content: flex-end; /* Right align badges */
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 12px; /* Tighter spacing: badge to title (0.75rem) */
+  margin-bottom: 16px; /* Consistent spacing: badge to title (1rem) */
   width: 100%;
 }
 
@@ -11245,11 +11245,18 @@ textarea:focus-visible,
   border: 1px solid rgba(51, 65, 85, 0.12);
 }
 
+/* Discount badge styling for course cards */
+.course-card-badge.badge-discount {
+  background: linear-gradient(135deg, rgba(254, 226, 226, 0.18) 0%, rgba(254, 202, 202, 0.15) 100%);
+  color: #991b1b;
+  border: 1px solid rgba(153, 27, 27, 0.12);
+}
+
 .course-card-title {
   font-size: 20px;
   font-weight: 700;
   color: var(--brown-dark);
-  margin: 0 0 8px 0; /* Tighter spacing: title to description (8px) */
+  margin: 0 0 12px 0; /* Consistent spacing: title to description (0.75rem) */
   padding: 0;
   text-align: left;
   line-height: 1.3;
@@ -11273,8 +11280,8 @@ textarea:focus-visible,
 .course-card-description {
   font-size: 14px;
   color: var(--brown-medium);
-  line-height: 1.5; /* Standard line-height for small text */
-  margin: 0 0 16px 0; /* Standardized spacing: description to meta (1rem) */
+  line-height: 1.6; /* Improved line-height for better readability */
+  margin: 0 0 20px 0; /* Consistent spacing: description to content (1.25rem) */
   padding: 0;
   text-align: left;
   display: -webkit-box;
@@ -11282,7 +11289,7 @@ textarea:focus-visible,
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 63px; /* Adjusted for tighter spacing (14px * 1.5 * 3) */
+  min-height: 67px; /* Adjusted for improved spacing (14px * 1.6 * 3) */
 }
 
 .course-card-content {
@@ -11291,22 +11298,24 @@ textarea:focus-visible,
   min-height: 120px; /* Standardize minimum height for meta items */
   position: relative;
   z-index: 1;
-  padding: 0 24px 0 24px; /* Remove top padding - description margin handles spacing */
+  padding: 0 24px; /* Consistent horizontal padding */
 }
 
 .course-card-meta {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem; /* Standardized spacing: between meta items */
+  gap: 12px; /* Consistent spacing: between meta items (0.75rem) */
   margin: 0; /* Reset any default margins */
+  padding: 0; /* Ensure no padding conflicts */
 }
 
 .course-card-meta-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px; /* Improved spacing between icon and text */
   font-size: 14px;
   color: var(--brown-medium);
+  line-height: 1.5; /* Consistent line-height */
 }
 
 .course-card-meta-icon {
@@ -11344,8 +11353,8 @@ textarea:focus-visible,
   font-weight: 700;
   color: var(--brown-dark);
   margin: 0;
-  padding-top: 0;
-  padding-bottom: 2px;
+  padding: 0;
+  line-height: 1.2; /* Tighter line-height to reduce spacing */
   transition: all 0.3s ease;
   text-align: left;
 }
@@ -11358,9 +11367,9 @@ textarea:focus-visible,
 .course-card-price-label {
   font-size: 12px;
   color: var(--brown-medium);
-  margin: 0;
-  padding-top: 0;
-  padding-bottom: 0;
+  margin: -2px 0 0 0; /* Negative top margin to bring closer to amount */
+  padding: 0;
+  line-height: 1.2; /* Tighter line-height */
   text-align: left;
 }
 
@@ -36728,7 +36737,8 @@ font-size: 1.5rem;
   font-weight: 700;
   color: var(--brown-dark);
   margin: 0;
-  padding-bottom: 2px;
+  padding: 0;
+  line-height: 1.2; /* Tighter line-height to reduce spacing */
   transition: all 0.3s ease;
   text-align: left;
 }
@@ -36736,7 +36746,9 @@ font-size: 1.5rem;
 .course-card-price-label {
 font-size: 0.75rem;
   color: var(--brown-medium);
-  margin: 0;
+  margin: -2px 0 0 0; /* Negative top margin to bring closer to amount */
+  padding: 0;
+  line-height: 1.2; /* Tighter line-height */
   text-align: left;
 }
 
@@ -47487,26 +47499,7 @@ a.article-cta-btn:focus-visible {
   line-height: 1.2;
 }
 
-.cqc-regulatory-label-important {
-  background: linear-gradient(135deg, rgba(254, 226, 226, 0.18) 0%, rgba(254, 202, 202, 0.15) 100%);
-  color: #991b1b;
-  border: 1px solid rgba(153, 27, 27, 0.12);
-}
-
 /* Color-coded labels based on category - matching course card badge colors */
-
-.cqc-regulatory-label-purple {
-  background: linear-gradient(135deg, rgba(233, 213, 255, 0.18) 0%, rgba(221, 214, 254, 0.15) 100%);
-  color: #6b21a8;
-  border: 1px solid rgba(107, 33, 168, 0.12);
-}
-
-
-.cqc-regulatory-label-gold {
-  background: linear-gradient(135deg, rgba(254, 243, 199, 0.18) 0%, rgba(253, 230, 138, 0.15) 100%);
-  color: #92400e;
-  border: 1px solid rgba(146, 64, 14, 0.12);
-}
 
 .cqc-regulatory-title {
   font-size: 1.4rem;
@@ -49358,7 +49351,7 @@ a.article-cta-btn:focus-visible {
   justify-content: center;
   align-items: center; /* Center align items vertically */
   margin-top: 0; /* Remove top margin - section-header-center already has bottom margin */
-  margin-bottom: 0; /* Remove bottom margin - let content-section padding handle spacing */
+  margin-bottom: 40px; /* Increased spacing between filter buttons and content */
   max-width: 100%; /* Allow full width to prevent awkward wrapping */
   margin-left: auto;
   margin-right: auto;

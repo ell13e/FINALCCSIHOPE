@@ -179,11 +179,16 @@ function cta_course_link($course_name, $display_text = null) {
  * 7. Commitment/CTA → Gold - company commitments
  */
 function cta_get_label_color_class($label, $is_highlight = false) {
+  $label_lower = strtolower($label);
+  
+  // Specific labels that should use base styling (like "Reports")
+  if ($label_lower === 'statutory requirement' || $label_lower === 'timeline' || $label_lower === 'our commitment' || $label_lower === 'who needs it') {
+    return '';
+  }
+  
   if ($is_highlight) {
     return 'cqc-regulatory-label-important';
   }
-  
-  $label_lower = strtolower($label);
   
   // Priority order matters - check most specific first
   if (strpos($label_lower, 'statutory') !== false || strpos($label_lower, 'legal') !== false || strpos($label_lower, 'requirement') !== false) {

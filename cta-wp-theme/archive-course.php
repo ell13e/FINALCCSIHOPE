@@ -179,9 +179,48 @@ $category_names = [
       <div id="courses-grid" class="courses-grid">
         <?php while ($courses->have_posts()) : $courses->the_post(); 
           $duration = get_field('course_duration');
-          $price = get_field('course_price');
+          $original_price = get_field('course_price');
+          $price = $original_price;
           $accreditation = get_field('course_accreditation');
           $level = get_field('course_level');
+          
+          // Discount calculation
+          $course_discount = cta_get_course_discount(get_the_ID());
+          $course_discount_active = cta_is_course_discount_active(get_the_ID());
+          $course_discount_percent = cta_get_course_discount_percentage(get_the_ID());
+          $requires_code = $course_discount['requires_code'] && !empty($course_discount['discount_code']);
+          
+          $has_discount = false;
+          $discount_type = '';
+          $discount_label = '';
+          $discount_percent = 0;
+          
+          // Check course-specific discount
+          if ($course_discount_active && $course_discount_percent > 0 && $price) {
+            if (!$requires_code) {
+              $has_discount = true;
+              $discount_type = 'course';
+              $price = cta_apply_course_discount(get_the_ID(), floatval($price));
+              $discount_label = $course_discount['label'] ?: 'Special Offer';
+              $discount_percent = $course_discount_percent;
+            }
+          }
+          
+          // Check site-wide discount
+          $site_wide_discount_percent = cta_get_site_wide_discount_percentage();
+          $site_wide_active = cta_is_site_wide_discount_active();
+          if ($site_wide_active && $site_wide_discount_percent > 0 && $price) {
+            $site_wide_price = cta_apply_site_wide_discount(floatval($original_price));
+            if (!$has_discount || $site_wide_price < floatval($price)) {
+              $has_discount = true;
+              $discount_type = 'site-wide';
+              $price = $site_wide_price;
+              $site_wide_discount = cta_get_site_wide_discount();
+              $discount_label = $site_wide_discount['label'] ?: 'Site-Wide Sale';
+              $discount_percent = $site_wide_discount_percent;
+            }
+          }
+          
           // Use limiting function to get max 2 categories
           $terms = function_exists('cta_get_course_category_terms') ? cta_get_course_category_terms(get_the_ID()) : get_the_terms(get_the_ID(), 'course_category');
           $primary_term = $terms && !is_wp_error($terms) && !empty($terms) ? $terms[0] : null;
@@ -213,7 +252,7 @@ $category_names = [
           <?php endif; ?>
           
           <div class="course-card-header">
-            <?php if ($primary_term || $secondary_term) : ?>
+            <?php if ($primary_term || $secondary_term || $has_discount) : ?>
             <div class="course-card-badge-wrapper">
               <?php if ($primary_term) : ?>
               <span class="course-card-badge <?php echo esc_attr($badge_color); ?>">
@@ -225,6 +264,12 @@ $category_names = [
               <span class="course-card-badge <?php echo esc_attr($secondary_badge_color); ?>">
                 <i class="fas <?php echo esc_attr($secondary_icon); ?> course-card-badge-icon" aria-hidden="true"></i>
                 <?php echo esc_html($secondary_short_name); ?>
+              </span>
+              <?php endif; ?>
+              <?php if ($has_discount) : ?>
+              <span class="course-card-badge badge-discount">
+                <i class="fas fa-tag course-card-badge-icon" aria-hidden="true"></i>
+                Save <?php echo esc_html($discount_percent); ?>%
               </span>
               <?php endif; ?>
             </div>
@@ -265,7 +310,18 @@ $category_names = [
           <div class="course-card-footer">
             <?php if ($price) : ?>
             <div class="course-card-price">
-              <p class="course-card-price-amount">From £<?php echo esc_html(number_format($price, 0)); ?></p>
+              <?php if ($has_discount) : ?>
+                <div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+                  <span style="text-decoration: line-through; color: #8c8f94; font-size: 14px; font-weight: 400;">
+                    £<?php echo esc_html(number_format($original_price, 0)); ?>
+                  </span>
+                  <span class="course-card-price-amount" style="color: #dc3232; font-weight: 700;">
+                    From £<?php echo esc_html(number_format($price, 0)); ?>
+                  </span>
+                </div>
+              <?php else : ?>
+                <p class="course-card-price-amount">From £<?php echo esc_html(number_format($price, 0)); ?></p>
+              <?php endif; ?>
               <p class="course-card-price-label">per person</p>
             </div>
             <?php endif; ?>

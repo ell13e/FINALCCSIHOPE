@@ -309,6 +309,15 @@ function cta_enqueue_page_scripts() {
             true
         );
         
+        // Pass theme URL to JavaScript
+        wp_localize_script(
+            'cta-course-data-manager',
+            'ctaThemeData',
+            [
+                'themeUri' => CTA_THEME_URI,
+            ]
+        );
+        
         wp_enqueue_script(
             'cta-courses-data',
             CTA_THEME_URI . '/assets/js/data/courses-data.js',
@@ -341,6 +350,15 @@ function cta_enqueue_page_scripts() {
             ['cta-main'],
             CTA_THEME_VERSION,
             true
+        );
+        
+        // Pass theme URL to JavaScript
+        wp_localize_script(
+            'cta-course-data-manager',
+            'ctaThemeData',
+            [
+                'themeUri' => CTA_THEME_URI,
+            ]
         );
         
         // Enqueue course data
