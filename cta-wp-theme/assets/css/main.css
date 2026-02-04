@@ -49740,6 +49740,10 @@ a.article-cta-btn:focus-visible {
   margin-right: auto;
   position: relative; /* Ensure proper positioning context */
   z-index: 10; /* Higher z-index for search container */
+  /* Ensure container doesn't clip absolutely positioned suggestions */
+  overflow: visible;
+  height: auto;
+  min-height: 0;
 }
 
 @media (min-width: 768px) {
@@ -49753,6 +49757,10 @@ a.article-cta-btn:focus-visible {
   display: flex;
   align-items: center;
   z-index: 10; /* Higher z-index for search wrapper */
+  /* Ensure wrapper doesn't clip absolutely positioned suggestions */
+  overflow: visible;
+  height: auto;
+  min-height: 0;
 }
 
 .faqs-search-icon {
