@@ -1770,12 +1770,9 @@ function cta_populate_faqs_from_defaults($force = false) {
 
 /**
  * Auto-populate FAQs on theme activation (non-forced)
+ * NOTE: This function is now defined in inc/acf-fields.php to handle ACF field population
+ * The duplicate has been removed to prevent redeclaration errors
  */
-function cta_populate_faqs_on_activation() {
-    $result = cta_populate_faqs_from_defaults(false);
-    return $result['created'];
-}
-add_action('after_switch_theme', 'cta_populate_faqs_on_activation', 30);
 
 /**
  * Add admin page for manual FAQ population
