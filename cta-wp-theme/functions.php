@@ -463,10 +463,9 @@ function cta_enqueue_page_scripts() {
         );
     }
 
-    // Resource download modal: styles + JS (used on Downloadable Resources, CQC Hub, and Training Guides pages)
+    // Resource download modal: styles + JS (used on Downloadable Resources and CQC Hub pages)
     if (is_page_template('page-templates/page-downloadable-resources.php') ||
-        is_page_template('page-templates/page-cqc-hub.php') ||
-        is_page_template('page-templates/page-training-guides.php')) {
+        is_page_template('page-templates/page-cqc-hub.php')) {
         wp_enqueue_style(
             'cta-resource-download-modal',
             CTA_THEME_URI . '/assets/css/resource-download-modal.css',
@@ -1267,7 +1266,6 @@ function cta_footer_company_fallback_menu() {
         ['title' => 'Upcoming Courses', 'url' => get_post_type_archive_link('course_event') ?: home_url('/upcoming-courses/')],
         ['title' => 'Group Training', 'slug' => 'group-training'],
         ['title' => 'CQC Compliance Hub', 'slug' => 'cqc-compliance-hub'],
-        ['title' => 'Training Guides', 'slug' => 'training-guides'],
         ['title' => 'Downloadable Resources', 'slug' => 'downloadable-resources'],
         ['title' => 'News', 'page_id' => get_option('page_for_posts')],
     ];

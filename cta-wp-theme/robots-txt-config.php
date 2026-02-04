@@ -63,7 +63,6 @@ function cta_add_meta_tags() {
         // Custom descriptions for key pages
         $custom_descriptions = [
             'cqc-compliance-hub' => 'Complete guide to CQC training compliance. 5 Key Questions, mandatory training requirements, inspection preparation, and regulatory updates.',
-            'training-guides' => 'Comprehensive training guides including course comparisons, training pathways by role, funding information, and group training planning.',
             'downloadable-resources' => 'Free training resources for care professionals. Templates, checklists, quick reference guides, and tools to support excellent care.',
             'faqs' => 'Frequently asked questions about care training courses, booking, certification, payment, and group training options.',
             'group-training' => 'Group training for care teams in Kent. Flexible scheduling, CPD-accredited certificates, and group rates for quality training.',

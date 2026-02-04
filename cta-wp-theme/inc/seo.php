@@ -150,7 +150,7 @@ function cta_get_meta_description($post = null) {
 
 /**
  * Check if a page is a permanent page (static, non-dynamic content)
- * Permanent pages: Home, About, Contact, Group Training, CQC Hub, Training Guides, FAQs, Downloadable Resources, News
+ * Permanent pages: Home, About, Contact, Group Training, CQC Hub, FAQs, Downloadable Resources, News
  * 
  * @param int|WP_Post $post_id Post ID or object
  * @return bool True if permanent page
@@ -179,8 +179,6 @@ function cta_is_permanent_page($post_id = null) {
         'contact',
         'group-training',
         'cqc-compliance-hub',
-        'training-guides',
-        'training-guides-tools',
         'faqs',
         'downloadable-resources',
         'news',
@@ -1664,9 +1662,6 @@ function cta_filter_sitemap_entry($entry, $post, $post_type) {
         'terms-and-conditions',
         'legal-notice',
         'disclaimer',
-        // Training guides pages (not currently used)
-        'training-guides-tools',
-        'training-guides',
         // All location pages (completely removed - keeping slugs for sitemap exclusion)
         'location-maidstone',
         'location-london',
@@ -1759,7 +1754,6 @@ function cta_sitemap_entry($entry, $post, $post_type) {
     // High priority pages based on slug
     $high_priority_slugs = [
         'cqc-compliance-hub',
-        'training-guides',
         'downloadable-resources',
         'faqs',
         'group-training',
@@ -2188,7 +2182,6 @@ function cta_sitemap_admin_page() {
             <h2>High-Priority Pages</h2>
             <ul>
                 <li>CQC Compliance Hub (0.9 priority)</li>
-                <li>Training Guides (0.9 priority)</li>
                 <li>Downloadable Resources (0.9 priority)</li>
                 <li>FAQs (0.9 priority)</li>
                 <li>Group Training (0.9 priority)</li>

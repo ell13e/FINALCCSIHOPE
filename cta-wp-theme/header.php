@@ -310,7 +310,7 @@
           <button
             type="button"
             id="resources-link"
-            class="nav-link nav-link-dropdown<?php echo (is_page('news') || is_page('cqc-compliance-hub') || is_page('training-guides-tools') || is_page('downloadable-resources') || is_page('faqs') || is_singular('post')) ? ' nav-link-active' : ''; ?>"
+            class="nav-link nav-link-dropdown<?php echo (is_page('news') || is_page('cqc-compliance-hub') || is_page('downloadable-resources') || is_page('faqs') || is_singular('post')) ? ' nav-link-active' : ''; ?>"
             aria-expanded="false"
             aria-haspopup="true"
             aria-controls="resources-dropdown"
@@ -466,7 +466,6 @@
           </button>
           <div id="mobile-resources-content" class="accordion-content" aria-hidden="true">
             <a href="<?php echo esc_url(get_permalink(get_page_by_path('cqc-compliance-hub'))); ?>" class="mobile-menu-link mobile-menu-link-sub">CQC Compliance Hub</a>
-            <a href="<?php echo esc_url(get_permalink(get_page_by_path('training-guides-tools'))); ?>" class="mobile-menu-link mobile-menu-link-sub">Training Guides & Tools</a>
             <a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>" class="mobile-menu-link mobile-menu-link-sub">Downloadable Resources</a>
             <a href="<?php echo esc_url(get_permalink(get_page_by_path('news'))); ?>" class="mobile-menu-link mobile-menu-link-sub">News & Articles</a>
             <a href="<?php echo esc_url(get_permalink(get_page_by_path('faqs'))); ?>" class="mobile-menu-link mobile-menu-link-sub">FAQs</a>

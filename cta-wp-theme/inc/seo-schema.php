@@ -832,7 +832,7 @@ function cta_output_permanent_page_schema() {
         $schema_graph = cta_get_group_training_page_schema();
     } elseif ($page_slug === 'faqs') {
         $schema_graph = cta_get_faq_page_schema();
-    } elseif (in_array($page_slug, ['cqc-compliance-hub', 'training-guides', 'training-guides-tools', 'downloadable-resources', 'news'], true)) {
+    } elseif (in_array($page_slug, ['cqc-compliance-hub', 'downloadable-resources', 'news'], true)) {
         $schema_graph = cta_get_collection_page_schema($page_slug);
     } else {
         // Fallback to WebPage schema

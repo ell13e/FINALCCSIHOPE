@@ -899,12 +899,6 @@ function cta_create_static_pages() {
             'content' => '',
         ],
         [
-            'title' => 'Training Guides & Tools',
-            'slug' => 'training-guides-tools',
-            'template' => 'page-templates/page-training-guides.php',
-            'content' => '',
-        ],
-        [
             'title' => 'Downloadable Resources',
             'slug' => 'downloadable-resources',
             'template' => 'page-templates/page-downloadable-resources.php',
