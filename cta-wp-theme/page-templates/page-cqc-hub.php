@@ -179,44 +179,52 @@ function cta_course_link($course_name, $display_text = null) {
  * 7. Commitment/CTA → Gold - company commitments
  */
 function cta_get_label_color_class($label, $is_highlight = false) {
-  $label_lower = strtolower($label);
-  
-  // Specific labels that should use base styling (like "Reports")
-  if ($label_lower === 'statutory requirement' || $label_lower === 'timeline' || $label_lower === 'our commitment' || $label_lower === 'who needs it') {
+  if (empty($label)) {
     return '';
   }
   
+  $label_lower = strtolower(trim($label));
+  
+  // Force highlight to important (pink)
   if ($is_highlight) {
     return 'cqc-regulatory-label-important';
   }
   
   // Priority order matters - check most specific first
-  // 1. Statutory/Legal → Important (pink) - highest priority
+  // 1. Statutory/Legal/Requirement → Important (pink) - highest priority
   if (strpos($label_lower, 'statutory') !== false || strpos($label_lower, 'legal') !== false || strpos($label_lower, 'requirement') !== false) {
     return 'cqc-regulatory-label-important';
   } 
-  // 2. Framework/New → Blue - check framework first (more specific than "new")
+  // 2. Framework/New/System → Blue - check framework first (more specific than "new")
   elseif (strpos($label_lower, 'framework') !== false || strpos($label_lower, 'new') !== false || strpos($label_lower, 'system') !== false) {
     return 'cqc-regulatory-label-blue';
   }
-  // 3. Training/Educational → Teal - training content
-  elseif (strpos($label_lower, 'training') !== false || strpos($label_lower, 'educational') !== false || strpos($label_lower, 'course') !== false) {
+  // 3. Training/Educational/Course/Structure → Teal - training content
+  elseif (strpos($label_lower, 'training') !== false || strpos($label_lower, 'educational') !== false || strpos($label_lower, 'course') !== false || strpos($label_lower, 'structure') !== false) {
     return 'cqc-regulatory-label-teal';
   }
-  // 4. Timeline/Updates → Purple - time-based info
+  // 4. Timeline/Updates/Change/News/Regulatory/Guidance → Purple - time-based info
   elseif (strpos($label_lower, 'timeline') !== false || strpos($label_lower, 'update') !== false || strpos($label_lower, 'change') !== false || strpos($label_lower, 'news') !== false || strpos($label_lower, 'regulatory') !== false || strpos($label_lower, 'guidance') !== false) {
     return 'cqc-regulatory-label-purple';
   }
-  // 5. Compliance/Standards → Amber - compliance info
+  // 5. Compliance/Standards/Fundamental/Code of Practice/Practice → Amber - compliance info
   elseif (strpos($label_lower, 'compliance') !== false || strpos($label_lower, 'standard') !== false || strpos($label_lower, 'fundamental') !== false || strpos($label_lower, 'code of practice') !== false || strpos($label_lower, 'practice') !== false) {
     return 'cqc-regulatory-label-amber';
   }
-  // 6. Commitment/CTA → Gold - company commitments
+  // 6. Commitment/CTA/Our → Gold - company commitments
   elseif (strpos($label_lower, 'commitment') !== false || strpos($label_lower, 'cta') !== false || strpos($label_lower, 'our') !== false) {
     return 'cqc-regulatory-label-gold';
   }
+  // 7. Reports/About/Funding → Purple (information/resource category)
+  elseif (strpos($label_lower, 'report') !== false || strpos($label_lower, 'about') !== false || strpos($label_lower, 'funding') !== false) {
+    return 'cqc-regulatory-label-purple';
+  }
+  // 8. Who Needs It → Teal (training/educational context)
+  elseif (strpos($label_lower, 'who needs') !== false || strpos($label_lower, 'needs it') !== false) {
+    return 'cqc-regulatory-label-teal';
+  }
   
-  // Default (cream) - no additional class
+  // Default (cream) - no additional class for unrecognized labels
   return '';
 }
 

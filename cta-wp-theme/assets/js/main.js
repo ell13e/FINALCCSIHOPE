@@ -477,6 +477,19 @@
   // Desktop Dropdown Functions
   // ============================================
 
+  // Helper function to position mega menu below header (centered with header container)
+  function updateMegaMenuPosition() {
+    if (!coursesDropdownRef) return;
+    const header = document.querySelector('.site-header');
+    if (header) {
+      const headerRect = header.getBoundingClientRect();
+      const headerHeight = headerRect.height;
+      coursesDropdownRef.style.top = `${headerHeight + 8}px`;
+      // Set CSS custom property for future use
+      document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
+    }
+  }
+
   // These functions create a better UX by preventing accidental dropdown closures
   // When mouse enters: clear any pending close timeout and open immediately
   // When mouse leaves: wait 150ms before closing (gives user time to move mouse to dropdown)
@@ -494,6 +507,10 @@
     if (coursesDropdownRef) {
       coursesDropdownRef.classList.add('active');
       coursesDropdownRef.setAttribute('aria-hidden', 'false');
+      
+      // Position mega menu below header (centered with header container)
+      updateMegaMenuPosition();
+      
       // Set up focus trap
       setupFocusTrap();
       // Make menu items focusable
@@ -816,6 +833,10 @@
     if (coursesDropdownRef) {
       coursesDropdownRef.classList.add('active');
       coursesDropdownRef.setAttribute('aria-hidden', 'false');
+      
+      // Position mega menu below header (centered with header container)
+      updateMegaMenuPosition();
+      
       setupFocusTrap();
       makeMenuItemsFocusable(true);
       // Focus first item when opened via keyboard
@@ -1333,6 +1354,10 @@
   window.addEventListener('resize', () => {
     if (window.innerWidth >= 768 && state.isMobileMenuOpen) {
       closeMobileMenu();
+    }
+    // Update mega menu position if it's open (header height might change)
+    if (state.isCoursesOpen && coursesDropdownRef) {
+      updateMegaMenuPosition();
     }
   });
 

@@ -1223,11 +1223,11 @@ section .container,
 /* Mega Menu - Modern Clean Design */
 #courses-mega-menu,
 #courses-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 50%; /* Center horizontally */
-  transform: translate(-50%, 0); /* Center horizontally, no vertical offset */
-  margin-top: 8px;
+  position: fixed;
+  top: calc(var(--header-height, 80px) + 8px);
+  left: 50%;
+  transform: translate(-50%, 0);
+  margin-top: 0;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -1240,16 +1240,17 @@ section .container,
   overflow: visible;
 }
 
-/* Position mega menu relative to nav-desktop container - centered with nav bar */
+/* Position mega menu relative to header container - centered with header */
 @media (min-width: 1121px) {
   .nav-desktop {
     position: relative;
   }
   
-  /* Center mega menu with navigation bar */
-  /* Position relative to nav-desktop, not nav-item-dropdown */
+  /* Center mega menu with header container */
+  /* Position fixed and centered relative to viewport (which centers with header) */
   .nav-desktop #courses-mega-menu,
   .nav-desktop #courses-dropdown {
+    position: fixed;
     left: 50%;
     transform: translate(-50%, 0);
   }
@@ -3438,8 +3439,11 @@ input[type="search"]::-ms-clear,
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transition: left 0.5s ease;
-  border-radius: var(--radius-sm); /* Match button border radius to contain shine effect */
+  border-radius: inherit; /* Use button's border-radius to clip shimmer */
   overflow: hidden; /* Contain the shine effect within button bounds */
+  z-index: 1; /* Ensure it's above button background but below text */
+  pointer-events: none; /* Don't interfere with button clicks */
+  clip-path: inset(0 round var(--radius-sm)); /* Force clipping to button's border-radius */
 }
 
 .btn-primary:hover::before {
@@ -3518,7 +3522,13 @@ input[type="search"]::-ms-clear,
 .btn-primary svg {
   transition: transform 0.2s ease;
   position: relative;
-  z-index: 1;
+  z-index: 2; /* Above shimmer effect */
+}
+
+/* Ensure all button content is above shimmer */
+.btn-primary > * {
+  position: relative;
+  z-index: 2;
 }
 
 .btn-primary:hover svg {
@@ -4641,6 +4651,9 @@ input[type="search"]::-ms-clear,
   position: relative;
   align-items: flex-start;
   min-height: 72px;
+  width: 100%; /* Ensure full width for right-aligned badge */
+  padding-top: 0; /* Remove top padding */
+  margin-top: 0; /* Remove top margin */
 }
 
 .category-name-wrapper {
@@ -18950,14 +18963,13 @@ input[type="email"].contact-form-input {
 /* Event Card Footer */
 .event-card-footer {
   display: flex;
-  align-items: center;
+  align-items: flex-end; /* Bottom align items */
   justify-content: space-between;
   flex-wrap: nowrap;
   margin-top: auto;
   padding-top: 0;
   gap: 16px;
   position: relative;
-  padding-right: 50px;
 }
 
 .event-card-price {
@@ -18987,10 +18999,11 @@ input[type="email"].contact-form-input {
 }
 
 .event-card-discount-badges {
-  display: flex;
-  flex-wrap: wrap;
+  display: inline-flex;
+  flex-wrap: nowrap;
   gap: 6px;
   margin-bottom: 6px;
+  align-items: center;
 }
 
 .event-card-price-label {
@@ -19084,8 +19097,8 @@ input[type="email"].contact-form-input {
   white-space: nowrap;
   flex-shrink: 0;
   line-height: 1.2; /* Match price label line-height for better alignment */
-  align-self: center; /* Ensure vertical centering with price section */
-  margin-left: auto;
+  align-self: flex-end; /* Bottom align CTA */
+  margin-left: auto; /* Right align CTA */
 }
 
 .event-card-cta span {
@@ -40779,6 +40792,17 @@ fieldset.booking-modal-field legend.booking-modal-label {
   background: var(--white, #ffffff);
 }
 
+/* Remove top padding on mobile/tablet */
+@media (max-width: 967px) {
+  .course-detail-content {
+    padding-top: 0; /* Remove top padding on mobile and tablet */
+  }
+  
+  .group-hero-section + .course-detail-content {
+    padding-top: 0; /* Remove top padding even after hero section */
+  }
+}
+
 /* Fix excessive spacing - use standardized section padding */
 .group-hero-section + .course-detail-content {
   padding-top: var(--section-padding-mobile);
@@ -40786,7 +40810,7 @@ fieldset.booking-modal-field legend.booking-modal-label {
 
 @media (min-width: 768px) {
   .course-detail-content {
-    padding: var(--section-padding-tablet) 0;
+    padding-bottom: var(--section-padding-tablet); /* Keep bottom padding on tablet */
   }
   
   .group-hero-section + .course-detail-content {
@@ -40807,15 +40831,17 @@ fieldset.booking-modal-field legend.booking-modal-label {
 /* Apply standardized container padding with increased side padding */
 .course-detail-content .container {
   padding: 16px; /* Mobile: 16px - standardized to match base container */
+  padding-top: 0; /* Remove top padding on mobile */
   box-sizing: border-box;
   width: 100%;
   /* Remove max-width: 100% to inherit standard 1280px max-width */
   overflow-x: hidden;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 640px) and (max-width: 967px) {
   .course-detail-content .container {
     padding: 24px; /* Tablet: 24px - standardized to match base container */
+    padding-top: 0; /* Remove top padding on tablet */
   }
 }
 
@@ -41314,6 +41340,8 @@ fieldset.booking-modal-field legend.booking-modal-label {
   .course-detail-grid {
     gap: var(--spacing-lg); /* 24px - reduced gap on mobile */
     padding: 0;
+    padding-top: 0; /* Remove top padding on mobile */
+    margin-top: 0; /* Remove top margin on mobile */
     box-sizing: border-box;
   }
   
@@ -41461,6 +41489,8 @@ fieldset.booking-modal-field legend.booking-modal-label {
 @media (min-width: 640px) and (max-width: 967px) {
   .course-detail-grid {
     padding: 0;
+    padding-top: 0; /* Remove top padding on tablet */
+    margin-top: 0; /* Remove top margin on tablet */
     box-sizing: border-box;
     gap: var(--spacing-xl); /* 32px */
   }

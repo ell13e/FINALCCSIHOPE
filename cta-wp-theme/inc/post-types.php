@@ -1696,8 +1696,11 @@ function cta_create_faq_categories() {
 
 /**
  * Auto-populate FAQs from default data
+ * 
+ * @param bool $force If true, will populate even if FAQs exist (skips existing by title)
+ * @return array Result with 'created', 'skipped', and 'total' counts
  */
-function cta_populate_faqs_from_defaults() {
+function cta_populate_faqs_from_defaults($force = false) {
     // Check if FAQs already exist
     $existing_faqs = get_posts([
         'post_type' => 'faq',
@@ -1705,9 +1708,9 @@ function cta_populate_faqs_from_defaults() {
         'post_status' => 'any',
     ]);
     
-    // Only populate if no FAQs exist
-    if (!empty($existing_faqs)) {
-        return 0;
+    // Only populate if no FAQs exist (unless forced)
+    if (!empty($existing_faqs) && !$force) {
+        return ['created' => 0, 'skipped' => 0, 'total' => 0, 'message' => 'FAQs already exist. Use force mode to populate anyway.'];
     }
     
     // Create categories first
@@ -1716,12 +1719,14 @@ function cta_populate_faqs_from_defaults() {
     // Get default FAQs
     $default_faqs = cta_get_default_faqs();
     $created = 0;
+    $skipped = 0;
     $menu_order = 0;
     
     foreach ($default_faqs as $faq) {
         // Check if FAQ already exists by title
         $existing = get_page_by_title($faq['question'], OBJECT, 'faq');
         if ($existing) {
+            $skipped++;
             continue;
         }
         
@@ -1755,6 +1760,145 @@ function cta_populate_faqs_from_defaults() {
         }
     }
     
-    return $created;
+    return [
+        'created' => $created,
+        'skipped' => $skipped,
+        'total' => count($default_faqs),
+        'message' => sprintf('Created %d FAQ(s), skipped %d existing FAQ(s).', $created, $skipped)
+    ];
 }
-add_action('after_switch_theme', 'cta_populate_faqs_from_defaults', 30);
+
+/**
+ * Auto-populate FAQs on theme activation (non-forced)
+ */
+function cta_populate_faqs_on_activation() {
+    $result = cta_populate_faqs_from_defaults(false);
+    return $result['created'];
+}
+add_action('after_switch_theme', 'cta_populate_faqs_on_activation', 30);
+
+/**
+ * Add admin page for manual FAQ population
+ */
+function cta_add_faq_populate_admin_page() {
+    add_submenu_page(
+        'edit.php?post_type=faq',
+        'Populate FAQs',
+        'Populate FAQs',
+        'edit_posts',
+        'cta-populate-faqs',
+        'cta_faq_populate_admin_page'
+    );
+}
+add_action('admin_menu', 'cta_add_faq_populate_admin_page');
+
+/**
+ * Admin page for manual FAQ population
+ */
+function cta_faq_populate_admin_page() {
+    if (!current_user_can('edit_posts')) {
+        wp_die('You do not have permission to access this page.');
+    }
+    
+    $result = null;
+    $force = false;
+    
+    // Handle form submission
+    if (isset($_POST['cta_populate_faqs']) && check_admin_referer('cta_populate_faqs_action')) {
+        $force = isset($_POST['force_populate']) && $_POST['force_populate'] === '1';
+        $result = cta_populate_faqs_from_defaults($force);
+    }
+    
+    // Get current FAQ count
+    $current_count = wp_count_posts('faq');
+    $total_faqs = $current_count->publish + $current_count->draft + $current_count->private;
+    
+    ?>
+    <div class="wrap">
+        <h1>Populate FAQs</h1>
+        
+        <?php if ($result) : ?>
+            <div class="notice notice-<?php echo $result['created'] > 0 ? 'success' : 'info'; ?> is-dismissible">
+                <p><strong><?php echo esc_html($result['message']); ?></strong></p>
+                <?php if ($result['total'] > 0) : ?>
+                    <p>Total FAQs available: <?php echo esc_html($result['total']); ?></p>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+        
+        <div class="card" style="max-width: 800px; margin-top: 20px;">
+            <h2>Auto-Populate Default FAQs</h2>
+            <p>This will create <?php echo count(cta_get_default_faqs()); ?> default FAQ posts from the template data.</p>
+            
+            <?php if ($total_faqs > 0) : ?>
+                <div class="notice notice-warning inline" style="margin: 15px 0;">
+                    <p><strong>Warning:</strong> You currently have <?php echo esc_html($total_faqs); ?> FAQ(s) in your database.</p>
+                    <p>If you proceed without "Force" mode, no FAQs will be created. Enable "Force" mode to add FAQs that don't already exist (by title).</p>
+                </div>
+            <?php else : ?>
+                <div class="notice notice-info inline" style="margin: 15px 0;">
+                    <p>No FAQs found. Click the button below to populate all default FAQs.</p>
+                </div>
+            <?php endif; ?>
+            
+            <form method="post" action="">
+                <?php wp_nonce_field('cta_populate_faqs_action'); ?>
+                
+                <table class="form-table">
+                    <tr>
+                        <th scope="row">
+                            <label for="force_populate">Force Mode</label>
+                        </th>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="force_populate" id="force_populate" value="1" <?php checked($total_faqs > 0); ?>>
+                                Populate even if FAQs exist (will skip FAQs with matching titles)
+                            </label>
+                            <p class="description">When enabled, this will create any FAQs that don't already exist by title, even if you have other FAQs in the database.</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <p class="submit">
+                    <button type="submit" name="cta_populate_faqs" class="button button-primary button-large" onclick="return confirm('Are you sure you want to populate FAQs? This will create <?php echo count(cta_get_default_faqs()); ?> FAQ posts.');">
+                        <span class="dashicons dashicons-database-add" style="vertical-align: middle; margin-right: 5px;"></span>
+                        Populate FAQs
+                    </button>
+                </p>
+            </form>
+        </div>
+        
+        <div class="card" style="max-width: 800px; margin-top: 20px;">
+            <h2>Current Status</h2>
+            <ul>
+                <li><strong>Total FAQs in database:</strong> <?php echo esc_html($total_faqs); ?></li>
+                <li><strong>Published:</strong> <?php echo esc_html($current_count->publish); ?></li>
+                <li><strong>Draft:</strong> <?php echo esc_html($current_count->draft); ?></li>
+                <li><strong>Default FAQs available:</strong> <?php echo count(cta_get_default_faqs()); ?></li>
+            </ul>
+        </div>
+        
+        <div class="card" style="max-width: 800px; margin-top: 20px;">
+            <h2>FAQ Categories</h2>
+            <?php
+            $categories = get_terms([
+                'taxonomy' => 'faq_category',
+                'hide_empty' => false,
+            ]);
+            
+            if (!empty($categories) && !is_wp_error($categories)) : ?>
+                <ul>
+                    <?php foreach ($categories as $category) : ?>
+                        <li>
+                            <strong><?php echo esc_html($category->name); ?></strong> (<?php echo esc_html($category->slug); ?>)
+                            - <?php echo esc_html($category->count); ?> FAQ(s)
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else : ?>
+                <p>No categories found. Categories will be created automatically when you populate FAQs.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php
+}
