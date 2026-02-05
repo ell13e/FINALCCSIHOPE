@@ -426,16 +426,10 @@ function cta_performance_dashboard_widget_content() {
  * Add performance admin page
  */
 function cta_add_performance_admin_page() {
-    add_submenu_page(
-        'tools.php',
-        'Performance Optimization',
-        'Performance Optimization',
-        'manage_options',
-        'cta-performance',
-        'cta_performance_admin_page'
-    );
+    // Moved to SEO menu - registration handled in seo-admin.php
+    // This function kept for backward compatibility
 }
-add_action('admin_menu', 'cta_add_performance_admin_page');
+// Removed: add_action('admin_menu', 'cta_add_performance_admin_page');
 
 /**
  * Handle performance optimization actions
@@ -755,7 +749,7 @@ function cta_performance_admin_page() {
         <p class="description">Take action to improve your site's performance. These tools actually do the work for you.</p>
         
         <!-- Database Optimization -->
-        <div class="card" style="max-width: 1200px; margin-top: 20px;">
+        <div class="card" style="margin-top: 20px;">
             <h2><span class="dashicons dashicons-database" style="color: #2271b1;"></span> Database Optimization</h2>
             <p>Clean up and optimize your database to improve query performance.</p>
             
@@ -792,7 +786,7 @@ function cta_performance_admin_page() {
         </div>
         
         <!-- Browser Caching -->
-        <div class="card" style="max-width: 1200px; margin-top: 20px;">
+        <div class="card" style="margin-top: 20px;">
             <h2><span class="dashicons dashicons-clock" style="color: #2271b1;"></span> Browser Caching</h2>
             <p>Add caching rules to your .htaccess file to tell browsers to cache static files.</p>
             
@@ -824,7 +818,7 @@ function cta_performance_admin_page() {
         </div>
         
         <!-- WordPress Features -->
-        <div class="card" style="max-width: 1200px; margin-top: 20px;">
+        <div class="card" style="margin-top: 20px;">
             <h2><span class="dashicons dashicons-wordpress" style="color: #2271b1;"></span> WordPress Features</h2>
             <p>Disable unnecessary WordPress features to reduce HTTP requests and improve performance.</p>
             
@@ -900,7 +894,7 @@ function cta_performance_admin_page() {
         </div>
         
         <!-- Core Web Vitals -->
-        <div class="card" style="max-width: 1200px; margin-top: 20px;">
+        <div class="card" style="margin-top: 20px;">
             <h2><span class="dashicons dashicons-chart-line" style="color: #2271b1;"></span> Core Web Vitals Targets</h2>
             <p>Google's recommended performance metrics for good user experience.</p>
             
@@ -932,7 +926,7 @@ function cta_performance_admin_page() {
         </div>
         
         <!-- Performance Notes -->
-        <div class="card" style="max-width: 1200px; margin-top: 20px;">
+        <div class="card" style="margin-top: 20px;">
             <h2>Performance Notes</h2>
             <ul style="line-height: 1.8;">
                 <li>✓ <strong>WebP images</strong> are already implemented</li>
@@ -944,7 +938,7 @@ function cta_performance_admin_page() {
         </div>
         
         <!-- Automatic Optimization Schedule -->
-        <div class="card" style="max-width: 1200px; margin-top: 20px;">
+        <div class="card" style="margin-top: 20px;">
             <h2><span class="dashicons dashicons-calendar-alt" style="color: #2271b1;"></span> Automatic Optimization</h2>
             <p>Schedule automatic database optimization to keep your site running smoothly.</p>
             

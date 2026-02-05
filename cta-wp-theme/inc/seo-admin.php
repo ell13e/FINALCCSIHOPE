@@ -103,6 +103,45 @@ function cta_add_seo_admin_menu() {
         'cta-seo-verification',
         'cta_seo_admin_verification_page'
     );
+    
+    // SEO Tools (moved from Tools menu)
+    // Note: Function is defined in seo.php, so we reference it directly
+    if (function_exists('cta_seo_tools_admin_page')) {
+        add_submenu_page(
+            'cta-seo',
+            'SEO Tools',
+            'Tools',
+            'manage_options',
+            'cta-seo-tools',
+            'cta_seo_tools_admin_page'
+        );
+    }
+    
+    // Sitemap Diagnostic (moved from Tools menu)
+    // Note: Function is defined in seo.php, so we reference it directly
+    if (function_exists('cta_sitemap_diagnostic_page')) {
+        add_submenu_page(
+            'cta-seo',
+            'Sitemap Diagnostic',
+            'Sitemap Diagnostic',
+            'manage_options',
+            'cta-seo-sitemap-diagnostic',
+            'cta_sitemap_diagnostic_page'
+        );
+    }
+    
+    // Performance Optimization (moved from Tools menu)
+    // Note: Function is defined in performance-helpers.php, so we reference it directly
+    if (function_exists('cta_performance_admin_page')) {
+        add_submenu_page(
+            'cta-seo',
+            'Performance Optimization',
+            'Performance',
+            'manage_options',
+            'cta-seo-performance',
+            'cta_performance_admin_page'
+        );
+    }
 }
 add_action('admin_menu', 'cta_add_seo_admin_menu', 20);
 
@@ -130,6 +169,41 @@ function cta_seo_dashboard_page() {
         AND (pm.meta_value IS NULL OR pm.meta_value = '')
     ");
     
+    // Count pages with meta descriptions
+    $pages_with_meta = 0;
+    $pages_without_meta = 0;
+    $post_types = ['course', 'course_event', 'post', 'page'];
+    foreach ($post_types as $post_type) {
+        $posts = get_posts([
+            'post_type' => $post_type,
+            'posts_per_page' => -1,
+            'post_status' => 'publish',
+            'fields' => 'ids'
+        ]);
+        
+        foreach ($posts as $post_id) {
+            $has_meta = false;
+            if ($post_type === 'course') {
+                $has_meta = !empty(cta_safe_get_field('course_seo_meta_description', $post_id, ''));
+            } elseif ($post_type === 'course_event') {
+                $has_meta = !empty(cta_safe_get_field('event_seo_meta_description', $post_id, ''));
+            } elseif ($post_type === 'post') {
+                $has_meta = !empty(cta_safe_get_field('news_meta_description', $post_id, ''));
+            } else {
+                $has_meta = !empty(cta_safe_get_field('seo_meta_description', $post_id, ''));
+            }
+            
+            if ($has_meta) {
+                $pages_with_meta++;
+            } else {
+                $pages_without_meta++;
+            }
+        }
+    }
+    
+    $total_content = $pages_with_meta + $pages_without_meta;
+    $meta_coverage = $total_content > 0 ? round(($pages_with_meta / $total_content) * 100, 1) : 0;
+    
     // Get sitemap URL
     $sitemap_url = home_url('/wp-sitemap.xml');
     
@@ -139,6 +213,24 @@ function cta_seo_dashboard_page() {
         
         <div class="cta-seo-dashboard">
             <div class="cta-seo-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0;">
+                
+                <!-- Meta Descriptions Coverage -->
+                <div class="card">
+                    <h2>Meta Descriptions</h2>
+                    <p style="font-size: 32px; margin: 10px 0; font-weight: bold; color: <?php echo $meta_coverage >= 80 ? '#00a32a' : ($meta_coverage >= 50 ? '#dba617' : '#d63638'); ?>;">
+                        <?php echo $meta_coverage; ?>%
+                    </p>
+                    <p style="margin: 0; font-size: 13px; color: #666;">
+                        <?php echo number_format($pages_with_meta); ?> of <?php echo number_format($total_content); ?> pages
+                    </p>
+                    <?php if ($pages_without_meta > 0): ?>
+                        <p style="margin: 10px 0 0;">
+                            <a href="<?php echo admin_url('admin.php?page=cta-seo-tools'); ?>" class="button button-primary">
+                                Fix Missing Meta
+                            </a>
+                        </p>
+                    <?php endif; ?>
+                </div>
                 
                 <!-- Content Stats -->
                 <div class="card">
@@ -199,8 +291,10 @@ function cta_seo_dashboard_page() {
                             View Sitemap
                         </a>
                     </p>
-                    <p style="margin: 0; font-size: 12px; color: #666;">
-                        <a href="<?php echo admin_url('admin.php?page=cta-seo-sitemap'); ?>">Manage Sitemap →</a>
+                    <p style="margin: 5px 0 0; font-size: 12px; color: #666;">
+                        <a href="<?php echo admin_url('admin.php?page=cta-seo-sitemap'); ?>">Manage →</a>
+                        <span style="margin: 0 5px;">|</span>
+                        <a href="<?php echo admin_url('admin.php?page=cta-seo-sitemap-diagnostic'); ?>">Diagnostic →</a>
                     </p>
                 </div>
                 
@@ -216,14 +310,20 @@ function cta_seo_dashboard_page() {
                     <a href="<?php echo admin_url('admin.php?page=cta-seo-bulk'); ?>" class="button button-primary">
                         Bulk Optimization
                     </a>
+                    <a href="<?php echo admin_url('admin.php?page=cta-seo-tools'); ?>" class="button">
+                        SEO Tools
+                    </a>
                     <a href="<?php echo admin_url('admin.php?page=cta-seo-schema'); ?>" class="button">
                         Schema Markup
                     </a>
                     <a href="<?php echo admin_url('admin.php?page=cta-seo-verification'); ?>" class="button">
-                        Verification Tools
+                        Verification
                     </a>
-                    <a href="<?php echo admin_url('upload.php'); ?>" class="button">
-                        Media Library
+                    <a href="<?php echo admin_url('admin.php?page=cta-seo-sitemap-diagnostic'); ?>" class="button">
+                        Sitemap Diagnostic
+                    </a>
+                    <a href="<?php echo admin_url('admin.php?page=cta-seo-performance'); ?>" class="button">
+                        Performance
                     </a>
                 </div>
             </div>
@@ -858,3 +958,4 @@ function cta_seo_admin_verification_page() {
         echo '<div class="wrap"><h1>SEO Verification</h1><p>Verification functionality not available.</p></div>';
     }
 }
+

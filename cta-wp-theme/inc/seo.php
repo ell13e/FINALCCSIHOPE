@@ -2405,18 +2405,14 @@ add_action('wp_ajax_cta_sitemap_fix', 'cta_sitemap_fix_handler');
 
 /**
  * Add sitemap diagnostic admin page
+ * NOTE: This is now registered in seo-admin.php under the SEO menu
+ * Keeping this function for backward compatibility but the menu registration is removed
  */
 function cta_add_sitemap_diagnostic_page() {
-    add_submenu_page(
-        'tools.php',
-        'Sitemap Diagnostic',
-        'Sitemap Diagnostic',
-        'manage_options',
-        'cta-sitemap-diagnostic',
-        'cta_sitemap_diagnostic_page'
-    );
+    // Menu registration moved to seo-admin.php
+    // This function is kept for backward compatibility
 }
-add_action('admin_menu', 'cta_add_sitemap_diagnostic_page');
+// Removed: add_action('admin_menu', 'cta_add_sitemap_diagnostic_page');
 
 /**
  * Sitemap diagnostic page content
@@ -2454,7 +2450,7 @@ function cta_sitemap_diagnostic_page() {
     <div class="wrap">
         <h1>Sitemap Diagnostic Tool</h1>
         
-        <div class="card" style="max-width: 1200px; margin-top: 20px;">
+        <div class="card" style="margin-top: 20px;">
             <h2>Quick Status Check</h2>
             
             <table class="widefat">
@@ -2536,7 +2532,7 @@ function cta_sitemap_diagnostic_page() {
             </table>
         </div>
         
-        <div class="card" style="max-width: 1200px; margin-top: 20px;">
+        <div class="card" style="margin-top: 20px;">
             <h2>Sitemap URLs</h2>
             <p>Submit these URLs to Google Search Console:</p>
             <ul>
@@ -2548,13 +2544,13 @@ function cta_sitemap_diagnostic_page() {
         </div>
         
         <?php if ($sitemap_status === 'accessible' && !empty($sitemap_content)) : ?>
-        <div class="card" style="max-width: 1200px; margin-top: 20px;">
+        <div class="card" style="margin-top: 20px;">
             <h2>Sitemap Preview</h2>
             <textarea readonly style="width: 100%; height: 300px; font-family: monospace; font-size: 12px;"><?php echo esc_textarea(substr($sitemap_content, 0, 2000)); ?><?php echo strlen($sitemap_content) > 2000 ? '...' : ''; ?></textarea>
         </div>
         <?php endif; ?>
         
-        <div class="card" style="max-width: 1200px; margin-top: 20px;">
+        <div class="card" style="margin-top: 20px;">
             <h2>Next Steps</h2>
             <ol>
                 <li>Fix any issues shown above</li>
@@ -2839,57 +2835,71 @@ function cta_seo_tools_admin_page() {
             </div>
         <?php endif; ?>
         
-        <div class="card" style="max-width: 1200px; margin-top: 20px;">
-            <h2>Meta Descriptions</h2>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0;">
-                <div style="padding: 15px; background: #f0f0f1; border-radius: 4px;">
-                    <h3 style="margin: 0 0 10px 0;">Pages with Meta Descriptions</h3>
-                    <p style="font-size: 32px; font-weight: bold; margin: 0; color: #00a32a;"><?php echo $pages_with_meta; ?></p>
-                </div>
-                <div style="padding: 15px; background: #f0f0f1; border-radius: 4px;">
-                    <h3 style="margin: 0 0 10px 0;">Pages Missing Meta Descriptions</h3>
-                    <p style="font-size: 32px; font-weight: bold; margin: 0; color: #d63638;"><?php echo $pages_without_meta; ?></p>
-                </div>
-            </div>
-            
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
-                <h3>Import Meta Descriptions from CSV</h3>
+        <div class="cta-seo-tools">
+            <!-- Meta Descriptions Section -->
+            <div class="card" style="margin-top: 20px;">
+                <h2>Meta Descriptions</h2>
                 
-                <?php if ($csv_exists) : ?>
-                    <p>CSV file found at: <code><?php echo esc_html($csv_path); ?></code></p>
-                    <p class="description">
-                        This will import meta descriptions from the CSV file. Only pages without existing descriptions will be updated (merge mode).
-                    </p>
-                    <form method="post" style="margin-top: 15px;">
-                        <?php wp_nonce_field('cta_import_seo_csv'); ?>
-                        <button type="submit" name="import_csv" class="button button-primary" onclick="return confirm('This will import meta descriptions for all pages in the CSV. Continue?');">
-                            Import Meta Descriptions from CSV
-                        </button>
-                    </form>
-                <?php else : ?>
-                    <div class="notice notice-warning">
-                        <p><strong>CSV file not found.</strong></p>
-                        <p>Expected location: <code><?php echo esc_html($csv_path); ?></code></p>
-                        <p>Please ensure the CSV file is placed in the theme's <code>data/</code> directory.</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0;">
+                    <div class="card">
+                        <h3 style="margin: 0 0 10px 0;">Pages with Meta Descriptions</h3>
+                        <p style="font-size: 32px; font-weight: bold; margin: 10px 0; color: #00a32a;">
+                            <?php echo number_format($pages_with_meta); ?>
+                        </p>
                     </div>
-                <?php endif; ?>
+                    <div class="card">
+                        <h3 style="margin: 0 0 10px 0;">Pages Missing Meta Descriptions</h3>
+                        <p style="font-size: 32px; font-weight: bold; margin: 10px 0; color: #d63638;">
+                            <?php echo number_format($pages_without_meta); ?>
+                        </p>
+                        <?php if ($pages_without_meta > 0): ?>
+                            <p style="margin: 10px 0 0;">
+                                <a href="<?php echo admin_url('admin.php?page=cta-seo-bulk'); ?>" class="button button-primary">
+                                    Fix Missing Meta
+                                </a>
+                            </p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+                    <h3>Import Meta Descriptions from CSV</h3>
+                    
+                    <?php if ($csv_exists) : ?>
+                        <p>CSV file found at: <code><?php echo esc_html($csv_path); ?></code></p>
+                        <p class="description">
+                            This will import meta descriptions from the CSV file. Only pages without existing descriptions will be updated (merge mode).
+                        </p>
+                        <form method="post" style="margin-top: 15px;">
+                            <?php wp_nonce_field('cta_import_seo_csv'); ?>
+                            <button type="submit" name="import_csv" class="button button-primary" onclick="return confirm('This will import meta descriptions for all pages in the CSV. Continue?');">
+                                Import Meta Descriptions from CSV
+                            </button>
+                        </form>
+                    <?php else : ?>
+                        <div class="notice notice-warning inline">
+                            <p><strong>CSV file not found.</strong></p>
+                            <p>Expected location: <code><?php echo esc_html($csv_path); ?></code></p>
+                            <p>Please ensure the CSV file is placed in the theme's <code>data/</code> directory.</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+                    <h3>Auto-Generation</h3>
+                    <p>Meta descriptions are automatically generated for new posts when saved if no custom description is set.</p>
+                    <p class="description">
+                        <strong>Fallback hierarchy:</strong><br>
+                        1. ACF custom field (if set)<br>
+                        2. Post excerpt (if exists and 120-160 chars)<br>
+                        3. Auto-generated from template (based on post type)<br>
+                        4. Generic fallback (never empty)
+                    </p>
+                </div>
             </div>
             
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
-                <h3>Auto-Generation</h3>
-                <p>Meta descriptions are automatically generated for new posts when saved if no custom description is set.</p>
-                <p class="description">
-                    <strong>Fallback hierarchy:</strong><br>
-                    1. ACF custom field (if set)<br>
-                    2. Post excerpt (if exists and 120-160 chars)<br>
-                    3. Auto-generated from template (based on post type)<br>
-                    4. Generic fallback (never empty)
-                </p>
-            </div>
-        </div>
-        
-        <div class="card" style="max-width: 1200px; margin-top: 20px;">
+            <!-- Orphan Pages Section -->
+            <div class="card" style="margin-top: 20px;">
             <h2>Orphan Pages Detection</h2>
             
             <?php
@@ -3108,11 +3118,11 @@ function cta_seo_tools_admin_page() {
             ?>
             
             <?php if (!empty($orphan_pages)) : ?>
-                <div class="notice notice-warning" style="margin-top: 15px;">
+                <div class="notice notice-warning inline" style="margin-top: 15px;">
                     <p><strong>Found <?php echo count($orphan_pages); ?> orphan pages (with 1 or fewer internal links):</strong></p>
                     <ul style="margin-top: 10px;">
                         <?php foreach (array_slice($orphan_pages, 0, 20) as $orphan) : ?>
-                            <li>
+                            <li style="margin-bottom: 8px;">
                                 <strong><?php echo esc_html($orphan['title']); ?></strong> 
                                 (<?php echo esc_html($orphan['type']); ?>) - 
                                 <?php echo $orphan['link_count']; ?> link(s)
@@ -3125,10 +3135,10 @@ function cta_seo_tools_admin_page() {
                         <p class="description">... and <?php echo count($orphan_pages) - 20; ?> more. Add internal links to these pages from relevant content.</p>
                     <?php endif; ?>
                     
-                    <div style="margin-top: 20px; padding: 16px; background: #f0f6fc; border-left: 4px solid #2271b1;">
+                    <div style="margin-top: 20px; padding: 16px; background: #f0f6fc; border-left: 4px solid #2271b1; border-radius: 4px;">
                         <h3 style="margin-top: 0;">Fix Orphan Pages</h3>
                         <p>Use the tool below to get suggestions for where to add internal links to orphan pages.</p>
-                        <form method="post" action="<?php echo esc_url(admin_url('admin.php?page=cta-seo-tools&tab=orphan-fixer')); ?>">
+                        <form method="post" action="<?php echo esc_url(admin_url('admin.php?page=cta-seo-tools&tab=orphan-fixer')); ?>" style="margin-top: 15px;">
                             <?php wp_nonce_field('cta_fix_orphan_pages'); ?>
                             <input type="hidden" name="action" value="fix_orphan_pages" />
                             <button type="submit" class="button button-primary">Get Link Suggestions for Orphan Pages</button>
@@ -3136,9 +3146,11 @@ function cta_seo_tools_admin_page() {
                     </div>
                 </div>
             <?php else : ?>
-                <p>No orphan pages detected. All pages have sufficient internal linking.</p>
+                <div class="notice notice-success inline">
+                    <p>✅ No orphan pages detected. All pages have sufficient internal linking.</p>
+                </div>
             <?php endif; ?>
-        </div>
+            </div>
         
         <?php
         // Handle orphan page fixing
@@ -3236,7 +3248,7 @@ function cta_seo_tools_admin_page() {
         ?>
         
         <?php if (isset($show_suggestions) && $show_suggestions) : ?>
-        <div class="card" style="max-width: 1200px; margin-top: 20px;">
+        <div class="card" style="margin-top: 20px;">
             <h2>Link Suggestions for Orphan Pages</h2>
             <p class="description">Review suggestions and approve links to be added automatically. Links will be inserted in natural positions within the content.</p>
             
@@ -3357,7 +3369,7 @@ function cta_seo_tools_admin_page() {
         </div>
         <?php endif; ?>
         
-        <div class="card" style="max-width: 1200px; margin-top: 20px;">
+        <div class="card" style="margin-top: 20px;">
             <h2>Content Audit - Thin Content Detection</h2>
             
             <?php
@@ -3443,7 +3455,7 @@ function cta_seo_tools_admin_page() {
             </p>
         </div>
         
-        <div class="card" style="max-width: 1200px; margin-top: 20px;">
+        <div class="card" style="margin-top: 20px;">
             <h2>Fix Duplicate Course URLs</h2>
             
             <?php
@@ -4097,9 +4109,9 @@ function cta_seo_dashboard_widget_content() {
         </div>
         
         <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0;">
-            <a href="<?php echo admin_url('tools.php?page=cta-seo-verification'); ?>" class="button button-primary">Run SEO Verification</a>
-            <a href="<?php echo admin_url('tools.php?page=cta-sitemap-diagnostic'); ?>" class="button">Sitemap Diagnostic</a>
-            <a href="<?php echo admin_url('tools.php?page=cta-performance'); ?>" class="button">Performance</a>
+            <a href="<?php echo admin_url('admin.php?page=cta-seo-verification'); ?>" class="button button-primary">Run SEO Verification</a>
+            <a href="<?php echo admin_url('admin.php?page=cta-seo-sitemap-diagnostic'); ?>" class="button">Sitemap Diagnostic</a>
+            <a href="<?php echo admin_url('admin.php?page=cta-seo-performance'); ?>" class="button">Performance</a>
         </div>
         
         <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">

@@ -1,6 +1,9 @@
 /**
  * Universal AI Assistant
  * Automatically detects textareas and adds AI generate buttons
+ * 
+ * NOTE: This script ONLY targets textareas and WYSIWYG editors.
+ * It explicitly EXCLUDES select/dropdown fields - those don't need AI generation.
  */
 
 (function($) {
@@ -22,27 +25,44 @@
     function detectTextareas() {
         const textareas = [];
         
-        // Standard textareas
-            $('textarea:not(.cta-ai-processed)').each(function() {
-                const $textarea = $(this);
+        // Standard textareas only - explicitly exclude select/dropdown fields
+        $('textarea:not(.cta-ai-processed)').each(function() {
+            const $textarea = $(this);
             const id = $textarea.attr('id') || '';
             const name = $textarea.attr('name') || '';
-                
+            
             // Skip if already has AI button
             if ($textarea.siblings('.' + config.buttonClass).length > 0) {
-                    return;
-                }
-                
-                // Skip hidden textareas
-                if (!$textarea.is(':visible')) {
-                    return;
-                }
-                
+                return;
+            }
+            
+            // Skip hidden textareas
+            if (!$textarea.is(':visible')) {
+                return;
+            }
+            
+            // Skip if inside a select field wrapper (shouldn't happen, but safety check)
+            if ($textarea.closest('select, .select2-container, .acf-select').length > 0) {
+                return;
+            }
+            
             // Skip ACF fields that already have AI (they're handled separately)
             if ($textarea.closest('.acf-field').find('.cta-generate-course-description, .cta-generate-course-meta-description').length > 0) {
+                return;
+            }
+            
+            // Skip if near a select field (don't add AI buttons to dropdown areas)
+            const $parent = $textarea.closest('.form-field, .acf-field, .inside, td, th');
+            if ($parent.length && $parent.find('select').length > 0) {
+                // Only skip if the select is the main field (not just any select in the container)
+                const $select = $parent.find('select').first();
+                const selectName = $select.attr('name') || '';
+                // If there's a select field with a similar name, skip adding AI to this textarea
+                if (selectName && name && selectName.toLowerCase() === name.toLowerCase()) {
                     return;
                 }
-                
+            }
+            
             textareas.push({
                 element: $textarea,
                 id: id,
@@ -232,6 +252,13 @@
                     const $textarea = item.element;
                     const $wrapper = $textarea.closest('.form-field, .acf-field, .inside, td, th');
                     
+                    // Explicitly skip if wrapper contains select/dropdown fields
+                    if ($wrapper.length && $wrapper.find('select').length > 0) {
+                        // Don't add AI buttons to areas with dropdowns
+                        $textarea.addClass('cta-ai-processed');
+                        return;
+                    }
+                    
                     if ($wrapper.length) {
                         // Add button after label or before textarea
                         const $label = $wrapper.find('label');
@@ -241,8 +268,10 @@
                             $textarea.before(createAIButton(item.id, item.type));
                         }
                     } else {
-                        // Fallback: add after textarea
-                        $textarea.after(createAIButton(item.id, item.type));
+                        // Fallback: add after textarea (only if no select fields nearby)
+                        if ($textarea.siblings('select').length === 0 && $textarea.parent().find('select').length === 0) {
+                            $textarea.after(createAIButton(item.id, item.type));
+                        }
                     }
                     
                     // Mark as processed
@@ -263,6 +292,12 @@
                 textareas.forEach(function(item) {
                     const $textarea = item.element;
                     const $wrapper = $textarea.closest('.acf-field');
+                    
+                    // Skip if this is a select field wrapper
+                    if ($wrapper.length && $wrapper.find('select').length > 0) {
+                        return;
+                    }
+                    
                     if ($wrapper.length) {
                         const $label = $wrapper.find('label');
                         if ($label.length) {

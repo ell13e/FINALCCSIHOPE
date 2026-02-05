@@ -927,11 +927,11 @@ function cta_seo_verification_page() {
         <div class="card" style="max-width: 1200px; margin-top: 20px;">
             <h2>Quick Links</h2>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
-                <a href="<?php echo admin_url('tools.php?page=cta-sitemap-diagnostic'); ?>" class="button">
+                <a href="<?php echo admin_url('admin.php?page=cta-seo-sitemap-diagnostic'); ?>" class="button">
                     <span class="dashicons dashicons-admin-site" style="vertical-align: middle;"></span>
                     Sitemap Diagnostic
                 </a>
-                <a href="<?php echo admin_url('tools.php?page=cta-performance'); ?>" class="button">
+                <a href="<?php echo admin_url('admin.php?page=cta-seo-performance'); ?>" class="button">
                     <span class="dashicons dashicons-performance" style="vertical-align: middle;"></span>
                     Performance
                 </a>

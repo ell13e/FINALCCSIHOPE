@@ -78,247 +78,219 @@ function cta_page_seo_meta_box_callback($post) {
     
     ?>
     <div class="cta-seo-meta-box">
-        <!-- SEO Score Indicator -->
-        <div class="cta-seo-score" style="background: #f0f6fc; border-left: 4px solid #2271b1; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+        <!-- Simplified SEO Score -->
+        <div class="cta-seo-score-card" style="background: #f6f7f7; border: 1px solid #dcdcde; border-radius: 4px; padding: 16px; margin-bottom: 20px;">
             <div style="display: flex; align-items: center; justify-content: space-between;">
                 <div>
-                    <strong style="font-size: 14px; color: #1d2327;">SEO Score: <span id="cta-seo-score-value" style="color: <?php echo $seo_score['color']; ?>; font-size: 18px;"><?php echo $seo_score['score']; ?>/100</span></strong>
-                    <p style="margin: 5px 0 0 0; font-size: 12px; color: #646970;"><?php echo esc_html($seo_score['message']); ?></p>
+                    <strong style="font-size: 14px; color: #1d2327;">SEO Score: <span id="cta-seo-score-value" style="color: <?php echo $seo_score['color']; ?>; font-size: 20px; font-weight: 600;"><?php echo $seo_score['score']; ?>/100</span></strong>
+                    <p style="margin: 4px 0 0 0; font-size: 13px; color: #646970;"><?php echo esc_html($seo_score['message']); ?></p>
                 </div>
-                <div id="cta-seo-score-details" style="font-size: 12px; color: #646970;">
-                    <?php foreach ($seo_score['checks'] as $check) : ?>
-                        <div style="margin: 3px 0;">
-                            <?php echo $check['passed'] ? '✅' : '⚠️'; ?> <?php echo esc_html($check['label']); ?>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
+                <button type="button" id="cta-toggle-seo-details" class="button button-small" style="margin-left: 16px;">
+                    <span class="dashicons dashicons-arrow-down-alt2" style="font-size: 16px; width: 16px; height: 16px;"></span>
+                </button>
+            </div>
+            <div id="cta-seo-score-details" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid #dcdcde; font-size: 13px; color: #646970;">
+                <?php foreach ($seo_score['checks'] as $check) : ?>
+                    <div style="margin: 4px 0;">
+                        <?php echo $check['passed'] ? '✅' : ($check['score'] > 0 ? '⚠️' : '❌'); ?> 
+                        <?php echo esc_html($check['label']); ?>
+                        <?php if (isset($check['score'])): ?>
+                            <span style="color: #8c8f94;">(<?php echo $check['score']; ?>pts)</span>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
             </div>
         </div>
         
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-            <!-- Left Column: Meta Tags -->
-            <div>
-                <h3 style="margin-top: 0; font-size: 14px; font-weight: 600;">Meta Tags</h3>
-                
-                <!-- Meta Title -->
-                <div style="margin-bottom: 15px;">
-                    <label for="cta_meta_title" style="display: block; font-weight: 600; margin-bottom: 5px;">
-                        Meta Title (SEO)
-                        <span id="cta-title-length" style="color: #646970; font-weight: normal; margin-left: 10px;">0/60</span>
-                    </label>
-                    <input 
-                        type="text" 
-                        id="cta_meta_title" 
-                        name="page_seo_meta_title" 
-                        value="<?php echo esc_attr($meta_title); ?>"
-                        placeholder="<?php echo esc_attr(get_the_title($post->ID)); ?>"
-                        maxlength="60"
-                        style="width: 100%; padding: 8px; border: 1px solid #8c8f94; border-radius: 4px;"
-                    />
-                    <p style="margin: 5px 0 0 0; font-size: 12px; color: #646970;">
-                        Leave blank to use page title. 50-60 characters recommended.
-                    </p>
-                    <div id="cta-title-preview" style="margin-top: 8px; padding: 8px; background: #f6f7f7; border-radius: 4px; font-size: 13px;">
-                        <strong style="color: #1e8cbe;">Preview:</strong> <span id="cta-title-preview-text"><?php echo esc_html($meta_title ?: get_the_title($post->ID)); ?></span>
-                    </div>
-                </div>
-                
-                <!-- Meta Description -->
-                <div style="margin-bottom: 15px;">
-                    <label for="cta_meta_description" style="display: block; font-weight: 600; margin-bottom: 5px;">
-                        Meta Description (SEO)
-                        <span id="cta-desc-length" style="color: #646970; font-weight: normal; margin-left: 10px;">0/160</span>
-                    </label>
-                    <textarea 
-                        id="cta_meta_description" 
-                        name="page_seo_meta_description" 
-                        rows="3"
-                        maxlength="160"
-                        placeholder="<?php echo esc_attr($auto_description); ?>"
-                        style="width: 100%; padding: 8px; border: 1px solid #8c8f94; border-radius: 4px; font-family: inherit;"
-                    ><?php echo esc_textarea($meta_description); ?></textarea>
-                    <p style="margin: 5px 0 0 0; font-size: 12px; color: #646970;">
-                        Leave blank to auto-generate. 150-160 characters recommended.
-                    </p>
+        <!-- Main SEO Fields -->
+        <div class="cta-seo-main-fields" style="margin-bottom: 20px;">
+            <!-- Meta Title -->
+            <div style="margin-bottom: 20px;">
+                <label for="cta_meta_title" style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 13px;">
+                    Meta Title
+                    <span id="cta-title-length" style="color: #646970; font-weight: normal; margin-left: 8px; font-size: 12px;">0/60</span>
+                </label>
+                <input 
+                    type="text" 
+                    id="cta_meta_title" 
+                    name="page_seo_meta_title" 
+                    value="<?php echo esc_attr($meta_title); ?>"
+                    placeholder="<?php echo esc_attr(get_the_title($post->ID)); ?>"
+                    maxlength="60"
+                    style="width: 100%; padding: 8px 12px; border: 1px solid #8c8f94; border-radius: 4px; font-size: 14px;"
+                />
+                <p class="description" style="margin: 6px 0 0 0; font-size: 12px; color: #646970;">
+                    Leave blank to use page title. 50-60 characters recommended.
+                </p>
+            </div>
+            
+            <!-- Meta Description -->
+            <div style="margin-bottom: 20px;">
+                <label for="cta_meta_description" style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 13px;">
+                    Meta Description
+                    <span id="cta-desc-length" style="color: #646970; font-weight: normal; margin-left: 8px; font-size: 12px;">0/160</span>
+                </label>
+                <textarea 
+                    id="cta_meta_description" 
+                    name="page_seo_meta_description" 
+                    rows="3"
+                    maxlength="160"
+                    placeholder="<?php echo esc_attr($auto_description); ?>"
+                    style="width: 100%; padding: 8px 12px; border: 1px solid #8c8f94; border-radius: 4px; font-family: inherit; font-size: 14px; resize: vertical;"
+                ><?php echo esc_textarea($meta_description); ?></textarea>
+                <div style="margin-top: 8px; display: flex; align-items: center; gap: 8px;">
                     <button 
                         type="button" 
                         id="cta-generate-meta-desc" 
                         class="button button-small"
-                        style="margin-top: 5px;"
                     >
-                        ✨ Generate from content
+                        Generate from content
                     </button>
-                    <div id="cta-desc-preview" style="margin-top: 8px; padding: 8px; background: #f6f7f7; border-radius: 4px; font-size: 13px;">
-                        <strong style="color: #1e8cbe;">Preview:</strong> <span id="cta-desc-preview-text"><?php echo esc_html($meta_description ?: $auto_description); ?></span>
-                    </div>
-                </div>
-                
-                <!-- Robots Meta -->
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; font-weight: 600; margin-bottom: 5px;">Search Engine Indexing</label>
-                    <label style="display: flex; align-items: center; margin-bottom: 8px;">
-                        <input 
-                            type="checkbox" 
-                            name="cta_noindex" 
-                            value="1" 
-                            <?php checked($noindex, '1'); ?>
-                            style="margin-right: 8px;"
-                        />
-                        <span>Noindex (hide from search engines)</span>
-                    </label>
-                    <label style="display: flex; align-items: center;">
-                        <input 
-                            type="checkbox" 
-                            name="cta_nofollow" 
-                            value="1" 
-                            <?php checked($nofollow, '1'); ?>
-                            style="margin-right: 8px;"
-                        />
-                        <span>Nofollow (don't follow links)</span>
-                    </label>
-                    <p style="margin: 5px 0 0 0; font-size: 12px; color: #d63638;">
-                        ⚠️ Only use noindex if this page should NOT appear in search results.
-                    </p>
+                    <span class="description" style="margin: 0; font-size: 12px; color: #646970;">
+                        Leave blank to auto-generate. 150-160 characters recommended.
+                    </span>
                 </div>
             </div>
             
-            <!-- Right Column: Schema & SEO Info -->
-            <div>
-                <h3 style="margin-top: 0; font-size: 14px; font-weight: 600;">Schema & SEO Info</h3>
-                
-                <!-- Primary Keyword -->
-                <div style="margin-bottom: 15px;">
-                    <label for="cta_primary_keyword" style="display: block; font-weight: 600; margin-bottom: 5px;">
-                        Primary Focus Keyword
-                    </label>
-                    <input 
-                        type="text" 
-                        id="cta_primary_keyword" 
-                        name="page_seo_primary_keyword" 
-                        value="<?php echo esc_attr($primary_keyword); ?>"
-                        placeholder="e.g., care training kent"
-                        style="width: 100%; padding: 8px; border: 1px solid #8c8f94; border-radius: 4px;"
-                    />
-                    <p style="margin: 5px 0 0 0; font-size: 12px; color: #646970;">
-                        Main keyword you want to rank for. 1-4 words recommended.
-                    </p>
-                </div>
-                
-                <!-- Secondary Keywords -->
-                <div style="margin-bottom: 15px;">
-                    <label for="cta_secondary_keywords" style="display: block; font-weight: 600; margin-bottom: 5px;">
-                        Secondary Keywords (comma-separated)
-                    </label>
-                    <input 
-                        type="text" 
-                        id="cta_secondary_keywords" 
-                        name="page_seo_secondary_keywords" 
-                        value="<?php echo esc_attr($secondary_keywords); ?>"
-                        placeholder="e.g., cqc training, care courses, maidstone training"
-                        style="width: 100%; padding: 8px; border: 1px solid #8c8f94; border-radius: 4px;"
-                    />
-                    <p style="margin: 5px 0 0 0; font-size: 12px; color: #646970;">
-                        Related keywords to include naturally in content. Tested in content body and subheadings.
-                    </p>
-                    <div id="cta-secondary-keyword-tests" style="margin-top: 8px; padding: 8px; background: #f6f7f7; border-radius: 4px; font-size: 12px; display: none;">
-                        <strong>Secondary Keyword Tests:</strong>
-                        <div id="cta-secondary-keyword-results"></div>
+            <!-- Search Result Preview -->
+            <div style="background: #f6f7f7; border: 1px solid #dcdcde; border-radius: 4px; padding: 16px; margin-bottom: 20px;">
+                <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #1d2327;">Search Result Preview</h4>
+                <div id="cta-search-preview" style="max-width: 600px;">
+                    <div style="color: #1a0dab; font-size: 18px; line-height: 1.3; margin-bottom: 3px;">
+                        <span id="preview-title"><?php echo esc_html($meta_title ?: get_the_title($post->ID)); ?></span>
                     </div>
-                </div>
-                
-                <!-- Schema Type -->
-                <div style="margin-bottom: 15px;">
-                    <label for="cta_schema_type" style="display: block; font-weight: 600; margin-bottom: 5px;">
-                        Schema.org Type
-                    </label>
-                    <select 
-                        id="cta_schema_type" 
-                        name="page_schema_type"
-                        style="width: 100%; padding: 8px; border: 1px solid #8c8f94; border-radius: 4px;"
-                    >
-                        <option value="WebPage" <?php selected($schema_type, 'WebPage'); ?>>WebPage (Generic)</option>
-                        <option value="HomePage" <?php selected($schema_type, 'HomePage'); ?>>HomePage</option>
-                        <option value="AboutPage" <?php selected($schema_type, 'AboutPage'); ?>>AboutPage</option>
-                        <option value="ContactPage" <?php selected($schema_type, 'ContactPage'); ?>>ContactPage</option>
-                        <option value="CollectionPage" <?php selected($schema_type, 'CollectionPage'); ?>>CollectionPage</option>
-                        <option value="FAQPage" <?php selected($schema_type, 'FAQPage'); ?>>FAQPage</option>
-                    </select>
-                    <p style="margin: 5px 0 0 0; font-size: 12px; color: #646970;">
-                        Schema type helps search engines understand your page content.
-                    </p>
-                </div>
-                
-                <!-- SEO Checklist -->
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; font-weight: 600; margin-bottom: 8px;">SEO Checklist</label>
-                    <div style="background: #f6f7f7; padding: 12px; border-radius: 4px; font-size: 13px;">
-                        <div style="margin-bottom: 8px;">
-                            <input type="checkbox" id="seo-check-title" <?php checked(!empty($meta_title) || !empty(get_the_title($post->ID))); ?> disabled style="margin-right: 8px;">
-                            <label for="seo-check-title" style="cursor: default;">Page has title</label>
-                        </div>
-                        <div style="margin-bottom: 8px;">
-                            <input type="checkbox" id="seo-check-desc" <?php checked(!empty($meta_description) || !empty($auto_description)); ?> disabled style="margin-right: 8px;">
-                            <label for="seo-check-desc" style="cursor: default;">Meta description set</label>
-                        </div>
-                        <div style="margin-bottom: 8px;">
-                            <input type="checkbox" id="seo-check-featured" <?php checked(has_post_thumbnail($post->ID)); ?> disabled style="margin-right: 8px;">
-                            <label for="seo-check-featured" style="cursor: default;">Featured image set</label>
-                        </div>
-                        <div style="margin-bottom: 8px;">
-                            <input type="checkbox" id="seo-check-content" <?php checked(strlen($post->post_content) > 300); ?> disabled style="margin-right: 8px;">
-                            <label for="seo-check-content" style="cursor: default;">Content length (300+ words)</label>
-                        </div>
-                        <div>
-                            <input type="checkbox" id="seo-check-schema" <?php checked(!empty($schema_type)); ?> disabled style="margin-right: 8px;">
-                            <label for="seo-check-schema" style="cursor: default;">Schema type selected</label>
-                        </div>
+                    <div style="color: #006621; font-size: 14px; line-height: 1.3; margin-bottom: 8px;">
+                        <?php echo esc_html(home_url()); ?> › <span id="preview-url"><?php echo esc_html(str_replace(home_url(), '', get_permalink($post->ID))); ?></span>
                     </div>
-                </div>
-                
-                <!-- Quick Links -->
-                <div>
-                    <label style="display: block; font-weight: 600; margin-bottom: 8px;">Quick Actions</label>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <a 
-                            href="<?php echo esc_url(get_permalink($post->ID)); ?>" 
-                            target="_blank" 
-                            class="button button-small"
-                            style="text-align: center;"
-                        >
-                            👁️ View Page
-                        </a>
-                        <a 
-                            href="https://search.google.com/test/rich-results?url=<?php echo urlencode(get_permalink($post->ID)); ?>" 
-                            target="_blank" 
-                            class="button button-small"
-                            style="text-align: center;"
-                        >
-                            🔍 Test Schema
-                        </a>
-                        <button 
-                            type="button" 
-                            id="cta-copy-meta-tags" 
-                            class="button button-small"
-                        >
-                            📋 Copy Meta Tags
-                        </button>
+                    <div style="color: #545454; font-size: 14px; line-height: 1.4;">
+                        <span id="preview-description"><?php echo esc_html($meta_description ?: $auto_description); ?></span>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Live Preview Section -->
-        <div style="border-top: 1px solid #dcdcde; padding-top: 20px; margin-top: 20px;">
-            <h3 style="margin-top: 0; font-size: 14px; font-weight: 600;">Search Result Preview</h3>
-            <div id="cta-search-preview" style="border: 1px solid #dcdcde; border-radius: 4px; padding: 15px; background: #fff; max-width: 600px;">
-                <div style="color: #1a0dab; font-size: 18px; line-height: 1.3; margin-bottom: 3px; cursor: pointer;">
-                    <span id="preview-title"><?php echo esc_html($meta_title ?: get_the_title($post->ID)); ?></span>
-                </div>
-                <div style="color: #006621; font-size: 14px; line-height: 1.3; margin-bottom: 8px;">
-                    <?php echo esc_html(home_url()); ?> › <span id="preview-url"><?php echo esc_html(str_replace(home_url(), '', get_permalink($post->ID))); ?></span>
-                </div>
-                <div style="color: #545454; font-size: 14px; line-height: 1.4;">
-                    <span id="preview-description"><?php echo esc_html($meta_description ?: $auto_description); ?></span>
+        <!-- Advanced Options (Collapsible) -->
+        <div class="cta-seo-advanced" style="border-top: 1px solid #dcdcde; padding-top: 20px;">
+            <button type="button" id="cta-toggle-advanced-seo" class="button button-link" style="padding: 0; margin-bottom: 16px; font-size: 13px; font-weight: 600;">
+                <span class="dashicons dashicons-arrow-down-alt2" style="font-size: 16px; width: 16px; height: 16px; vertical-align: middle;"></span>
+                Advanced SEO Settings
+            </button>
+            
+            <div id="cta-advanced-seo-content" style="display: none;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <!-- Left: Keywords -->
+                    <div>
+                        <div style="margin-bottom: 16px;">
+                            <label for="cta_primary_keyword" style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 13px;">
+                                Primary Focus Keyword
+                            </label>
+                            <input 
+                                type="text" 
+                                id="cta_primary_keyword" 
+                                name="page_seo_primary_keyword" 
+                                value="<?php echo esc_attr($primary_keyword); ?>"
+                                placeholder="e.g., care training kent"
+                                style="width: 100%; padding: 8px 12px; border: 1px solid #8c8f94; border-radius: 4px; font-size: 14px;"
+                            />
+                            <p class="description" style="margin: 6px 0 0 0; font-size: 12px; color: #646970;">
+                                Main keyword you want to rank for.
+                            </p>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label for="cta_secondary_keywords" style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 13px;">
+                                Secondary Keywords
+                            </label>
+                            <input 
+                                type="text" 
+                                id="cta_secondary_keywords" 
+                                name="page_seo_secondary_keywords" 
+                                value="<?php echo esc_attr($secondary_keywords); ?>"
+                                placeholder="e.g., cqc training, care courses"
+                                style="width: 100%; padding: 8px 12px; border: 1px solid #8c8f94; border-radius: 4px; font-size: 14px;"
+                            />
+                            <p class="description" style="margin: 6px 0 0 0; font-size: 12px; color: #646970;">
+                                Comma-separated related keywords.
+                            </p>
+                            <div id="cta-secondary-keyword-tests" style="margin-top: 8px; padding: 12px; background: #f6f7f7; border-radius: 4px; font-size: 12px; display: none;">
+                                <strong>Keyword Tests:</strong>
+                                <div id="cta-secondary-keyword-results" style="margin-top: 8px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right: Schema & Indexing -->
+                    <div>
+                        <div style="margin-bottom: 16px;">
+                            <label for="cta_schema_type" style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 13px;">
+                                Schema.org Type
+                            </label>
+                            <select 
+                                id="cta_schema_type" 
+                                name="page_schema_type"
+                                style="width: 100%; padding: 8px 12px; border: 1px solid #8c8f94; border-radius: 4px; font-size: 14px;"
+                            >
+                                <option value="WebPage" <?php selected($schema_type, 'WebPage'); ?>>WebPage (Generic)</option>
+                                <option value="HomePage" <?php selected($schema_type, 'HomePage'); ?>>HomePage</option>
+                                <option value="AboutPage" <?php selected($schema_type, 'AboutPage'); ?>>AboutPage</option>
+                                <option value="ContactPage" <?php selected($schema_type, 'ContactPage'); ?>>ContactPage</option>
+                                <option value="CollectionPage" <?php selected($schema_type, 'CollectionPage'); ?>>CollectionPage</option>
+                                <option value="FAQPage" <?php selected($schema_type, 'FAQPage'); ?>>FAQPage</option>
+                            </select>
+                            <p class="description" style="margin: 6px 0 0 0; font-size: 12px; color: #646970;">
+                                Helps search engines understand your page content.
+                            </p>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 13px;">Search Engine Indexing</label>
+                            <label style="display: flex; align-items: center; margin-bottom: 8px;">
+                                <input 
+                                    type="checkbox" 
+                                    name="cta_noindex" 
+                                    value="1" 
+                                    <?php checked($noindex, '1'); ?>
+                                    style="margin-right: 8px;"
+                                />
+                                <span style="font-size: 13px;">Noindex (hide from search engines)</span>
+                            </label>
+                            <label style="display: flex; align-items: center;">
+                                <input 
+                                    type="checkbox" 
+                                    name="cta_nofollow" 
+                                    value="1" 
+                                    <?php checked($nofollow, '1'); ?>
+                                    style="margin-right: 8px;"
+                                />
+                                <span style="font-size: 13px;">Nofollow (don't follow links)</span>
+                            </label>
+                            <p class="description" style="margin: 8px 0 0 0; font-size: 12px; color: #d63638;">
+                                ⚠️ Only use noindex if this page should NOT appear in search results.
+                            </p>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 13px;">Quick Actions</label>
+                            <div style="display: flex; flex-direction: column; gap: 6px;">
+                                <a 
+                                    href="<?php echo esc_url(get_permalink($post->ID)); ?>" 
+                                    target="_blank" 
+                                    class="button button-small"
+                                    style="text-align: center;"
+                                >
+                                    View Page
+                                </a>
+                                <a 
+                                    href="https://search.google.com/test/rich-results?url=<?php echo urlencode(get_permalink($post->ID)); ?>" 
+                                    target="_blank" 
+                                    class="button button-small"
+                                    style="text-align: center;"
+                                >
+                                    Test Schema
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -326,6 +298,32 @@ function cta_page_seo_meta_box_callback($post) {
     
     <script>
     jQuery(document).ready(function($) {
+        // Toggle SEO details
+        $('#cta-toggle-seo-details').on('click', function() {
+            var $details = $('#cta-seo-score-details');
+            var $icon = $(this).find('.dashicons');
+            if ($details.is(':visible')) {
+                $details.slideUp();
+                $icon.removeClass('dashicons-arrow-up-alt2').addClass('dashicons-arrow-down-alt2');
+            } else {
+                $details.slideDown();
+                $icon.removeClass('dashicons-arrow-down-alt2').addClass('dashicons-arrow-up-alt2');
+            }
+        });
+        
+        // Toggle advanced SEO settings
+        $('#cta-toggle-advanced-seo').on('click', function() {
+            var $content = $('#cta-advanced-seo-content');
+            var $icon = $(this).find('.dashicons');
+            if ($content.is(':visible')) {
+                $content.slideUp();
+                $icon.removeClass('dashicons-arrow-up-alt2').addClass('dashicons-arrow-down-alt2');
+            } else {
+                $content.slideDown();
+                $icon.removeClass('dashicons-arrow-down-alt2').addClass('dashicons-arrow-up-alt2');
+            }
+        });
+        
         // Character counters
         function updateCounters() {
             var title = $('#cta_meta_title').val() || '<?php echo esc_js(get_the_title($post->ID)); ?>';
@@ -337,9 +335,7 @@ function cta_page_seo_meta_box_callback($post) {
             $('#cta-title-length').text(titleLen + '/60').css('color', titleLen > 60 ? '#d63638' : (titleLen < 50 ? '#d63638' : '#646970'));
             $('#cta-desc-length').text(descLen + '/160').css('color', descLen > 160 ? '#d63638' : (descLen < 120 ? '#d63638' : '#646970'));
             
-            // Update previews
-            $('#cta-title-preview-text').text(title);
-            $('#cta-desc-preview-text').text(desc);
+            // Update preview
             $('#preview-title').text(title);
             $('#preview-description').text(desc);
             
@@ -656,9 +652,9 @@ function cta_page_seo_meta_box_callback($post) {
             $('#cta-seo-score-details').html(
                 checks.map(function(check) {
                     var icon = check.passed ? '✅' : (check.score > 0 ? '⚠️' : '❌');
-                    return '<div style="margin: 3px 0; font-size: 12px;">' + 
+                    return '<div style="margin: 4px 0; font-size: 13px;">' + 
                            icon + ' ' + check.label + 
-                           (check.score !== undefined ? ' <span style="color: #646970;">(' + check.score + 'pts)</span>' : '') +
+                           (check.score !== undefined ? ' <span style="color: #8c8f94;">(' + check.score + 'pts)</span>' : '') +
                            '</div>';
                 }).join('')
             );
@@ -679,12 +675,33 @@ function cta_page_seo_meta_box_callback($post) {
     .cta-seo-meta-box {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     }
-    .cta-seo-meta-box h3 {
-        border-bottom: 1px solid #dcdcde;
-        padding-bottom: 8px;
+    .cta-seo-meta-box .description {
+        font-size: 12px;
+        color: #646970;
+        line-height: 1.5;
     }
-    #cta-search-preview:hover {
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    .cta-seo-meta-box input[type="text"],
+    .cta-seo-meta-box textarea,
+    .cta-seo-meta-box select {
+        transition: border-color 0.15s ease-in-out;
+    }
+    .cta-seo-meta-box input[type="text"]:focus,
+    .cta-seo-meta-box textarea:focus,
+    .cta-seo-meta-box select:focus {
+        border-color: #2271b1;
+        box-shadow: 0 0 0 1px #2271b1;
+        outline: none;
+    }
+    #cta-search-preview {
+        transition: opacity 0.2s;
+    }
+    #cta-toggle-seo-details,
+    #cta-toggle-advanced-seo {
+        color: #2271b1;
+    }
+    #cta-toggle-seo-details:hover,
+    #cta-toggle-advanced-seo:hover {
+        color: #135e96;
     }
     </style>
     <?php
