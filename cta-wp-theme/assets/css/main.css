@@ -4646,23 +4646,32 @@ input[type="search"]::-ms-clear,
 
 .category-icon-title-row {
   display: flex;
-  flex-direction: column;
-  gap: 32px;
-  position: relative;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: flex-start;
-  min-height: 72px;
-  width: 100%; /* Ensure full width for right-aligned badge */
-  padding-top: 0; /* Remove top padding */
-  margin-top: 0; /* Remove top margin */
-  padding-right: 0; /* Ensure no right padding that would offset badge */
-  overflow: visible; /* Allow badge to extend if needed */
+  justify-content: space-between;
+  gap: 16px;
+  position: relative;
+  width: 100%;
+  padding-top: 0;
+  margin-top: 0;
+  padding-right: 0;
+  overflow: visible;
 }
 
 /* Ensure badge aligns perfectly with top of card - no space above */
 .category-icon-title-row .category-badge-new {
+  position: relative;
   top: 0;
+  right: auto;
+  left: auto;
   margin-top: calc(var(--spacing-xl) * -1); /* Pull badge up to top of card, accounting for card-link padding */
-  padding-top: 0;
+  padding-top: 10px; /* Restore padding for proper vertical centering */
+  padding-bottom: 10px; /* Ensure equal padding */
+  order: 2; /* Badge appears after icon */
+  margin-left: auto; /* Push badge to right */
+  align-items: center; /* Ensure vertical centering */
+  justify-content: center; /* Ensure horizontal centering */
 }
 
 /* On larger screens, account for larger padding */
@@ -4670,6 +4679,28 @@ input[type="search"]::-ms-clear,
   .category-icon-title-row .category-badge-new {
     margin-top: calc(var(--spacing-2xl) * -1); /* Pull badge up to top of card on larger screens */
   }
+}
+
+/* Icon wrapper - top aligned with badge */
+.category-icon-title-row .category-icon-wrapper {
+  order: 1; /* Icon appears before badge */
+  margin-top: calc(var(--spacing-xl) * -1); /* Pull icon up to match badge */
+  align-self: flex-start;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .category-icon-title-row .category-icon-wrapper {
+    margin-top: calc(var(--spacing-2xl) * -1); /* Match badge positioning on larger screens */
+  }
+}
+
+/* Category name wrapper - full width below badge and icon */
+.category-icon-title-row .category-name-wrapper {
+  order: 3;
+  flex-basis: 100%;
+  width: 100%;
+  margin-top: 0;
 }
 
 /* Remove any top spacing from category-icon-title-row when it contains a badge */
@@ -4792,22 +4823,24 @@ input[type="search"]::-ms-clear,
   left: auto; /* Explicitly set left to auto to prevent any left alignment */
   flex-shrink: 0;
   display: inline-flex;
-  align-items: center;
-  justify-content: center; /* Center content inside badge */
-  padding: 7px 14px; /* Equal padding on both sides for centered text */
+  align-items: center; /* Vertical centering */
+  justify-content: center; /* Horizontal centering */
+  padding: 10px 18px; /* Increased padding for bigger badge */
   border-radius: 12px; /* Match course-card-badge border-radius */
-  font-size: 13px; /* Increased from 11px for slightly bigger badges */
+  font-size: 14px; /* Increased from 13px for bigger badge */
   font-weight: 600; /* Match course-card-badge font-weight */
   text-transform: none; /* Match course-card-badge text-transform */
   letter-spacing: 0.2px; /* Match course-card-badge letter-spacing */
   width: fit-content;
   height: fit-content;
-  line-height: 1;
+  min-height: 36px; /* Ensure consistent height for proper centering */
+  line-height: 1.2; /* Slightly increased for better vertical centering */
   text-align: center; /* Center text inside badge */
   z-index: 10; /* Ensure badge appears above other content */
   margin-left: auto; /* Push to right if flex context affects it */
   margin-right: 0; /* Ensure no right margin */
   margin-top: 0; /* Remove any top margin */
+  box-sizing: border-box; /* Include padding in height calculation */
 }
 
 /* Ensure course-badge-* colors override category-badge-* colors when both classes are present */
