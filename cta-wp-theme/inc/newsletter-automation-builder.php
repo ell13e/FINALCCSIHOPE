@@ -45,6 +45,11 @@ function cta_render_flow_builder($flow = null) {
     $flow_name = $flow ? $flow->name : '';
     $flow_description = $flow ? $flow->description : '';
     $flow_data = $flow ? json_decode($flow->flow_data, true) : [];
+    // Handle double-encoded flow_data from older saves
+    if (is_string($flow_data)) {
+        $flow_data = json_decode($flow_data, true);
+    }
+    $flow_data = is_array($flow_data) ? $flow_data : [];
     $trigger_type = $flow ? $flow->trigger_type : '';
     $trigger_config = $flow ? json_decode($flow->trigger_config, true) : [];
 

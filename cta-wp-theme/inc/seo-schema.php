@@ -630,18 +630,11 @@ function cta_get_faq_page_schema() {
             
             foreach ($faq_posts as $faq_post) {
                 $question = trim($faq_post->post_title);
-                $answer = '';
-                
-                // Try ACF field first
-                if (function_exists('get_field')) {
-                    $answer = get_field('faq_answer', $faq_post->ID);
+                // Prefer block editor content (post content), fallback to ACF
+                $answer = $faq_post->post_content;
+                if (empty(trim(strip_tags($answer))) && function_exists('get_field')) {
+                    $answer = get_field('faq_answer', $faq_post->ID) ?: '';
                 }
-                
-                // Fallback to post content
-                if (empty($answer)) {
-                    $answer = $faq_post->post_content;
-                }
-                
                 $answer = wp_strip_all_tags($answer);
                 
                 if (!empty($question) && !empty($answer)) {

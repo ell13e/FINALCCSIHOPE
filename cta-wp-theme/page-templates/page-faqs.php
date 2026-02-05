@@ -209,9 +209,13 @@ foreach ($faq_posts as $faq_post) {
         $category = $template_slug;
     }
     
-    $answer = get_field('faq_answer', $faq_post->ID);
-    if (empty($answer)) {
-        $answer = $faq_post->post_content; // Fallback to post content
+    // Prefer block editor content (post content), fallback to ACF
+    $answer = $faq_post->post_content;
+    if (empty(trim(strip_tags($answer)))) {
+        $answer = get_field('faq_answer', $faq_post->ID) ?: '';
+    } else {
+        // Render blocks to HTML when content is from the editor
+        $answer = apply_filters('the_content', $answer);
     }
     
     $faqs[] = [

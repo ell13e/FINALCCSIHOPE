@@ -1590,21 +1590,19 @@ function cta_faq_admin_column_content($column, $post_id) {
             break;
             
         case 'faq_answer_preview':
-            $answer = get_field('faq_answer', $post_id);
-            if ($answer) {
-                $preview = wp_strip_all_tags($answer);
-                $preview = wp_trim_words($preview, 20);
-                echo '<span title="' . esc_attr(wp_strip_all_tags($answer)) . '">' . esc_html($preview) . '</span>';
+            // Prefer block editor content (post content), fallback to ACF
+            $content = get_post_field('post_content', $post_id);
+            if (empty(trim(strip_tags($content)))) {
+                $content = get_field('faq_answer', $post_id) ?: '';
             } else {
-                // Fallback to post content if ACF field not set
-                $content = get_post_field('post_content', $post_id);
-                if ($content) {
-                    $preview = wp_strip_all_tags($content);
-                    $preview = wp_trim_words($preview, 20);
-                    echo '<span title="' . esc_attr(wp_strip_all_tags($content)) . '">' . esc_html($preview) . '</span>';
-                } else {
-                    echo '<span class="cta-admin-empty">-</span>';
-                }
+                $content = apply_filters('the_content', $content);
+            }
+            if ($content) {
+                $preview = wp_strip_all_tags($content);
+                $preview = wp_trim_words($preview, 20);
+                echo '<span title="' . esc_attr(wp_strip_all_tags($content)) . '">' . esc_html($preview) . '</span>';
+            } else {
+                echo '<span class="cta-admin-empty">-</span>';
             }
             break;
     }

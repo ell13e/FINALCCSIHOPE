@@ -162,8 +162,7 @@ function cta_add_editor_help_text($post) {
         ?>
         <div class="cta-editor-help" style="background: #f0f6fc; border-left: 4px solid #2271b1; padding: 12px 16px; margin: 10px 0 15px 0; border-radius: 4px;">
             <p style="margin: 0; font-size: 13px; color: #1d2327; line-height: 1.6;">
-                <strong>💡 FAQ Writing Tips:</strong> The title above is your question. Use the <strong>Answer</strong> field below to write a clear, helpful response. 
-                Keep answers concise and focused. Use formatting tools to add emphasis, lists, or links when helpful.
+                <strong>💡 FAQ:</strong> The <strong>title</strong> above is the question. The <strong>content block below</strong> is the answer—edit it here in the main editor. Use blocks to add lists, links, or emphasis. Keep answers concise and focused.
             </p>
         </div>
         <?php
@@ -188,4 +187,23 @@ function cta_remove_unnecessary_meta_boxes() {
     remove_meta_box('slugdiv', 'faq', 'normal');
 }
 add_action('admin_menu', 'cta_remove_unnecessary_meta_boxes');
+
+/**
+ * Sync FAQ block editor content to ACF faq_answer on save.
+ * Ensures the ACF field stays in sync when editing in the main editor.
+ */
+function cta_sync_faq_answer_from_editor($post_id) {
+    if (get_post_type($post_id) !== 'faq') {
+        return;
+    }
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+    $content = get_post_field('post_content', $post_id);
+    if ($content !== '' && function_exists('update_field')) {
+        // Store rendered HTML so ACF fallback displays correctly
+        update_field('faq_answer', apply_filters('the_content', $content), $post_id);
+    }
+}
+add_action('save_post_faq', 'cta_sync_faq_answer_from_editor', 20);
 

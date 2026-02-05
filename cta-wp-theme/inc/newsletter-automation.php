@@ -628,6 +628,288 @@ function cta_create_default_automations() {
 }
 
 /**
+ * Check if any active flow has trigger_type 'subscribes' (so welcome can be sent by flow).
+ */
+function cta_automation_has_active_subscribes_flow() {
+    global $wpdb;
+    $flows_table = $wpdb->prefix . 'cta_automation_flows';
+    if ($wpdb->get_var("SHOW TABLES LIKE '$flows_table'") !== $flows_table) {
+        return false;
+    }
+    return (int) $wpdb->get_var(
+        "SELECT COUNT(*) FROM $flows_table WHERE status = 'active' AND trigger_type = 'subscribes'"
+    ) > 0;
+}
+
+/**
+ * Get first step ID for a flow (lowest step_order).
+ */
+function cta_automation_get_first_step_id($flow_id) {
+    global $wpdb;
+    $steps_table = $wpdb->prefix . 'cta_automation_steps';
+    return (int) $wpdb->get_var($wpdb->prepare(
+        "SELECT id FROM $steps_table WHERE flow_id = %d ORDER BY step_order ASC LIMIT 1",
+        $flow_id
+    ));
+}
+
+/**
+ * Enter a subscriber into a flow and set current step to first step.
+ */
+function cta_automation_enter_flow($flow_id, $subscriber_id) {
+    global $wpdb;
+    $flows_table = $wpdb->prefix . 'cta_automation_flows';
+    $contacts_table = $wpdb->prefix . 'cta_automation_contacts';
+    $steps_table = $wpdb->prefix . 'cta_automation_steps';
+
+    $flow = $wpdb->get_row($wpdb->prepare("SELECT id, status FROM $flows_table WHERE id = %d", $flow_id));
+    if (!$flow || $flow->status !== 'active') {
+        return null;
+    }
+
+    $existing = $wpdb->get_var($wpdb->prepare(
+        "SELECT id FROM $contacts_table WHERE flow_id = %d AND subscriber_id = %d",
+        $flow_id,
+        $subscriber_id
+    ));
+    if ($existing) {
+        return (int) $existing;
+    }
+
+    $first_step_id = cta_automation_get_first_step_id($flow_id);
+    $wpdb->insert($contacts_table, [
+        'flow_id'         => $flow_id,
+        'subscriber_id'  => $subscriber_id,
+        'current_step_id' => $first_step_id ?: null,
+    ], ['%d', '%d', '%d']);
+    $contact_id = $wpdb->insert_id;
+    return $contact_id ? (int) $contact_id : null;
+}
+
+/**
+ * Execute current step for a contact and advance (or complete).
+ */
+function cta_automation_process_current_step($contact_id) {
+    global $wpdb;
+    $contacts_table = $wpdb->prefix . 'cta_automation_contacts';
+    $steps_table = $wpdb->prefix . 'cta_automation_steps';
+    $templates_table = $wpdb->prefix . 'cta_email_templates';
+    $subscribers_table = $wpdb->prefix . 'cta_newsletter_subscribers';
+
+    $contact = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM $contacts_table WHERE id = %d AND exited_at IS NULL",
+        $contact_id
+    ));
+    if (!$contact || !$contact->current_step_id) {
+        return;
+    }
+
+    $step = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM $steps_table WHERE id = %d",
+        $contact->current_step_id
+    ));
+    if (!$step) {
+        return;
+    }
+
+    $subscriber = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM $subscribers_table WHERE id = %d",
+        $contact->subscriber_id
+    ));
+    if (!$subscriber) {
+        return;
+    }
+
+    $config = json_decode($step->step_config, true);
+    $config = is_array($config) ? $config : [];
+
+    if ($step->step_type === 'send_email') {
+        $template_id = isset($config['template_id']) ? (int) $config['template_id'] : 0;
+        $subject = isset($config['subject']) ? $config['subject'] : '';
+        $content = isset($config['content']) ? $config['content'] : '';
+
+        if ($template_id) {
+            $template = $wpdb->get_row($wpdb->prepare(
+                "SELECT * FROM $templates_table WHERE id = %d",
+                $template_id
+            ));
+            if ($template) {
+                $subject = $template->subject;
+                $content = $template->content;
+            }
+        }
+
+        if ($subject !== '' && $content !== '') {
+            $first_name = !empty($subscriber->first_name) ? $subscriber->first_name : '';
+            $email = $subscriber->email;
+            $unsubscribe_token = function_exists('wp_hash') ? wp_hash($email . $contact->subscriber_id) : md5($email . $contact->subscriber_id);
+            $unsubscribe_url = add_query_arg([
+                'cta_unsubscribe' => 1,
+                'email' => urlencode($email),
+                'token' => $unsubscribe_token,
+            ], home_url('/unsubscribe/'));
+            $unsubscribe_link = '<a href="' . esc_url($unsubscribe_url) . '">Unsubscribe</a>';
+            $content = str_replace(
+                ['{first_name}', '{site_name}', '{unsubscribe_link}'],
+                [esc_html($first_name), esc_html(get_bloginfo('name')), $unsubscribe_link],
+                $content
+            );
+            $from_email = defined('CTA_ENQUIRIES_EMAIL') && CTA_ENQUIRIES_EMAIL ? CTA_ENQUIRIES_EMAIL : get_option('admin_email');
+            $headers = [
+                'Content-Type: text/html; charset=UTF-8',
+                'From: ' . get_bloginfo('name') . ' <' . $from_email . '>',
+                'Reply-To: ' . $from_email,
+            ];
+            wp_mail($email, $subject, $content, $headers);
+        }
+
+        $next_step = $wpdb->get_row($wpdb->prepare(
+            "SELECT id FROM $steps_table WHERE flow_id = %d AND step_order > %d ORDER BY step_order ASC LIMIT 1",
+            $contact->flow_id,
+            $step->step_order
+        ));
+        if ($next_step) {
+            $wpdb->update(
+                $contacts_table,
+                ['current_step_id' => $next_step->id],
+                ['id' => $contact_id],
+                ['%d'],
+                ['%d']
+            );
+        } else {
+            $wpdb->update(
+                $contacts_table,
+                ['current_step_id' => null, 'completed_at' => current_time('mysql')],
+                ['id' => $contact_id],
+                ['%s', '%s'],
+                ['%d']
+            );
+        }
+    } elseif ($step->step_type === 'delay') {
+        $days = isset($config['delay_value']) ? (int) $config['delay_value'] : 0;
+        $run_after = gmdate('Y-m-d H:i:s', strtotime("+{$days} days"));
+        $meta = json_decode($contact->metadata, true);
+        $meta = is_array($meta) ? $meta : [];
+        $meta['delay_run_after'] = $run_after;
+        $wpdb->update(
+            $contacts_table,
+            ['metadata' => wp_json_encode($meta)],
+            ['id' => $contact_id],
+            ['%s'],
+            ['%d']
+        );
+    }
+}
+
+/**
+ * Cron: process contacts whose delay step has elapsed (advance and run next step).
+ */
+function cta_automation_process_delayed_steps() {
+    global $wpdb;
+    $contacts_table = $wpdb->prefix . 'cta_automation_contacts';
+    $steps_table = $wpdb->prefix . 'cta_automation_steps';
+
+    $contacts = $wpdb->get_results(
+        "SELECT id, flow_id, current_step_id, metadata FROM $contacts_table WHERE exited_at IS NULL AND current_step_id IS NOT NULL"
+    );
+    $now = current_time('mysql');
+    foreach ($contacts as $contact) {
+        $step = $wpdb->get_row($wpdb->prepare(
+            "SELECT id, step_type, step_order, step_config FROM $steps_table WHERE id = %d",
+            $contact->current_step_id
+        ));
+        if (!$step || $step->step_type !== 'delay') {
+            continue;
+        }
+        $meta = json_decode($contact->metadata, true);
+        $run_after = isset($meta['delay_run_after']) ? $meta['delay_run_after'] : '';
+        if ($run_after === '' || $run_after > $now) {
+            continue;
+        }
+        $next_step = $wpdb->get_row($wpdb->prepare(
+            "SELECT id FROM $steps_table WHERE flow_id = %d AND step_order > %d ORDER BY step_order ASC LIMIT 1",
+            $contact->flow_id,
+            $step->step_order
+        ));
+        unset($meta['delay_run_after']);
+        $wpdb->update(
+            $contacts_table,
+            [
+                'current_step_id' => $next_step ? $next_step->id : null,
+                'metadata' => wp_json_encode($meta),
+                'completed_at' => !$next_step ? $now : null,
+            ],
+            ['id' => $contact->id],
+            ['%d', '%s', '%s'],
+            ['%d']
+        );
+        if ($next_step) {
+            cta_automation_process_current_step($contact->id);
+        }
+    }
+}
+add_action('cta_automation_process_delays', 'cta_automation_process_delayed_steps');
+
+/**
+ * Schedule delay processing every 15 minutes if not already scheduled.
+ */
+function cta_automation_schedule_delay_cron() {
+    if (wp_next_scheduled('cta_automation_process_delays')) {
+        return;
+    }
+    wp_schedule_event(time(), 'every_15_minutes', 'cta_automation_process_delays');
+}
+add_action('admin_init', 'cta_automation_schedule_delay_cron');
+
+/**
+ * Register 15-minute cron interval.
+ */
+function cta_automation_cron_intervals($schedules) {
+    $schedules['every_15_minutes'] = [
+        'interval' => 15 * 60,
+        'display'  => __('Every 15 Minutes'),
+    ];
+    return $schedules;
+}
+add_filter('cron_schedules', 'cta_automation_cron_intervals');
+
+/**
+ * Trigger: add subscriber to all active 'subscribes' flows and process first step.
+ */
+function cta_automation_trigger_subscribes($subscriber_id) {
+    global $wpdb;
+    $flows_table = $wpdb->prefix . 'cta_automation_flows';
+    if ($wpdb->get_var("SHOW TABLES LIKE '$flows_table'") !== $flows_table) {
+        return false;
+    }
+
+    $flows = $wpdb->get_results(
+        "SELECT id FROM $flows_table WHERE status = 'active' AND trigger_type = 'subscribes'"
+    );
+    if (empty($flows)) {
+        return false;
+    }
+
+    $entered = 0;
+    foreach ($flows as $flow) {
+        $contact_id = cta_automation_enter_flow($flow->id, $subscriber_id);
+        if ($contact_id) {
+            $entered++;
+            cta_automation_process_current_step($contact_id);
+        }
+    }
+    return $entered > 0;
+}
+
+/**
+ * Run when a new subscriber is added: enter them into subscribes flows and process first step.
+ */
+function cta_automation_on_subscriber_added($subscriber_id, $email, $first_name) {
+    cta_automation_trigger_subscribes($subscriber_id);
+}
+add_action('cta_newsletter_subscriber_added', 'cta_automation_on_subscriber_added', 10, 3);
+
+/**
  * Add automation menu to admin
  */
 function cta_automation_admin_menu() {
@@ -651,6 +933,51 @@ function cta_automation_admin_menu() {
     );
 }
 add_action('admin_menu', 'cta_automation_admin_menu', 11);
+
+/**
+ * Handle email template copy/redirect before any output (avoids "headers already sent").
+ * Must run on admin_init so redirect happens before script-loader or admin UI outputs.
+ */
+function cta_email_templates_handle_redirect_actions() {
+    if (!is_admin() || !isset($_GET['page']) || $_GET['page'] !== 'cta-email-templates') {
+        return;
+    }
+    $cap = function_exists('cta_newsletter_required_capability') ? cta_newsletter_required_capability() : 'edit_others_posts';
+    if (!current_user_can($cap)) {
+        return;
+    }
+    if (!isset($_GET['action']) || !isset($_GET['template_id'])) {
+        return;
+    }
+    $action = sanitize_text_field($_GET['action']);
+    $template_id = absint($_GET['template_id']);
+    if ($template_id < 1) {
+        return;
+    }
+    global $wpdb;
+    $templates_table = $wpdb->prefix . 'cta_email_templates';
+    if ($action === 'copy' && check_admin_referer('copy_template_' . $template_id, '_wpnonce', false)) {
+        $original = $wpdb->get_row($wpdb->prepare("SELECT * FROM $templates_table WHERE id = %d", $template_id));
+        if ($original) {
+            $wpdb->insert($templates_table, [
+                'name' => $original->name . ' (Copy)',
+                'description' => $original->description,
+                'subject' => $original->subject,
+                'content' => $original->content,
+                'template_type' => $original->template_type,
+                'category' => $original->category,
+                'is_system' => 0,
+                'created_by' => get_current_user_id(),
+            ], ['%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d']);
+            $new_id = $wpdb->insert_id;
+            if ($new_id) {
+                wp_redirect(admin_url('admin.php?page=cta-email-templates&action=edit&template_id=' . $new_id));
+                exit;
+            }
+        }
+    }
+}
+add_action('admin_init', 'cta_email_templates_handle_redirect_actions', 5);
 
 /**
  * Automation flows admin page
@@ -696,12 +1023,20 @@ function cta_automation_admin_page() {
     // Handle flow save
     if (isset($_POST['save_flow']) && check_admin_referer('save_automation_flow')) {
         $flow_id = isset($_POST['flow_id']) ? absint($_POST['flow_id']) : 0;
+        // flow_data from builder is a JSON string; avoid double-encoding
+        $steps_raw = $_POST['flow_data'] ?? [];
+        if (is_string($steps_raw)) {
+            $steps_decoded = json_decode($steps_raw, true);
+            $steps_for_db = is_array($steps_decoded) ? $steps_decoded : [];
+        } else {
+            $steps_for_db = is_array($steps_raw) ? $steps_raw : [];
+        }
         $flow_data = [
             'name' => sanitize_text_field($_POST['flow_name'] ?? ''),
             'description' => sanitize_textarea_field($_POST['flow_description'] ?? ''),
             'trigger_type' => sanitize_text_field($_POST['trigger_type'] ?? ''),
             'trigger_config' => wp_json_encode($_POST['trigger_config'] ?? []),
-            'flow_data' => wp_json_encode($_POST['flow_data'] ?? []),
+            'flow_data' => wp_json_encode($steps_for_db),
             'status' => sanitize_text_field($_POST['flow_status'] ?? 'draft'),
         ];
         
@@ -714,9 +1049,9 @@ function cta_automation_admin_page() {
             echo '<div class="notice notice-success"><p>Flow created.</p></div>';
         }
         
-        // Save flow steps
-        if (isset($_POST['flow_steps']) && is_array($_POST['flow_steps'])) {
-            cta_save_flow_steps($flow_id, $_POST['flow_steps']);
+        // Sync steps table from flow_data so execution (which uses steps_table) works
+        if ($flow_id && function_exists('cta_save_flow_steps')) {
+            cta_save_flow_steps($flow_id, $steps_for_db);
         }
     }
     
@@ -944,25 +1279,8 @@ function cta_email_templates_admin_page() {
                 $wpdb->delete($templates_table, ['id' => $template_id], ['%d']);
                 echo '<div class="notice notice-success"><p>Template deleted.</p></div>';
             }
-        } elseif ($action === 'copy' && check_admin_referer('copy_template_' . $template_id)) {
-            // Copy a system template to create an editable version
-            $original = $wpdb->get_row($wpdb->prepare("SELECT * FROM $templates_table WHERE id = %d", $template_id));
-            if ($original) {
-                $wpdb->insert($templates_table, [
-                    'name' => $original->name . ' (Copy)',
-                    'description' => $original->description,
-                    'subject' => $original->subject,
-                    'content' => $original->content,
-                    'template_type' => $original->template_type,
-                    'category' => $original->category,
-                    'is_system' => 0,
-                    'created_by' => get_current_user_id(),
-                ], ['%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d']);
-                
-                $new_id = $wpdb->insert_id;
-                wp_redirect(admin_url('admin.php?page=cta-email-templates&action=edit&template_id=' . $new_id));
-                exit;
-            }
+        } elseif ($action === 'copy') {
+            // Handled in cta_email_templates_handle_redirect_actions() on admin_init to avoid headers already sent.
         } elseif ($action === 'duplicate' && check_admin_referer('duplicate_template_' . $template_id)) {
             // Duplicate any template
             $original = $wpdb->get_row($wpdb->prepare("SELECT * FROM $templates_table WHERE id = %d", $template_id));

@@ -3640,11 +3640,11 @@ function cta_add_faq_acf_fields() {
         'fields' => [
             [
                 'key' => 'field_faq_answer',
-                'label' => 'Answer',
+                'label' => 'Answer (fallback)',
                 'name' => 'faq_answer',
                 'type' => 'wysiwyg',
-                'instructions' => 'The detailed answer to this FAQ. Use formatting tools to add emphasis, lists, or links.',
-                'required' => 1,
+                'instructions' => 'The main answer is edited in the block editor above. This field is a fallback for legacy content and is synced from the editor on save.',
+                'required' => 0,
                 'tabs' => 'all',
                 'toolbar' => 'full',
                 'media_upload' => 1,
