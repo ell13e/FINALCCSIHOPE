@@ -7,7 +7,6 @@
 
 get_header();
 
-// SEO Meta Tags
 $meta_title = 'About Continuity Training Academy | Care Training Providers Kent';
 $meta_description = 'Professional care training in Kent since 2020. CQC-compliant, CPD-accredited courses delivered by working care professionals. 4.6★ rated on Trustpilot.';
 ?>
@@ -23,21 +22,17 @@ $meta_description = 'Professional care training in Kent since 2020. CQC-complian
 
 $contact = cta_get_contact_info();
 
-// ACF fields for About page
 $hero_title = get_field('hero_title') ?: 'About Our Care Training in Kent';
 $hero_subtitle = get_field('hero_subtitle') ?: 'CQC-compliant, CPD-accredited care sector training in Kent since 2020';
 
-// Mission section
 $mission_title = get_field('mission_title') ?: 'Our Care Training Approach';
 $mission_text = get_field('mission_text') ?: [
   "Continuity Training Academy's ethos reflects our goal: to urge businesses to invest in their staff, and individuals to invest in themselves.",
   "We position ourselves as <strong>'the external training room'</strong> that becomes part of your organisation. We don't just deliver courses, we partner with you.",
   "When working with new care providers, we take time to understand your policies and procedures, ensuring our training complements how your organisation operates. We tailor our training to align perfectly with your needs, creating a seamless integration with your existing processes and standards."
 ];
-// Get mission image - try ACF field first, then fallback to default
 $mission_image = get_field('mission_image');
 if (empty($mission_image)) {
-  // Try different image file names that might exist
   $possible_images = [
     'stock_photos/03_ABOUT_US_PAGE/about_epilepsy01.webp',
     'stock_photos/03_ABOUT_US_PAGE/about_epilepsy01-800w.webp',
@@ -45,17 +40,14 @@ if (empty($mission_image)) {
   ];
   foreach ($possible_images as $img_path) {
     $img_url = cta_image($img_path);
-    // Check if file exists (basic check - in production, you'd want to verify the file actually exists)
     $mission_image = $img_url;
-    break; // Use first available
+    break;
   }
 }
 
-// Values section
 $values_title = get_field('values_title') ?: 'Core Care Training Values';
 $values_subtitle = get_field('values_subtitle') ?: 'These principles guide everything we do and shape the experience we provide to our learners.';
 
-// Stats
 $stats = get_field('stats') ?: [
   ['number' => '40+', 'label' => 'Courses Offered'],
   ['number' => '2020', 'label' => 'Established'],
@@ -63,17 +55,14 @@ $stats = get_field('stats') ?: [
   ['number' => '100%', 'label' => 'CQC-Compliant'],
 ];
 
-// Team section
 $team_title = get_field('team_title') ?: 'Expert Care Training Team';
 $team_subtitle = get_field('team_subtitle') ?: 'Experienced professionals dedicated to your development';
 
-// CTA section
 $cta_title = get_field('cta_title') ?: 'Start Your Care Training Today';
 $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who trust us for their training needs. Get expert CQC compliance training with CPD-accredited certificates.';
 ?>
 
 <main id="main-content">
-  <!-- Hero Section -->
   <section class="group-hero-section" aria-labelledby="about-heading">
     <div class="container">
       <nav aria-label="Breadcrumb" class="breadcrumb breadcrumb-hero">
@@ -92,7 +81,6 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
     </div>
   </section>
 
-  <!-- Mission/Ethos Section -->
   <section class="about-mission-new">
     <div class="container">
       <div class="about-mission-grid-new">
@@ -101,12 +89,10 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
           <?php 
           if (is_array($mission_text)) {
             foreach ($mission_text as $paragraph) {
-              // Strip slashes in case ACF stored escaped quotes
               $paragraph = stripslashes($paragraph);
               echo '<p>' . wp_kses_post($paragraph) . '</p>';
             }
           } else {
-            // Strip slashes in case ACF stored escaped quotes
             $mission_text = stripslashes($mission_text);
             echo wp_kses_post($mission_text);
           }
@@ -123,7 +109,6 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
     </div>
   </section>
 
-  <!-- Values Section -->
   <section class="about-values-new">
     <div class="container">
       <div class="about-values-header">
@@ -170,7 +155,6 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
     </div>
   </section>
 
-  <!-- Stats Section -->
   <section class="about-stats-new">
     <div class="container">
       <div class="about-stats-grid-new" id="statsGrid">
@@ -184,7 +168,6 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
     </div>
   </section>
 
-  <!-- Team Section -->
   <section class="team-section-new" aria-labelledby="team-heading">
     <div class="container">
       <div class="team-section-header-new">
@@ -193,7 +176,6 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
       </div>
 
       <?php
-      // Try to get directors from team_member post type first
       $director_posts = get_posts([
         'post_type' => 'team_member',
         'posts_per_page' => -1,
@@ -218,7 +200,6 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
           ];
         }
       } else {
-        // Fallback to ACF or hardcoded data
         $directors = get_field('directors') ?: [
         [
           'name' => 'Victoria Walker',
@@ -241,7 +222,6 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
       ];
       }
 
-      // Try to get trainers from team_member post type first
       $trainer_posts = get_posts([
         'post_type' => 'team_member',
         'posts_per_page' => -1,
@@ -266,7 +246,6 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
           ];
         }
       } else {
-        // Fallback to ACF or hardcoded data
         $trainers = get_field('trainers') ?: [
         [
           'name' => 'Adele Smith',
@@ -300,7 +279,6 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
       ?>
 
       <div class="team-grid-new">
-        <!-- Directors Row -->
         <div class="team-directors-row">
           <div class="team-directors-cards">
             <?php foreach ($directors as $director) : ?>
@@ -350,7 +328,6 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
           </div>
         </div>
 
-        <!-- Trainers Row -->
         <div class="team-trainers-row">
           <div class="team-trainers-grid">
             <?php foreach ($trainers as $trainer) : ?>
@@ -403,7 +380,6 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
     </div>
   </section>
 
-  <!-- Team Member Modal -->
   <div id="team-modal" class="team-modal" role="dialog" aria-modal="true" aria-labelledby="team-modal-title" aria-hidden="true">
     <div class="team-modal-backdrop" aria-hidden="true"></div>
     <div class="team-modal-container">
@@ -412,13 +388,10 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
           <path d="M18 6L6 18M6 6l12 12"></path>
         </svg>
       </button>
-      <div class="team-modal-content" id="team-modal-content">
-        <!-- Content populated by JavaScript -->
-      </div>
+      <div class="team-modal-content" id="team-modal-content"></div>
     </div>
   </div>
 
-  <!-- CTA Section -->
   <section class="about-cta-new">
     <div class="container">
       <div class="about-cta-content-new">
@@ -432,62 +405,5 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
     </div>
   </section>
 </main>
-
-<!-- Schema.org Structured Data -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "AboutPage",
-  "name": "About Continuity Training Academy",
-  "description": "CQC-compliant, CPD-accredited care sector training in Kent since 2020. Learn about our mission, values, and expert training team.",
-  "url": "<?php echo esc_url(get_permalink()); ?>",
-  "mainEntity": {
-    "@type": "EducationalOrganization",
-    "name": "Continuity Training Academy",
-    "url": "<?php echo esc_url(home_url('/')); ?>",
-    "description": "Professional care sector training provider in Maidstone, Kent. CQC-compliant, CPD-accredited courses delivered by experienced care professionals.",
-    "foundingDate": "2020",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "<?php echo esc_html($contact['address']); ?>",
-      "addressLocality": "Maidstone",
-      "addressRegion": "Kent",
-      "postalCode": "<?php echo esc_html($contact['postcode']); ?>",
-      "addressCountry": "GB"
-    },
-    "telephone": "<?php echo esc_html($contact['phone']); ?>",
-    "email": "<?php echo esc_html($contact['email']); ?>",
-    "areaServed": {
-      "@type": "State",
-      "name": "Kent"
-    },
-    "knowsAbout": [
-      "Care Training",
-      "CQC Compliance",
-      "Health and Social Care",
-      "Professional Development",
-      "CPD Accredited Training"
-    ],
-    "slogan": "Invest in Knowledge, Invest in Success"
-  },
-  "breadcrumb": {
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "<?php echo esc_url(home_url('/')); ?>"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "About",
-        "item": "<?php echo esc_url(get_permalink()); ?>"
-      }
-    ]
-  }
-}
-</script>
 
 <?php get_footer(); ?>

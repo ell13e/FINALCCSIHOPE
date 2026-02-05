@@ -1072,7 +1072,6 @@ function cta_maybe_seed_missing_static_pages() {
     if (!current_user_can('edit_pages')) {
         return;
     }
-    // Updated to v3 to include location pages
     if (get_option('cta_static_pages_seed_v3') === '1') {
         return;
     }

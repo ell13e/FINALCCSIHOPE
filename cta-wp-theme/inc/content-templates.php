@@ -10,60 +10,6 @@
 defined('ABSPATH') || exit;
 
 /**
- * Get location page content template
- * 
- * @param array $location_data Location data array
- * @return string Content template
- */
-function cta_get_location_content_template($location_data) {
-    if (!$location_data) {
-        return '';
-    }
-    
-    $location_name = $location_data['display_name'];
-    $location_slug = $location_data['name'];
-    
-    $template = <<<HTML
-<h2>Professional Care Training in {$location_name}</h2>
-
-<p>Continuity Training Academy provides CQC-compliant, CPD-accredited care training courses in {$location_name}. We offer face-to-face training at our Maidstone Studios training centre, as well as on-site training for care providers throughout the {$location_slug} area.</p>
-
-<h3>Why Choose Our Training in {$location_name}?</h3>
-
-<p>Our training courses are designed specifically for care sector professionals and meet all Care Quality Commission (CQC) requirements. Whether you're looking for mandatory training, refresher courses, or specialist care training, we have courses to suit your needs.</p>
-
-<h3>Training Options Available</h3>
-
-<ul>
-<li><strong>Face-to-Face Training:</strong> Join us at our Maidstone Studios for hands-on, interactive training sessions</li>
-<li><strong>On-Site Training:</strong> We can deliver training at your care home or workplace in {$location_slug}</li>
-<li><strong>Group Training:</strong> Train your entire team together with our group training packages</li>
-</ul>
-
-<h3>Popular Courses in {$location_name}</h3>
-
-<p>Our most popular training courses in {$location_name} include:</p>
-
-<ul>
-<li>Emergency First Aid at Work</li>
-<li>Care Certificate</li>
-<li>Safeguarding Adults</li>
-<li>Moving and Handling</li>
-<li>Medication Management</li>
-<li>Dementia Care</li>
-</ul>
-
-<p>View our <a href="/courses/">full course catalog</a> to see all available training courses.</p>
-
-<h3>Book Your Training Today</h3>
-
-<p>Ready to book your care training in {$location_name}? <a href="/contact/">Contact us</a> today to discuss your training needs or <a href="/upcoming-courses/">view our upcoming course dates</a>.</p>
-HTML;
-    
-    return $template;
-}
-
-/**
  * Get CQC article content template
  * 
  * @param string $topic Article topic

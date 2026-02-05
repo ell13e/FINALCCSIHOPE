@@ -12,7 +12,6 @@ $hero_subheadline = cta_get_field('hero_subheadline', false, 'Expert-led accredi
 $hero_cta_text = cta_get_field('hero_cta_text', false, 'Find My Course');
 $hero_cta_link = cta_get_field('hero_cta_link', false, get_post_type_archive_link('course'));
 
-// If hero CTA links to contact page, add type parameter for auto-fill
 if ($hero_cta_link && strpos($hero_cta_link, cta_page_url('contact')) !== false) {
   $separator = strpos($hero_cta_link, '?') !== false ? '&' : '?';
   $hero_cta_link .= $separator . 'type=book-course';
@@ -20,13 +19,11 @@ if ($hero_cta_link && strpos($hero_cta_link, cta_page_url('contact')) !== false)
 
 $contact = cta_get_contact_info();
 
-// Get Trustpilot settings from Customizer
 $trustpilot_url = cta_get_theme_option('trustpilot_url', 'https://uk.trustpilot.com/review/continuitytrainingacademy.co.uk');
 $trustpilot_rating = cta_get_theme_option('trustpilot_rating', '4.6/5');
 $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
 ?>
 
-<!-- Homepage-specific skip links -->
 <nav class="skip-links" aria-label="Skip to page sections">
   <a href="#partners-heading" class="skip-link">Skip to trusted partners</a>
   <a href="#why-us-heading" class="skip-link">Skip to why us</a>
@@ -34,7 +31,6 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
 </nav>
 
 <main id="main-content">
-  <!-- Hero Section -->
   <section class="hero" aria-labelledby="hero-heading">
     <div class="container">
       <div class="hero-content">
@@ -65,10 +61,8 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
     <div class="container">
       <?php
       $partners_title = cta_get_field('partners_title', false, 'Trusted by Care Providers Across the United Kingdom');
-      // Parse {focus} tags for highlighting
       $partners_title_parsed = preg_replace('/\{focus\}(.*?)\{\/focus\}/', '<span class="partners-enhanced-focus">$1</span>', $partners_title);
       if ($partners_title_parsed === $partners_title) {
-        // No tags found, highlight "United Kingdom" by default
         $partners_title_parsed = str_replace('United Kingdom', '<span class="partners-enhanced-focus">United Kingdom</span>', $partners_title);
       }
       ?>
@@ -117,7 +111,6 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
     </div>
   </section>
 
-  <!-- Why Us Section -->
   <section class="why-us-blended" aria-labelledby="why-us-heading">
     <div class="container">
       <div class="why-us-blended-header">
@@ -198,7 +191,6 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
     </div>
   </section>
 
-  <!-- Course Categories Section -->
   <section class="course-categories" aria-labelledby="courses-heading">
     <div class="container">
       <div class="section-header">
@@ -207,7 +199,6 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
       </div>
       <div class="categories-grid">
         <?php
-        // Use same badge color mapping as course cards
         $category_badge_colors = [
           'core-care-skills' => 'course-badge-blue',
           'emergency-first-aid' => 'course-badge-red',
@@ -333,7 +324,6 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
     </div>
   </section>
 
-  <!-- Upcoming Courses Section -->
   <section class="upcoming-courses" aria-labelledby="upcoming-heading">
     <div class="container">
       <div class="section-header">
@@ -351,7 +341,6 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
           $site_wide_label = !empty($sw['label']) ? (string) $sw['label'] : 'Site-Wide Sale';
         }
 
-        // Query upcoming course events - limit to 3 coming soonest
         $upcoming_events = new WP_Query([
           'post_type' => 'course_event',
           'posts_per_page' => 3,
@@ -390,7 +379,6 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
             $location = get_field('event_location');
             $spaces = get_field('spaces_available');
             $price = get_field('event_price') ?: ($course ? get_field('course_price', $course->ID) : '');
-            // Ensure price is numeric (remove any currency symbols)
             if ($price) {
               $price = preg_replace('/[£$,\s]/', '', $price);
               $price = is_numeric($price) ? floatval($price) : '';
@@ -408,8 +396,7 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
             $duration = $course ? get_field('course_duration', $course->ID) : '';
             
             if (!$course) continue;
-            
-            // Get category for styling
+
             $category_class = '';
             $category_name = '';
             $terms = get_the_terms($course->ID, 'course_category');
@@ -527,7 +514,6 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
     </div>
   </section>
 
-  <!-- Testimonials Section -->
   <section class="testimonials-section" aria-labelledby="testimonials-heading">
     <div class="container">
       <div class="testimonials-header">
@@ -593,7 +579,6 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
     </div>
   </section>
 
-  <!-- Latest News Section -->
   <section class="latest-news-section" aria-labelledby="latest-news-heading">
     <div class="container">
       <div class="latest-news-header">
@@ -604,7 +589,6 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
       </div>
       
       <?php
-      // Query 3 most recent blog posts
       $recent_posts = new WP_Query([
         'post_type' => 'post',
         'posts_per_page' => 3,
@@ -630,8 +614,7 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
             ];
           endwhile;
           wp_reset_postdata();
-          
-          // Display first post as featured
+
           if (!empty($posts_array)) :
             $featured = $posts_array[0];
             $featured_categories = $featured['categories'];
@@ -673,7 +656,6 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
         
         <div class="latest-news-categories">
           <?php 
-          // Display remaining 2 posts as category cards
           for ($i = 1; $i < min(3, count($posts_array)); $i++) :
             $post = $posts_array[$i];
             $post_categories = $post['categories'];
@@ -724,7 +706,6 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
     </div>
   </section>
 
-  <!-- CTA Section with Form -->
   <section id="cta-centered-section" class="cta-centered-section" aria-labelledby="cta-centered-heading">
     <div class="cta-centered-decorative-top-left"></div>
     <div class="cta-centered-decorative-top-right"></div>
@@ -755,7 +736,6 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
         <?php wp_nonce_field('cta_nonce', 'nonce'); ?>
         <input type="hidden" name="action" value="cta_callback_request">
         <input type="hidden" name="form-type" value="callback-request">
-        <!-- Honeypot spam protection - multiple fields -->
         <input type="text" name="website" id="cta-website" class="honeypot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
         <input type="text" name="url" id="cta-url" class="honeypot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
         <input type="text" name="homepage" id="cta-homepage" class="honeypot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -852,7 +832,6 @@ $trustpilot_stars = cta_get_trustpilot_stars($trustpilot_rating);
               </div>
               <span id="cta-consent-error" class="cta-centered-error-message" role="alert" aria-live="polite" style="display: none;"></span>
             </div>
-            <!-- reCAPTCHA v3 (invisible, no widget needed) -->
             <input type="hidden" name="g-recaptcha-response" id="cta-recaptcha-response" value="">
             <span id="cta-robot-error" class="cta-centered-error-message" role="alert" aria-live="polite" style="display: none;"></span>
             <p class="cta-centered-privacy">

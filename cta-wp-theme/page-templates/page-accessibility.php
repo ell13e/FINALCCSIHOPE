@@ -14,7 +14,6 @@ $contact = cta_get_contact_info();
 ?>
 
 <main id="main-content">
-  <!-- Hero Section -->
   <section class="group-hero-section" aria-labelledby="accessibility-heading">
     <div class="container">
       <nav aria-label="Breadcrumb" class="breadcrumb breadcrumb-hero">
@@ -33,7 +32,6 @@ $contact = cta_get_contact_info();
     </div>
   </section>
 
-  <!-- Content Section -->
   <section class="legal-content-section">
     <div class="container">
       <div class="legal-content">
@@ -117,7 +115,6 @@ $contact = cta_get_contact_info();
     </div>
   </section>
 
-  <!-- Contact CTA -->
   <section class="legal-cta-section">
     <div class="container">
       <div class="legal-cta-content">

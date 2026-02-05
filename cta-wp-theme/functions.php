@@ -206,27 +206,6 @@ function cta_enqueue_assets() {
         true
     );
 
-    // SECURITY: Google Maps API key removed from frontend
-    // We now use iframe embeds which don't require an API key
-    // The API key setting is kept for potential future server-side use only
-    // See: https://developers.google.com/maps/documentation/embed/get-started
-    if (is_page_template('page-templates/locations/locations-index.php') || 
-        is_page_template('page-templates/locations/location-maidstone.php') ||
-        is_page_template('page-templates/locations/location-medway.php') ||
-        is_page_template('page-templates/locations/location-canterbury.php') ||
-        is_page_template('page-templates/locations/location-ashford.php') ||
-        is_page_template('page-templates/locations/location-tunbridge-wells.php')) {
-        
-        // Enqueue location maps script (uses iframe embeds, no API key needed)
-        wp_enqueue_script(
-            'cta-location-maps',
-            CTA_THEME_URI . '/assets/js/locations/location-maps.js',
-            [],
-            CTA_THEME_VERSION,
-            true
-        );
-    }
-
     $site_wide_discount = cta_get_site_wide_discount();
     $site_wide_active = cta_is_site_wide_discount_active();
     
@@ -451,16 +430,6 @@ function cta_enqueue_page_scripts() {
             ['cta-main'],
             CTA_THEME_VERSION,
             true
-        );
-    }
-
-    // Location pages: load location styles based on template slug
-    if (is_page() && strpos((string) get_page_template_slug(), 'locations/location-') !== false) {
-        wp_enqueue_style(
-            'cta-locations',
-            CTA_THEME_URI . '/assets/css/locations.css',
-            ['cta-main'],
-            CTA_THEME_VERSION
         );
     }
 

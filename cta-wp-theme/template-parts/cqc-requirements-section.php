@@ -7,7 +7,6 @@
  * @package CTA_Theme
  */
 
-// Helper function to find course link (if not already defined)
 if (!function_exists('cta_find_course_link')) {
   function cta_find_course_link($keywords) {
     static $courses_cache = null;
@@ -21,16 +20,14 @@ if (!function_exists('cta_find_course_link')) {
     }
     
     $keywords_lower = strtolower(trim($keywords));
-    
-    // Exact title matches first
+
     foreach ($courses_cache as $course) {
       $title_lower = strtolower($course->post_title);
       if ($title_lower === $keywords_lower || strpos($title_lower, $keywords_lower) !== false) {
         return get_permalink($course->ID);
       }
     }
-    
-    // Keyword mapping for common variations
+
     $keyword_map = [
       'safeguarding' => ['safeguarding', 'safeguarding adults', 'safeguarding children'],
       'first aid' => ['first aid', 'first aid at work', 'faw'],
@@ -63,7 +60,6 @@ if (!function_exists('cta_find_course_link')) {
   }
 }
 
-// Helper to create a course link or plain text
 if (!function_exists('cta_course_link')) {
   function cta_course_link($course_name, $display_text = null) {
     $link = cta_find_course_link($course_name);
@@ -211,8 +207,6 @@ $cqc_standards = [
 
 <section class="cqc-requirements-section" aria-labelledby="cqc-requirements-heading">
   <div class="container">
-    
-    <!-- Section Header -->
     <div class="cqc-requirements-header">
       <h2 id="cqc-requirements-heading" class="cqc-requirements-title">
         CQC Training Requirements
@@ -223,11 +217,9 @@ $cqc_standards = [
       </p>
     </div>
 
-    <!-- Standards Grid -->
     <div class="cqc-standards-grid">
       <?php foreach ($cqc_standards as $standard) : ?>
       <article class="cqc-standard-card cqc-standard-<?php echo esc_attr($standard['color']); ?>">
-        <!-- Card Header -->
         <div class="cqc-standard-header">
           <div class="cqc-standard-icon" aria-hidden="true">
             <?php echo $standard['icon']; ?>
@@ -240,7 +232,6 @@ $cqc_standards = [
           </div>
         </div>
 
-        <!-- Course List -->
         <ul class="cqc-course-list">
         <?php foreach ($standard['courses'] as $course) : 
           $course_name = is_array($course) ? $course['name'] : $course;

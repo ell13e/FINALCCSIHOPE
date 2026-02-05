@@ -9,13 +9,11 @@ get_header();
 
 $contact = cta_get_contact_info();
 
-// ACF fields
 $hero_title = get_field('hero_title') ?: 'Contact Us for Care Training in Kent';
 $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group training, or ask about compliance. Call, email, or use the form below.";
 ?>
 
 <main id="main-content">
-  <!-- Hero Section -->
   <section class="group-hero-section" aria-labelledby="contact-heading">
     <div class="container">
       <nav aria-label="Breadcrumb" class="breadcrumb breadcrumb-hero">
@@ -34,17 +32,12 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
     </div>
   </section>
 
-  <!-- Main Content: Contact Info & Form -->
   <section class="contact-main-section" aria-labelledby="contact-details-heading">
     <div class="container">
       <h2 id="contact-details-heading" class="sr-only">Contact details</h2>
       <div class="contact-main-layout">
-        
-        <!-- Left: Quick Contact Cards & Map -->
         <div class="contact-info-panel">
-          <!-- Quick Contact Cards -->
           <div class="contact-quick-cards-stacked">
-            <!-- Phone Card -->
             <a href="<?php echo esc_url($contact['phone_link']); ?>" class="contact-quick-card">
               <div class="contact-quick-icon-wrapper">
                 <i class="fas fa-phone contact-quick-icon" aria-hidden="true"></i>
@@ -55,7 +48,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
               </div>
             </a>
 
-            <!-- Email Card -->
             <a href="mailto:<?php echo esc_attr($contact['email']); ?>" class="contact-quick-card">
               <div class="contact-quick-icon-wrapper">
                 <i class="fas fa-envelope contact-quick-icon" aria-hidden="true"></i>
@@ -67,7 +59,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
             </a>
           </div>
 
-          <!-- Map Card -->
           <div class="contact-map-card">
             <div class="contact-map-wrapper">
               <iframe
@@ -85,7 +76,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
           </div>
         </div>
 
-        <!-- Right: Contact Form -->
         <div class="contact-form-panel">
           <div class="contact-form-card-new">
             <div class="contact-form-header">
@@ -93,21 +83,17 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
             </div>
 
             <?php 
-            // Check for Contact Form 7 or Gravity Forms
             if (shortcode_exists('contact-form-7')) {
-              // Use Contact Form 7 if available
               echo do_shortcode('[contact-form-7 id="contact-form" title="Contact Form"]');
             } else {
             ?>
             <form id="contact-form" class="contact-form-new" novalidate>
-              <!-- Honeypot spam protection - multiple fields -->
               <input type="text" name="website" id="website" class="honeypot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
               <input type="text" name="url" id="contact-url" class="honeypot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
               <input type="text" name="homepage" id="contact-homepage" class="honeypot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
               <input type="hidden" name="form_load_time" id="contact-form-load-time" value="">
               <input type="hidden" name="submission_time" id="contact-submission-time" value="">
-              
-              <!-- Error Summary -->
+
               <div id="contact-form-error-summary" class="contact-form-error-summary" role="alert" aria-live="assertive" style="display: none">
                 <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
                 <div>
@@ -115,10 +101,8 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
                   <ul id="contact-form-error-list"></ul>
                 </div>
               </div>
-              
-              <!-- Form Fields Grid -->
+
               <div class="contact-form-fields-grid">
-                <!-- Your Name -->
                 <div class="contact-form-field">
                   <label for="name" class="contact-form-label">
                     Your Name <span class="contact-form-required">*</span>
@@ -149,7 +133,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
                   ></p>
                 </div>
 
-                <!-- Email -->
                 <div class="contact-form-field">
                   <label for="email" class="contact-form-label">
                     Email <span class="contact-form-required">*</span>
@@ -180,7 +163,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
                   ></p>
                 </div>
 
-                <!-- Phone Number -->
                 <div class="contact-form-field">
                   <label for="phone" class="contact-form-label">
                     Phone Number <span class="contact-form-required">*</span>
@@ -212,7 +194,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
                 </div>
               </div>
 
-              <!-- Enquiry Type -->
               <div class="contact-form-field">
                 <label for="enquiryType" class="contact-form-label">
                   Enquiry Type <span class="contact-form-required">*</span>
@@ -248,7 +229,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
                 ></p>
               </div>
 
-              <!-- Course Selection (shown when book-course or group-training is selected) -->
               <div id="course-selection-field" class="contact-form-field" style="display: none;">
                 <label class="contact-form-label">
                   Select Course(s) <span class="contact-form-required">*</span>
@@ -258,14 +238,11 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
                     <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
                     <span>Loading courses...</span>
                   </div>
-                  <div id="course-selection-list" class="course-selection-list" role="group" aria-labelledby="course-selection-label" style="display: none;">
-                    <!-- Course checkboxes will be inserted here by JavaScript -->
-                  </div>
+                  <div id="course-selection-list" class="course-selection-list" role="group" aria-labelledby="course-selection-label" style="display: none;"></div>
                 </div>
                 <p id="course-selection-error" class="contact-form-error" role="alert" aria-live="polite" style="display: none"></p>
               </div>
 
-              <!-- Discount Code (shown when book-course or group-training is selected) -->
               <div id="discount-code-field" class="contact-form-field" style="display: none;">
                 <label for="discount-code" class="contact-form-label">
                   Discount Code (Optional)
@@ -294,7 +271,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
                 ></p>
               </div>
 
-              <!-- Message -->
               <div class="contact-form-field">
                 <label for="message" class="contact-form-label">
                   Message <span class="contact-form-required">*</span>
@@ -328,7 +304,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
                 </div>
               </div>
 
-              <!-- Consent Checkbox -->
               <div class="contact-form-consent">
                 <div class="contact-form-consent-checkbox-wrapper">
                   <input
@@ -370,18 +345,15 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
                 By submitting this form, you agree to our <a href="<?php echo esc_url(cta_page_url('privacy')); ?>" class="contact-form-privacy-link">Privacy Policy</a>
               </p>
 
-              <!-- Success Message -->
               <div id="contact-form-success" class="contact-form-success" style="display: none">
                 <i class="fas fa-check-circle contact-form-success-icon" aria-hidden="true"></i>
                 <h3 class="contact-form-success-title">Message Sent!</h3>
                 <p class="contact-form-success-text">We'll get back to you.</p>
               </div>
 
-              <!-- reCAPTCHA v3 (invisible, no widget needed) -->
               <input type="hidden" name="g-recaptcha-response" id="contact-recaptcha-response" value="">
               <span id="contact-robot-error" class="contact-form-error-message" role="alert" aria-live="polite" style="display: none;"></span>
 
-              <!-- Submit and Clear Buttons -->
               <div class="contact-form-actions">
                 <button type="submit" id="contact-form-submit" class="btn btn-primary contact-form-submit">
                   <span id="contact-form-submit-text">Send</span>
@@ -402,7 +374,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
     </div>
   </section>
 
-  <!-- Thank You Popup Modal -->
   <div id="thank-you-modal" class="thank-you-modal" role="dialog" aria-labelledby="thank-you-title" aria-hidden="true">
     <div class="thank-you-modal-overlay"></div>
     <div class="thank-you-modal-content">
@@ -427,72 +398,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
     </div>
   </div>
 </main>
-
-<!-- Schema.org Structured Data -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "ContactPage",
-  "name": "Contact Continuity Training Academy",
-  "description": "Contact us for care training in Kent. Book courses, arrange group training, or get answers about compliance and certification.",
-  "url": "<?php echo esc_url(get_permalink()); ?>",
-  "mainEntity": {
-    "@type": "EducationalOrganization",
-    "name": "Continuity Training Academy",
-    "url": "<?php echo esc_url(home_url('/')); ?>",
-    "telephone": "<?php echo esc_html($contact['phone']); ?>",
-    "email": "<?php echo esc_html($contact['email']); ?>",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "<?php echo esc_html($contact['address']); ?>",
-      "addressLocality": "Maidstone",
-      "addressRegion": "Kent",
-      "postalCode": "<?php echo esc_html($contact['postcode']); ?>",
-      "addressCountry": "GB"
-    },
-    "contactPoint": [
-      {
-        "@type": "ContactPoint",
-        "telephone": "<?php echo esc_html($contact['phone']); ?>",
-        "contactType": "Customer Service",
-        "availableLanguage": "English",
-        "areaServed": "GB"
-      },
-      {
-        "@type": "ContactPoint",
-        "email": "<?php echo esc_html($contact['email']); ?>",
-        "contactType": "Customer Service",
-        "availableLanguage": "English"
-      }
-    ],
-    "openingHoursSpecification": [
-      {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        "opens": "09:00",
-        "closes": "17:00"
-      }
-    ]
-  },
-  "breadcrumb": {
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "<?php echo esc_url(home_url('/')); ?>"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Contact",
-        "item": "<?php echo esc_url(get_permalink()); ?>"
-      }
-    ]
-  }
-}
-</script>
 
 <?php get_footer(); ?>
 

@@ -7,7 +7,6 @@
 
 get_header();
 
-// SEO Meta Tags
 $meta_title = 'Downloadable Care Training Resources | Free Templates & Guides';
 $meta_description = 'Free downloadable resources for care providers. Training templates, compliance checklists, policy documents, and care sector guides.';
 ?>
@@ -23,14 +22,12 @@ $meta_description = 'Free downloadable resources for care providers. Training te
 
 $contact = cta_get_contact_info();
 
-// ACF fields
 $hero_title = function_exists('get_field') ? get_field('hero_title') : '';
 $hero_subtitle = function_exists('get_field') ? get_field('hero_subtitle') : '';
 $resource_library_title = function_exists('get_field') ? (get_field('resource_library_title') ?: '') : '';
 $resource_library_subtitle = function_exists('get_field') ? (get_field('resource_library_subtitle') ?: '') : '';
 $resource_categories = function_exists('get_field') ? (get_field('resource_categories') ?: []) : [];
 
-// Defaults
 if (empty($hero_title)) {
     $hero_title = 'Free Training Resources for Care Professionals';
 }
@@ -44,7 +41,6 @@ if (empty($resource_library_subtitle)) {
     $resource_library_subtitle = 'Filter resources by category';
 }
 
-// Build category display map (defaults + ACF overrides)
 $category_defaults = [
     'quick-reference' => ['title' => 'Quick Reference Cards', 'subtitle' => 'Laminated reference cards and pocket guides for quick access to essential information'],
     'templates' => ['title' => 'Templates & Tools', 'subtitle' => 'Excel and Word templates to streamline your training administration'],
@@ -67,7 +63,6 @@ if (is_array($resource_categories)) {
     }
 }
 
-// Load resources from Resource CPT (cta_resource) and group by taxonomy term slug.
 $resources_by_category = [];
 $resource_posts = get_posts([
     'post_type' => 'cta_resource',
@@ -107,7 +102,6 @@ foreach ($resource_posts as $resource_post) {
     ];
 }
 
-// If resources use categories not in our defaults, add them from taxonomy term names/descriptions.
 foreach (array_keys($resources_by_category) as $slug) {
     if (isset($category_map[$slug])) {
         continue;
@@ -123,7 +117,6 @@ foreach (array_keys($resources_by_category) as $slug) {
 ?>
 
 <main id="main-content" class="site-main">
-  <!-- Hero Section -->
   <section class="group-hero-section" aria-labelledby="resources-heading">
     <div class="container">
       <nav aria-label="Breadcrumb" class="breadcrumb breadcrumb-hero">
@@ -143,7 +136,6 @@ foreach (array_keys($resources_by_category) as $slug) {
     </div>
   </section>
 
-  <!-- Filter Options -->
   <section class="content-section" id="resource-library" aria-labelledby="filter-heading">
     <div class="container">
       <div class="section-header-center">
@@ -225,7 +217,6 @@ foreach (array_keys($resources_by_category) as $slug) {
     </section>
   <?php endif; ?>
 
-  <!-- Newsletter Signup Section -->
   <section class="content-section">
     <div class="container">
       <div class="resources-newsletter-box">
@@ -239,7 +230,6 @@ foreach (array_keys($resources_by_category) as $slug) {
     </div>
   </section>
 
-  <!-- Bottom CTA Section -->
   <section class="cqc-cta-section">
     <div class="container">
       <div class="cqc-cta-content">
@@ -254,7 +244,6 @@ foreach (array_keys($resources_by_category) as $slug) {
   </section>
 </main>
 
-<!-- Schema.org Structured Data -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -318,30 +307,25 @@ foreach (array_keys($resources_by_category) as $slug) {
 (function() {
   'use strict';
   
-  // Resource filter functionality
   const filterButtons = document.querySelectorAll('.resources-filter-btn');
   const categorySections = document.querySelectorAll('section[data-category]');
   
   filterButtons.forEach(button => {
     button.addEventListener('click', function() {
       const filterValue = this.getAttribute('data-filter');
-      
-      // Update active button
+
       filterButtons.forEach(btn => {
         btn.classList.remove('active');
         btn.setAttribute('aria-pressed', 'false');
       });
       this.classList.add('active');
       this.setAttribute('aria-pressed', 'true');
-      
-      // Filter sections
+
       if (filterValue === 'all') {
-        // Show all sections
         categorySections.forEach(section => {
           section.style.display = 'block';
         });
       } else {
-        // Show only matching category
         categorySections.forEach(section => {
           const sectionCategory = section.getAttribute('data-category');
           if (sectionCategory === filterValue) {
@@ -351,8 +335,7 @@ foreach (array_keys($resources_by_category) as $slug) {
           }
         });
       }
-      
-      // Smooth scroll to first visible section
+
       const firstVisible = document.querySelector('section[data-category][style*="display: block"]');
       if (firstVisible && filterValue !== 'all') {
         firstVisible.scrollIntoView({ behavior: 'smooth', block: 'start' });

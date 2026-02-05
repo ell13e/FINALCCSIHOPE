@@ -15,8 +15,7 @@ $contact = cta_get_contact_info();
 
 <main id="main-content">
   <?php while (have_posts()) : the_post(); ?>
-  
-  <!-- Article Header -->
+
   <article id="post-<?php the_ID(); ?>" <?php post_class('single-post'); ?>>
     <header class="single-post-header-modern">
       <div class="container">
@@ -39,17 +38,12 @@ $contact = cta_get_contact_info();
               </li>
             </ol>
           </nav>
-          <!-- Category Tag - Simple text (Untitled UI style) -->
           <?php
           $categories = get_the_category();
           if ($categories) :
-            // Get news page URL
             $news_page_id = get_option('page_for_posts');
             $news_url = $news_page_id ? get_permalink($news_page_id) : get_post_type_archive_link('post');
-            // Add category filter parameter (lowercase to match filter button data-category)
-            // Use sanitize_title to ensure consistent slug format
             $category_slug = strtolower(trim($categories[0]->name));
-            // Build URL with category parameter
             $filtered_url = add_query_arg('category', $category_slug, $news_url);
           ?>
           <div class="single-post-category-simple">
@@ -58,11 +52,9 @@ $contact = cta_get_contact_info();
             </a>
           </div>
           <?php endif; ?>
-          
-          <!-- Title -->
-          <h1 class="single-post-title-modern"><?php the_title(); ?></h1>
-          
-          <!-- Author, Date, Read Time - Below title -->
+
+          <h1 class="single-post-title-modern"><?php the_title(); ?>          </h1>
+
           <div class="single-post-meta-below-image">
             <?php
             $author_id = get_the_author_meta('ID');
@@ -80,8 +72,7 @@ $contact = cta_get_contact_info();
               <?php echo cta_reading_time(get_the_content()); ?> min read
             </span>
           </div>
-          
-          <!-- Share Buttons - Below author/date -->
+
           <div class="single-post-share-below">
             <span class="single-post-share-label-below">Share</span>
             <button type="button" 
@@ -112,8 +103,7 @@ $contact = cta_get_contact_info();
               <i class="fab fa-linkedin-in" aria-hidden="true"></i>
             </a>
           </div>
-          
-          <!-- Intro Paragraph - Below title -->
+
           <?php 
           $intro = get_field('news_intro');
           if ($intro) :
@@ -131,12 +121,9 @@ $contact = cta_get_contact_info();
       </div>
     </header>
 
-    <!-- Article Content -->
     <div class="container">
-        <!-- Horizontal Rule between Header and Hero -->
         <div class="single-post-divider"></div>
-        
-        <!-- Hero Section: Image and TOC in 70/30 split -->
+
         <?php if (has_post_thumbnail()) : ?>
         <div class="single-post-hero-section">
           <div class="single-post-hero-image-wrapper">
@@ -154,7 +141,6 @@ $contact = cta_get_contact_info();
                 ]); 
                 ?>
                 <?php 
-                // Display caption if available
                 $caption = get_the_post_thumbnail_caption();
                 if ($caption) :
                 ?>
@@ -163,27 +149,21 @@ $contact = cta_get_contact_info();
               </div>
             </div>
           </div>
-          <!-- TOC Sidebar -->
           <aside class="single-post-sidebar single-post-sidebar-left">
             <nav class="single-post-toc" aria-label="Article sections">
               <h3 class="single-post-toc-title">On this page</h3>
-              <ul class="single-post-toc-list" id="article-toc">
-                <!-- Populated by JavaScript from article headings -->
-              </ul>
+              <ul class="single-post-toc-list" id="article-toc"></ul>
             </nav>
           </aside>
         </div>
         <?php endif; ?>
-        
-        <!-- Horizontal Rule Container -->
+
         <div class="single-post-divider"></div>
-        
-        <!-- Article Content: Spans from image left to TOC right -->
+
         <div class="single-post-layout">
           <div class="single-post-main" id="article-body">
             <div class="entry-content">
               <?php 
-              // Display sections if using ACF repeater
               $sections = get_field('news_sections');
               if ($sections && is_array($sections)) :
                 foreach ($sections as $section) :
@@ -199,7 +179,6 @@ $contact = cta_get_contact_info();
                   endif;
                 endforeach;
               else :
-                // Fallback to standard WordPress content
                 the_content();
               endif;
               ?>
@@ -209,7 +188,6 @@ $contact = cta_get_contact_info();
       </div>
   </article>
 
-  <!-- Related Posts -->
   <?php
   $related_args = [
     'post_type' => 'post',
@@ -217,8 +195,7 @@ $contact = cta_get_contact_info();
     'post__not_in' => [get_the_ID()],
     'orderby' => 'rand',
   ];
-  
-  // Try to get posts from same category first
+
   if ($categories) {
     $related_args['cat'] = $categories[0]->term_id;
   }
@@ -282,7 +259,6 @@ $contact = cta_get_contact_info();
 
   <?php endwhile; ?>
 
-  <!-- CTA Section -->
   <section class="news-cta-section">
     <div class="container">
       <div class="news-cta-content">

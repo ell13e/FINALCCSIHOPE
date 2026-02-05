@@ -17,7 +17,6 @@ $recaptcha_enabled = !empty(function_exists('cta_get_recaptcha_site_key') ? cta_
 ?>
 
 <main id="main-content">
-  <!-- Hero Section -->
   <section class="group-hero-section" aria-labelledby="cookies-heading">
     <div class="container">
       <nav aria-label="Breadcrumb" class="breadcrumb breadcrumb-hero">
@@ -36,7 +35,6 @@ $recaptcha_enabled = !empty(function_exists('cta_get_recaptcha_site_key') ? cta_
     </div>
   </section>
 
-  <!-- Content Section -->
   <section class="legal-content-section">
     <div class="container">
       <div class="legal-content">
@@ -167,7 +165,6 @@ $recaptcha_enabled = !empty(function_exists('cta_get_recaptcha_site_key') ? cta_
     </div>
   </section>
 
-  <!-- Contact CTA -->
   <section class="legal-cta-section">
     <div class="container">
       <div class="legal-cta-content">

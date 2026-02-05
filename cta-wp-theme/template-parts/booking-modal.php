@@ -10,7 +10,6 @@
 $contact = cta_get_contact_info();
 ?>
 
-<!-- Booking Modal -->
 <div id="booking-modal" class="booking-modal" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title" aria-hidden="true">
   <div class="booking-modal-backdrop" aria-hidden="true"></div>
   <div class="booking-modal-container">
@@ -26,19 +25,16 @@ $contact = cta_get_contact_info();
       <p class="booking-modal-course-date" id="booking-modal-course-date" style="display: none;"></p>
       
       <form id="booking-modal-form" class="booking-modal-form" novalidate>
-        <!-- Honeypot spam protection - multiple fields -->
         <input type="text" name="website" id="booking-website" class="honeypot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
         <input type="text" name="url" id="booking-url" class="honeypot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
         <input type="text" name="homepage" id="booking-homepage" class="honeypot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
         <input type="hidden" name="form_load_time" id="booking-form-load-time" value="">
         <input type="hidden" name="submission_time" id="booking-submission-time" value="">
-        
-        <!-- Hidden course info -->
+
         <input type="hidden" name="course_name" id="booking-course-name">
         <input type="hidden" name="course_id" id="booking-course-id">
         <input type="hidden" name="event_date" id="booking-event-date">
-        
-        <!-- Error Summary -->
+
         <div id="booking-error-summary" class="booking-form-error-summary" role="alert" aria-live="assertive" style="display: none">
           <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
           <div>
@@ -112,8 +108,7 @@ $contact = cta_get_contact_info();
           </div>
           <p id="booking-consent-error" class="booking-form-error" role="alert" aria-live="polite" style="display: none"></p>
         </div>
-        
-        <!-- reCAPTCHA v3 (invisible, no widget needed) -->
+
         <input type="hidden" name="g-recaptcha-response" id="booking-recaptcha-response" value="">
         <p id="booking-recaptcha-error" class="booking-form-error" role="alert" aria-live="polite" style="display: none"></p>
         

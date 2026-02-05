@@ -15,7 +15,6 @@ $ga_enabled = !empty(get_option('cta_google_analytics_id', ''));
 ?>
 
 <main id="main-content">
-  <!-- Hero Section -->
   <section class="group-hero-section" aria-labelledby="privacy-heading">
     <div class="container">
       <nav aria-label="Breadcrumb" class="breadcrumb breadcrumb-hero">
@@ -34,7 +33,6 @@ $ga_enabled = !empty(get_option('cta_google_analytics_id', ''));
     </div>
   </section>
 
-  <!-- Content Section -->
   <section class="legal-content-section">
     <div class="container">
       <div class="legal-content">
@@ -198,7 +196,6 @@ $ga_enabled = !empty(get_option('cta_google_analytics_id', ''));
     </div>
   </section>
 
-  <!-- Contact CTA -->
   <section class="legal-cta-section">
     <div class="container">
       <div class="legal-cta-content">

@@ -9,14 +9,11 @@ get_header();
 
 $contact = cta_get_contact_info();
 
-// ACF fields
 $hero_title = get_field('hero_title') ?: 'Care Training News, Tips & Insights';
 $hero_subtitle = get_field('hero_subtitle') ?: 'Stay updated with the latest training requirements, best practices, and care sector developments.';
 
-// Pagination
 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
-// Query for blog posts
 $args = [
   'post_type' => 'post',
   'posts_per_page' => 9,
@@ -31,7 +28,6 @@ $news_query = new WP_Query($args);
 ?>
 
 <main id="main-content">
-  <!-- Hero Section -->
   <section class="group-hero-section" aria-labelledby="news-heading">
     <div class="container">
       <nav aria-label="Breadcrumb" class="breadcrumb breadcrumb-hero">
@@ -52,7 +48,6 @@ $news_query = new WP_Query($args);
       <h1 id="news-heading" class="hero-title"><?php echo esc_html($hero_title); ?></h1>
       <p class="hero-subtitle"><?php echo esc_html($hero_subtitle); ?></p>
       
-      <!-- Search and Filter -->
       <div style="max-width: 600px; margin: 2rem auto 0;">
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
           <input type="search" id="news-search" placeholder="Search articles..." style="flex: 1; min-width: 200px; padding: 0.75rem; border: 1px solid #E8E3D6; border-radius: 4px; font-size: 0.9rem;">
@@ -69,7 +64,6 @@ $news_query = new WP_Query($args);
     </div>
   </section>
 
-  <!-- Articles Section -->
   <section class="news-articles-section">
     <div class="container">
       <?php if ($news_query->have_posts()) : 

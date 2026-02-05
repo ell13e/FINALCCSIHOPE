@@ -522,10 +522,12 @@ function cta_handle_seo_fix_actions() {
             break;
             
         case 'generate_robots':
-            $robots_content = "User-agent: *\n";
-            $robots_content .= "Allow: /\n\n";
-            $robots_content .= "Sitemap: " . home_url('/sitemap.xml') . "\n";
-            
+            $robots_content = apply_filters('robots_txt', '', get_option('blog_public'));
+            if ($robots_content === '') {
+                $robots_content = "User-agent: *\nDisallow: /\n";
+            } else {
+                $robots_content = "# Theme-generated file. Also available via WordPress.\n" . $robots_content;
+            }
             $robots_file = ABSPATH . 'robots.txt';
             if (file_put_contents($robots_file, $robots_content) !== false) {
                 $success = true;

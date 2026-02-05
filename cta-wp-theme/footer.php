@@ -8,10 +8,8 @@
 $contact = cta_get_contact_info();
 ?>
 
-<!-- Clean Modern Footer -->
 <footer class="site-footer-modern">
   <div class="footer-modern-container">
-    <!-- Top Section: Logo and Description -->
     <div class="footer-modern-top">
       <div class="footer-modern-brand">
         <a href="<?php echo esc_url(home_url('/')); ?>" class="footer-modern-logo-link">
@@ -32,9 +30,7 @@ $contact = cta_get_contact_info();
       </div>
     </div>
 
-    <!-- Main Footer Grid -->
     <div class="footer-modern-grid">
-      <!-- Company Column -->
       <nav class="footer-modern-col" aria-label="Company navigation">
         <h3 class="footer-modern-heading">Company</h3>
         <?php
@@ -49,7 +45,6 @@ $contact = cta_get_contact_info();
         ?>
       </nav>
 
-      <!-- Help Column -->
       <nav class="footer-modern-col" aria-label="Help and support navigation">
         <h3 class="footer-modern-heading">Help</h3>
         <?php
@@ -64,7 +59,6 @@ $contact = cta_get_contact_info();
         ?>
       </nav>
 
-      <!-- Newsletter Column -->
       <div class="footer-modern-col footer-modern-newsletter">
         <h3 class="footer-modern-heading">Newsletter</h3>
         <p class="footer-modern-newsletter-description">Stay updated with training insights and CQC updates.</p>
@@ -74,7 +68,6 @@ $contact = cta_get_contact_info();
       </div>
     </div>
 
-    <!-- Bottom Section: Copyright -->
     <div class="footer-modern-bottom">
       <p class="footer-modern-copyright">
         © Copyright <?php echo date('Y'); ?>. All Rights Reserved by Continuity Training Academy
@@ -83,7 +76,6 @@ $contact = cta_get_contact_info();
   </div>
 </footer>
 
-<!-- Back to Top Button -->
 <button
   id="back-to-top"
   class="back-to-top"
@@ -117,7 +109,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<!-- Newsletter Modal -->
 <div id="newsletter-modal" class="newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="newsletter-title" aria-hidden="true">
   <div class="newsletter-modal-backdrop" onclick="closeNewsletterModal()" aria-hidden="true"></div>
   <div class="newsletter-signup-card">
@@ -132,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
       <p class="newsletter-signup-description">Get the latest training insights, CQC updates, and exclusive offers delivered to your inbox.</p>
     </div>
     <form id="newsletter-signup-form" class="newsletter-signup-form">
-      <!-- Error Summary -->
       <div id="newsletter-error-summary" class="newsletter-signup-error-summary" role="alert" aria-live="assertive" style="display: none">
         <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
         <div>
@@ -550,7 +540,6 @@ window.openNewsletterModal = openNewsletterModal;
 window.closeNewsletterModal = closeNewsletterModal;
 </script>
 
-<!-- Thank You Popup Modal -->
 <div id="thank-you-modal" class="thank-you-modal" role="dialog" aria-labelledby="thank-you-title" aria-hidden="true">
   <div class="thank-you-modal-overlay"></div>
   <div class="thank-you-modal-content">

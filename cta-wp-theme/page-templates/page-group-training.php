@@ -9,13 +9,11 @@ get_header();
 
 $contact = cta_get_contact_info();
 
-// ACF fields
 $hero_title = get_field('hero_title') ?: 'Group Training for Care Teams in Kent';
 $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together. Flexible scheduling, accredited certificates, and group rates that make quality training affordable.';
 ?>
 
 <main id="main-content" class="site-main">
-  <!-- Hero Section -->
   <section class="group-hero-section" aria-labelledby="group-training-heading">
     <div class="container">
       <nav aria-label="Breadcrumb" class="breadcrumb breadcrumb-hero">
@@ -34,7 +32,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
     </div>
   </section>
 
-  <!-- How It Works Section -->
   <section class="group-how-it-works-section" id="how-it-works" aria-labelledby="how-it-works-heading">
     <div class="container">
       <div class="group-how-it-works-header">
@@ -62,7 +59,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
     </div>
   </section>
 
-  <!-- Training Options Comparison Section -->
   <section class="group-training-options-section" id="comparison" aria-labelledby="comparison-heading">
     <div class="container">
       <div class="group-training-options-header">
@@ -72,7 +68,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
       </div>
 
       <div class="group-training-cards-grid" id="comparison-cards-view">
-        <!-- On-Site Training -->
         <div class="group-training-card group-training-card-popular" id="onsite" data-card-type="onsite">
           <span class="group-training-card-badge" aria-label="Most Popular option">Most Popular</span>
           <div class="group-training-card-icon">
@@ -93,7 +88,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
           </div>
         </div>
 
-        <!-- Classroom Training -->
         <div class="group-training-card" id="classroom" data-card-type="classroom">
           <div class="group-training-card-icon">
             <i class="fas fa-building" aria-hidden="true"></i>
@@ -114,7 +108,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
           </div>
         </div>
 
-        <!-- Custom Training Package -->
         <div class="group-training-card" id="custom" data-card-type="custom">
           <div class="group-training-card-icon">
             <i class="fas fa-sliders-h" aria-hidden="true"></i>
@@ -137,7 +130,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
     </div>
   </section>
 
-  <!-- Testimonials Section -->
   <section class="group-testimonials-section" id="testimonials" aria-labelledby="testimonials-heading">
     <div class="container">
       <div class="group-testimonials-header">
@@ -170,7 +162,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
     </div>
   </section>
 
-  <!-- Benefits Section -->
   <section class="group-benefits-section" id="benefits" aria-labelledby="benefits-heading">
     <div class="container">
       <div class="group-benefits-header">
@@ -205,7 +196,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
     </div>
   </section>
 
-  <!-- Group Booking Form Section -->
   <section class="contact-section-main" id="group-booking-form" aria-labelledby="group-booking-heading">
     <div class="container">
       <div class="contact-departments-header">
@@ -215,7 +205,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
       </div>
 
       <div class="contact-form-card group-booking-form-wrapper">
-        <!-- Success message overlay -->
         <div id="group-booking-success" class="contact-form-success" style="display: none;">
           <div class="contact-form-success-content">
             <i class="fas fa-check-circle contact-form-success-icon" aria-hidden="true"></i>
@@ -225,14 +214,12 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
         </div>
 
         <form id="group-booking-form-element" class="contact-form" novalidate>
-          <!-- Honeypot spam protection - multiple fields -->
           <input type="text" name="website" id="group-booking-website" class="honeypot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
           <input type="text" name="url" id="group-booking-url" class="honeypot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
           <input type="text" name="homepage" id="group-booking-homepage" class="honeypot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
           <input type="hidden" name="form_load_time" id="group-booking-form-load-time" value="">
           <input type="hidden" name="submission_time" id="group-booking-submission-time" value="">
-          
-          <!-- Error Summary -->
+
           <div id="group-booking-error-summary" class="contact-form-error-summary" role="alert" aria-live="assertive" style="display: none">
             <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
             <div>
@@ -240,8 +227,7 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
               <ul id="group-booking-error-list"></ul>
             </div>
           </div>
-          
-          <!-- Name and Email row -->
+
           <div class="contact-form-grid">
             <div class="contact-form-field">
               <label for="group-booking-name" class="contact-form-label">
@@ -259,7 +245,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
             </div>
           </div>
 
-          <!-- Phone and Organisation -->
           <div class="contact-form-grid">
             <div class="contact-form-field">
               <label for="group-booking-phone" class="contact-form-label">
@@ -277,7 +262,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
             </div>
           </div>
 
-          <!-- Number of staff and training type -->
           <div class="contact-form-grid">
             <div class="contact-form-field contact-form-field-staff">
               <label for="group-booking-numberOfStaff" class="contact-form-label">
@@ -303,7 +287,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
             </div>
           </div>
 
-          <!-- Training Details -->
           <div class="contact-form-field">
             <label for="group-booking-details" class="contact-form-label">
               Training Details (Preferred dates, courses, or any requirements)
@@ -311,7 +294,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
             <textarea id="group-booking-details" name="details" rows="3" class="contact-form-textarea" placeholder="Preferred dates, courses, or specific requirements..."></textarea>
           </div>
 
-          <!-- Discount Code -->
           <div class="contact-form-field">
             <label for="group-booking-discount-code" class="contact-form-label">
               Discount Code (Optional)
@@ -340,7 +322,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
             ></p>
           </div>
 
-          <!-- Consent Checkbox -->
           <div class="contact-form-consent">
             <div class="contact-form-consent-checkbox-wrapper">
               <input type="checkbox" id="group-booking-consent" name="consent" required class="contact-form-consent-checkbox" aria-describedby="group-booking-consent-error" aria-invalid="false" />
@@ -356,18 +337,15 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
             </div>
             <p id="group-booking-consent-error" class="contact-form-error" role="alert" aria-live="polite" style="display: none"></p>
           </div>
-          <!-- reCAPTCHA v3 (invisible, no widget needed) -->
           <input type="hidden" name="g-recaptcha-response" id="group-booking-recaptcha-response" value="">
           <p class="contact-form-privacy">
             By submitting this form, you agree to our <a href="<?php echo esc_url(cta_page_url('privacy')); ?>" class="contact-form-privacy-link">Privacy Policy</a>
           </p>
 
-          <!-- Submit button -->
           <button type="submit" id="group-booking-submit" class="contact-form-submit">Get My Free Quote</button>
         </form>
       </div>
 
-      <!-- Contact alternatives -->
       <div class="group-booking-contact">
         <p class="group-booking-contact-text">Prefer to speak directly?</p>
         <div class="group-booking-contact-links">
@@ -388,7 +366,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
     </div>
   </section>
 
-  <!-- FAQ Section -->
   <section class="group-faq-section" id="faq" aria-labelledby="faq-heading">
     <div class="container">
       <div class="group-faq-header">
@@ -396,7 +373,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
       </div>
 
       <div class="faq-two-column">
-        <!-- Sidebar -->
         <aside class="faq-sidebar" aria-label="FAQ categories">
           <nav class="faq-sidebar-nav">
             <button type="button" class="faq-sidebar-btn active" data-category="all">All</button>
@@ -407,7 +383,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
           </nav>
         </aside>
 
-        <!-- FAQ Content Panel -->
         <div class="faq-content-panel">
           <div class="group-faq-list">
             <?php
@@ -440,7 +415,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
         </div>
       </div>
       
-      <!-- Still Have Questions CTA -->
       <div class="group-faq-cta">
         <div class="group-faq-cta-content">
           <h3 class="group-faq-cta-title">Still have questions?</h3>
@@ -452,7 +426,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
   </section>
 </main>
 
-<!-- Schema.org Structured Data -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

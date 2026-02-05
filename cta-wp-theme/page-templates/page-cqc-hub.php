@@ -384,7 +384,6 @@ $collection_schema = [
 </script>
 
 <main id="main-content" class="site-main">
-  <!-- Hero Section -->
   <section class="group-hero-section" aria-labelledby="cqc-heading">
     <div class="container">
       <nav aria-label="Breadcrumb" class="breadcrumb breadcrumb-hero">
@@ -404,7 +403,6 @@ $collection_schema = [
     </div>
   </section>
 
-  <!-- Jump to Navigation -->
   <nav class="cqc-jump-nav" aria-label="Page sections">
     <div class="container">
       <span class="cqc-jump-nav-label">Jump to:</span>
@@ -425,10 +423,8 @@ $collection_schema = [
     </div>
   </nav>
 
-  <!-- CQC Training Requirements Section -->
   <?php get_template_part('template-parts/cqc-requirements-section'); ?>
 
-  <!-- Mandatory Training by Setting Section -->
   <?php
   $mandatory_training_title = function_exists('get_field') ? get_field('mandatory_training_title') : '';
   $mandatory_training_description = function_exists('get_field') ? get_field('mandatory_training_description') : '';
@@ -627,7 +623,6 @@ $collection_schema = [
     </div>
   </section>
 
-  <!-- CQC Inspection Preparation Section -->
   <?php
   $inspection_title = function_exists('get_field') ? get_field('inspection_title') : '';
   $inspection_description = function_exists('get_field') ? get_field('inspection_description') : '';
@@ -671,7 +666,6 @@ $collection_schema = [
         <p class="section-description"><?php echo wp_kses_post($inspection_description); ?></p>
       </div>
       
-      <!-- Key Focus Areas -->
       <div class="cqc-inspection-intro">
         <div class="cqc-inspection-highlight">
           <div class="cqc-inspection-highlight-icon">
@@ -684,7 +678,6 @@ $collection_schema = [
         </div>
       </div>
 
-      <!-- Accordion Sections -->
       <div class="cqc-inspection-accordions">
         <?php if (!empty($inspection_accordions) && is_array($inspection_accordions)) : 
           // Default colors for each accordion (using CQC requirements colors)
@@ -752,7 +745,6 @@ $collection_schema = [
         else :
           // Default hardcoded content
         ?>
-        <!-- Default hardcoded accordions -->
         <div class="accordion" data-accordion-group="cqc-inspection">
           <button type="button" class="accordion-trigger" aria-expanded="true" aria-controls="inspection-look-for">
             <span>
@@ -907,7 +899,6 @@ $collection_schema = [
         <?php endif; ?>
       </div>
       
-      <!-- CTA -->
       <div class="cqc-inspection-cta">
         <div class="cqc-inspection-cta-content">
           <h3><?php echo esc_html($inspection_cta_title); ?></h3>
@@ -921,7 +912,6 @@ $collection_schema = [
     </div>
   </section>
 
-  <!-- 2026 Regulatory Changes Section -->
   <?php
   $regulatory_title = function_exists('get_field') ? get_field('regulatory_title') : '';
   $regulatory_description = function_exists('get_field') ? get_field('regulatory_description') : '';
@@ -1075,7 +1065,6 @@ $collection_schema = [
     </div>
   </section>
 
-  <!-- Oliver McGowan Training Section -->
   <section class="content-section bg-light-cream" aria-labelledby="oliver-mcgowan-heading">
     <div class="container">
       <div class="section-header-center">
@@ -1084,7 +1073,6 @@ $collection_schema = [
       </div>
       
       <div class="cqc-regulatory-grid">
-        <!-- What is Oliver McGowan Training -->
         <div class="cqc-regulatory-card cqc-regulatory-card-highlight">
           <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Statutory Requirement', true)); ?>">
             <span>Statutory Requirement</span>
@@ -1104,7 +1092,6 @@ $collection_schema = [
           </div>
         </div>
 
-        <!-- Training Structure -->
         <div class="cqc-regulatory-card">
           <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Training Structure')); ?>">
             <span>Training Structure</span>
@@ -1128,7 +1115,6 @@ $collection_schema = [
           </div>
         </div>
 
-        <!-- Who Needs It -->
         <div class="cqc-regulatory-card">
           <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Who Needs It')); ?>">
             <span>Who Needs It</span>
@@ -1152,7 +1138,6 @@ $collection_schema = [
           </div>
         </div>
 
-        <!-- Compliance -->
         <div class="cqc-regulatory-card">
           <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Compliance')); ?>">
             <span>Compliance</span>
@@ -1181,7 +1166,6 @@ $collection_schema = [
     </div>
   </section>
 
-  <!-- CQC Official Resources Section -->
   <section class="content-section bg-light-cream" aria-labelledby="cqc-resources-heading">
     <div class="container">
       <div class="section-header-center">
@@ -1190,7 +1174,6 @@ $collection_schema = [
       </div>
       
       <div class="cqc-regulatory-grid">
-        <!-- Guidance & Regulation -->
         <div class="cqc-regulatory-card">
           <a href="https://www.cqc.org.uk/guidance-regulation" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
             <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Guidance')); ?>">
@@ -1209,7 +1192,6 @@ $collection_schema = [
           </a>
         </div>
 
-        <!-- Publications -->
         <div class="cqc-regulatory-card">
           <a href="https://www.cqc.org.uk/publications" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
             <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Reports')); ?>">
@@ -1235,7 +1217,6 @@ $collection_schema = [
           </a>
         </div>
 
-        <!-- News & Updates -->
         <div class="cqc-regulatory-card">
           <a href="https://www.cqc.org.uk/news" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
             <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Updates')); ?>">
@@ -1261,7 +1242,6 @@ $collection_schema = [
           </a>
         </div>
 
-        <!-- About CQC -->
         <div class="cqc-regulatory-card">
           <a href="https://www.cqc.org.uk/about-us" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
             <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('About')); ?>">
@@ -1290,7 +1270,6 @@ $collection_schema = [
     </div>
   </section>
 
-  <!-- Additional Government Guidance Section -->
   <section class="content-section" aria-labelledby="government-guidance-heading">
     <div class="container">
       <div class="section-header-center">
@@ -1299,7 +1278,6 @@ $collection_schema = [
       </div>
       
       <div class="cqc-regulatory-grid">
-        <!-- Infection Control Code of Practice -->
         <div class="cqc-regulatory-card">
           <a href="https://www.gov.uk/government/publications/the-health-and-social-care-act-2008-code-of-practice-on-the-prevention-and-control-of-infections-and-related-guidance/health-and-social-care-act-2008-code-of-practice-on-the-prevention-and-control-of-infections-and-related-guidance" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
             <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Code of Practice')); ?>">
@@ -1318,7 +1296,6 @@ $collection_schema = [
           </a>
         </div>
 
-        <!-- Restraint and Restrictive Intervention -->
         <div class="cqc-regulatory-card">
           <a href="https://assets.publishing.service.gov.uk/media/5d1387e240f0b6350e1ab567/reducing-the-need-for-restraint-and-restrictive-intervention.pdf" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
             <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Guidance')); ?>">
@@ -1337,7 +1314,6 @@ $collection_schema = [
           </a>
         </div>
 
-        <!-- Training Tariff -->
         <div class="cqc-regulatory-card">
           <a href="https://www.gov.uk/government/publications/healthcare-education-and-training-tariff-2025-to-2026/education-and-training-tariffs-2025-to-2026" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
             <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Funding')); ?>">
@@ -1356,7 +1332,6 @@ $collection_schema = [
           </a>
         </div>
 
-        <!-- Naloxone Guidance -->
         <div class="cqc-regulatory-card">
           <a href="https://www.gov.uk/guidance/supplying-take-home-naloxone-without-a-prescription" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
             <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Guidance')); ?>">
@@ -1375,7 +1350,6 @@ $collection_schema = [
           </a>
         </div>
 
-        <!-- Down Syndrome Act Guidance -->
         <div class="cqc-regulatory-card">
           <a href="https://www.gov.uk/government/consultations/down-syndrome-act-2022-draft-statutory-guidance-easy-read" target="_blank" rel="noopener noreferrer" class="cqc-regulatory-card-link">
             <div class="cqc-regulatory-label <?php echo esc_attr(cta_get_label_color_class('Statutory Guidance', true)); ?>">
@@ -1397,7 +1371,6 @@ $collection_schema = [
     </div>
   </section>
 
-  <!-- CQC Articles Section -->
   <?php if ($cqc_query->have_posts()) : ?>
   <section class="news-articles-section" aria-labelledby="cqc-articles-heading">
     <div class="container">
@@ -1460,7 +1433,6 @@ $collection_schema = [
   </section>
   <?php endif; ?>
 
-  <!-- CQC Training Courses Section -->
   <?php if ($cqc_courses->have_posts()) : ?>
   <section class="courses-listing-section" aria-labelledby="cqc-courses-heading">
     <div class="container">
@@ -1538,7 +1510,6 @@ $collection_schema = [
   </section>
   <?php endif; ?>
 
-  <!-- FAQ Section -->
   <?php if (!empty($faqs)) : ?>
   <section class="content-section bg-light-cream" aria-labelledby="cqc-faq-heading">
     <div class="container">
@@ -1582,7 +1553,6 @@ $collection_schema = [
   </section>
   <?php endif; ?>
 
-  <!-- Downloadable CQC Resources Section -->
   <?php 
   $downloadable_resources = get_field('downloadable_resources');
   if ($downloadable_resources && is_array($downloadable_resources) && !empty($downloadable_resources)) : 
@@ -1635,7 +1605,6 @@ $collection_schema = [
   </section>
   <?php endif; ?>
 
-  <!-- CTA Section -->
   <section class="cqc-cta-section" aria-labelledby="cqc-cta-heading">
     <div class="container">
       <div class="cqc-cta-content">
@@ -1650,7 +1619,6 @@ $collection_schema = [
   </section>
 </main>
 
-<!-- Schema.org Structured Data -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

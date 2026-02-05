@@ -81,25 +81,6 @@
   </div>
 </div>
 
-<!-- 
-  Header Navigation
-  
-  NOTE FOR DEVELOPERS: The navigation uses a hybrid approach:
-  - Main nav links (Home, Courses, Upcoming Courses, etc.) are hardcoded
-  - Courses mega menu is hardcoded (complex structure with icons, descriptions, multi-column layouts)
-  - Resources dropdown uses wp_nav_menu() with custom walker (editable in WordPress admin)
-  
-  To modify navigation:
-  1. Main nav links: Edit the <nav class="nav-desktop"> section below
-  2. Mega menu items: Edit the mega-menu-section divs
-  3. Resources dropdown: Edit via WordPress Admin > Appearance > Menus (assign to 'resources' location)
-  4. Mobile menu: Edit the <div id="mobile-menu"> section
-  
-  Menu locations registered:
-  - 'resources' - Resources dropdown (editable in WordPress admin)
-  - 'footer-company' - Footer Company column (editable in WordPress admin)
-  - 'footer-help' - Footer Help column (editable in WordPress admin)
--->
 <header class="site-header" id="header">
   <div class="header-container">
     <div class="header-inner-wrapper">
@@ -188,7 +169,6 @@
             </button>
             <div class="mega-menu-content">
               <div class="mega-menu-sections">
-                <!-- Core Training Section -->
                 <section class="mega-menu-section" aria-labelledby="section-core-training">
                   <h3 class="mega-menu-section-title" id="section-core-training">Core Training</h3>
                   <div class="mega-menu-items" role="group" aria-labelledby="section-core-training">

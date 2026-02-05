@@ -402,7 +402,6 @@ foreach ($faqs as $faq) {
 <?php endif; ?>
 
 <main id="main-content" class="site-main">
-  <!-- Hero Section -->
   <section class="group-hero-section" aria-labelledby="faqs-heading">
     <div class="container">
       <nav aria-label="Breadcrumb" class="breadcrumb breadcrumb-hero">
@@ -417,7 +416,6 @@ foreach ($faqs as $faq) {
       <h1 id="faqs-heading" class="hero-title"><?php echo esc_html($hero_title); ?></h1>
       <p class="hero-subtitle"><?php echo esc_html($hero_subtitle); ?></p>
       
-      <!-- Search Bar -->
       <div class="faqs-search-container">
         <div class="faqs-search-wrapper">
           <i class="fas fa-search faqs-search-icon" aria-hidden="true"></i>
@@ -438,14 +436,12 @@ foreach ($faqs as $faq) {
     </div>
   </section>
 
-  <!-- FAQ Categories -->
   <section class="content-section" aria-labelledby="faq-categories-heading">
     <div class="container">
       <div class="section-header-center">
         <h2 id="faq-categories-heading" class="section-title">Browse FAQs by Category</h2>
       </div>
       
-      <!-- Category Filters -->
       <div class="faqs-filter-group">
         <button type="button" class="faqs-filter-btn active" data-category="all" aria-pressed="true">
           <i class="fas fa-th" aria-hidden="true"></i> All Categories
@@ -496,7 +492,6 @@ foreach ($faqs as $faq) {
     </div>
   </section>
 
-  <!-- Still Have Questions Section -->
   <section class="content-section bg-light-cream">
     <div class="container">
       <div class="faqs-contact-box">
@@ -514,7 +509,6 @@ foreach ($faqs as $faq) {
     </div>
   </section>
 
-  <!-- Related Resources Section -->
   <section class="content-section">
     <div class="container">
       <div class="section-header-center">
@@ -890,7 +884,6 @@ foreach ($faqs as $faq) {
 })();
 </script>
 
-<!-- Schema.org Structured Data -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

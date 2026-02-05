@@ -1,50 +1,14 @@
 <?php
 /**
- * Custom Robots.txt Configuration
- * 
- * WordPress generates robots.txt dynamically.
- * Add this to functions.php to customize it.
- * 
+ * Optional meta and Open Graph configuration
+ *
+ * Robots.txt is handled by inc/seo.php (cta_robots_txt). Include this file
+ * from functions.php only if you want these meta/OG tags in addition to
+ * the theme's SEO output. If the theme's SEO in inc/seo.php already outputs
+ * meta and Open Graph tags, including this file may duplicate them.
+ *
  * @package CTA_Theme
  */
-
-/**
- * Customize WordPress robots.txt
- */
-add_filter('robots_txt', 'cta_custom_robots_txt', 10, 2);
-function cta_custom_robots_txt($output, $public) {
-    if ('0' === $public) {
-        // If site is not public, disallow all
-        return $output;
-    }
-    
-    $site_url = get_site_url();
-    $sitemap_url = $site_url . '/wp-sitemap.xml';
-    
-    $custom_rules = "# Continuity Training Academy - Custom Robots.txt\n\n";
-    
-    $custom_rules .= "User-agent: *\n";
-    $custom_rules .= "Disallow: /wp-admin/\n";
-    $custom_rules .= "Disallow: /wp-includes/\n";
-    $custom_rules .= "Disallow: /wp-content/plugins/\n";
-    $custom_rules .= "Disallow: /wp-content/themes/\n";
-    $custom_rules .= "Disallow: /wp-content/cache/\n";
-    $custom_rules .= "Disallow: /wp-json/\n";
-    $custom_rules .= "Disallow: /*?s=\n"; // Block search URLs
-    $custom_rules .= "Disallow: /*?p=\n"; // Block old permalink structure
-    $custom_rules .= "Disallow: /cart/\n";
-    $custom_rules .= "Disallow: /checkout/\n";
-    $custom_rules .= "Disallow: /my-account/\n";
-    $custom_rules .= "Allow: /wp-admin/admin-ajax.php\n\n";
-    
-    // Allow important directories
-    $custom_rules .= "Allow: /wp-content/uploads/\n\n";
-    
-    // Sitemap location
-    $custom_rules .= "Sitemap: {$sitemap_url}\n";
-    
-    return $custom_rules;
-}
 
 /**
  * Add meta tags for SEO (no plugin needed)

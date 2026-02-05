@@ -9,15 +9,11 @@
 
 get_header();
 
-// Check if this is an unsubscribe request (with token)
 $is_unsubscribe_request = isset($_GET['cta_unsubscribe']) && isset($_GET['email']) && isset($_GET['token']);
 $unsubscribed = isset($_GET['unsubscribed']) && $_GET['unsubscribed'] === '1';
 $email = isset($_GET['email']) ? sanitize_email($_GET['email']) : '';
 
-// If this is an unsubscribe request, process it
 if ($is_unsubscribe_request && !$unsubscribed) {
-    // The cta_handle_unsubscribe() function will process this via template_redirect hook
-    // and redirect here with unsubscribed=1, so we just show a loading state
     ?>
     <main id="main-content">
         <section class="page-hero-section page-hero-section-simple">
@@ -40,7 +36,6 @@ if ($is_unsubscribe_request && !$unsubscribed) {
 ?>
 
 <main id="main-content">
-    <!-- Hero Section -->
     <section class="page-hero-section page-hero-section-simple" aria-labelledby="unsubscribe-heading">
         <div class="container">
             <nav aria-label="Breadcrumb" class="breadcrumb breadcrumb-hero">
@@ -58,7 +53,6 @@ if ($is_unsubscribe_request && !$unsubscribed) {
         </div>
     </section>
 
-    <!-- Content Section -->
     <section class="legal-content-section">
         <div class="container">
             <div class="legal-content" style="max-width: 600px; margin: 0 auto;">

@@ -2678,11 +2678,6 @@ function cta_get_page_defaults($post_id) {
             'hero_title' => 'About Our Care Training in Kent',
             'hero_subtitle' => 'CQC-compliant, CPD-accredited care sector training in Kent since 2020',
         ],
-        'page-templates/page-location.php' => [
-            // These are refined below with location-specific defaults when possible.
-            'section_testimonials_title' => 'What People Say',
-            'section_faq_title' => 'Frequently Asked Questions',
-        ],
     ];
     
     // Check template first
@@ -2723,21 +2718,6 @@ function cta_get_page_defaults($post_id) {
         }
     }
 
-    // Location pages: make defaults feel page-specific (pull from location data)
-    if ($template === 'page-templates/page-location.php') {
-        $location_slug = function_exists('get_field') ? get_field('location_slug', $post_id) : '';
-        if (empty($location_slug) && !empty($slug)) {
-            $location_slug = $slug;
-        }
-        $location_data = function_exists('cta_get_location_data') ? cta_get_location_data((string) $location_slug) : null;
-        if (is_array($location_data)) {
-            // Keep hero_title as the page title by default, but make subtitle helpful.
-            if (empty($defaults['hero_subtitle']) && !empty($location_data['description'])) {
-                $defaults['hero_subtitle'] = (string) $location_data['description'];
-            }
-        }
-    }
-    
     return $defaults;
 }
 
@@ -2817,44 +2797,6 @@ function cta_get_page_content_sections($post_id) {
     $slug = $post->post_name;
     
     $sections = [];
-    
-    // Location page sections (SEO landing pages)
-    if ($template === 'page-templates/page-location.php') {
-        // Try to infer location from ACF location_slug, otherwise page slug.
-        $location_slug = function_exists('get_field') ? get_field('location_slug', $post_id) : '';
-        if (empty($location_slug) && !empty($slug)) {
-            $location_slug = $slug;
-        }
-        $location_data = function_exists('cta_get_location_data') ? cta_get_location_data((string) $location_slug) : null;
-        $location_name = is_array($location_data) ? ($location_data['display_name'] ?? $post->post_title) : $post->post_title;
-
-        $sections = [
-            [
-                'section_heading' => 'Professional Care Training in ' . $location_name,
-                'section_list_style' => 'default',
-                'section_content' => '<p>We provide CQC-compliant, CPD-accredited care training for teams across ' . esc_html($location_name) . ' and the surrounding area.</p>
-<p>Choose face-to-face sessions at our Maidstone Studios or book on-site training at your service to keep your team confident, compliant, and inspection-ready.</p>
-<h3>On-site training for your team</h3>
-<p>We can deliver training at your location and tailor examples to your policies, service user needs, and real-world scenarios.</p>',
-            ],
-            [
-                'section_heading' => 'What training can you book?',
-                'section_list_style' => 'default',
-                'section_content' => '<p>Our most popular courses for care providers include:</p>
-<ul>
-<li>Moving &amp; Handling</li>
-<li>Safeguarding Adults</li>
-<li>Medication Competency</li>
-<li>Emergency First Aid at Work</li>
-<li>Infection Prevention &amp; Control</li>
-<li>Care Certificate support</li>
-</ul>
-<p>Browse our full course list and upcoming dates, or contact us for a tailored training plan for your service.</p>',
-            ],
-        ];
-
-        return $sections;
-    }
 
     // Group Training page sections
     if ($template === 'page-templates/page-group-training.php' || $slug === 'group-training') {
@@ -2943,40 +2885,6 @@ function cta_get_page_faqs($post_id) {
     
     $faqs = [];
     
-    // Location page FAQs (lightweight, customisable per page)
-    if ($template === 'page-templates/page-location.php') {
-        $location_slug = function_exists('get_field') ? get_field('location_slug', $post_id) : '';
-        if (empty($location_slug) && !empty($slug)) {
-            $location_slug = $slug;
-        }
-        $location_data = function_exists('cta_get_location_data') ? cta_get_location_data((string) $location_slug) : null;
-        $location_name = is_array($location_data) ? ($location_data['display_name'] ?? $post->post_title) : $post->post_title;
-
-        $faqs = [
-            [
-                'category' => 'general',
-                'question' => 'Do you deliver care training in ' . $location_name . '?',
-                'answer' => 'Yes. We deliver training for care teams in ' . $location_name . ' and nearby areas. You can attend scheduled sessions or book on-site training at your service.',
-            ],
-            [
-                'category' => 'scheduling',
-                'question' => 'Can you train our whole team on-site?',
-                'answer' => 'Yes. On-site training is ideal for groups and can be scheduled around shifts where possible. Contact us with your team size and preferred dates.',
-            ],
-            [
-                'category' => 'pricing',
-                'question' => 'Do you offer group rates?',
-                'answer' => 'Yes. Group and multi-course bookings are often more cost-effective than booking individual places. We’ll provide a quote based on your requirements.',
-            ],
-            [
-                'category' => 'general',
-                'question' => 'Are your courses CQC-compliant and accredited?',
-                'answer' => 'Our training is designed for the care sector and aligns with CQC expectations. Many courses are CPD-accredited and include certificates for your records.',
-            ],
-        ];
-
-        return $faqs;
-    }
 
     // Group Training page FAQs
     if ($template === 'page-templates/page-group-training.php' || $slug === 'group-training') {
@@ -3152,10 +3060,6 @@ function cta_populate_faqs_on_activation() {
             [
                 'key' => '_wp_page_template',
                 'value' => 'page-templates/page-group-training.php',
-            ],
-            [
-                'key' => '_wp_page_template',
-                'value' => 'page-templates/page-location.php',
             ],
         ],
     ]);
