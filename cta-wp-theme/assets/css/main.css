@@ -4642,13 +4642,13 @@ input[type="search"]::-ms-clear,
   flex-direction: column;
   gap: 0;
   width: 100%;
-  padding-top: var(--spacing-xl); /* Match footer spacing from card edge */
+  padding-top: 0;
 }
 
-/* On larger screens, account for larger padding */
+/* On larger screens */
 @media (min-width: 768px) {
   .category-header-left {
-    padding-top: var(--spacing-2xl); /* Match spacing on larger screens */
+    padding-top: 0;
   }
 }
 
@@ -41077,17 +41077,12 @@ fieldset.booking-modal-field legend.booking-modal-label {
   box-sizing: border-box;
 }
 
-/* Tablet: slightly larger gap with proper spacing */
+/* Tablet: clear separation between stacked main and sidebar */
 @media (min-width: 640px) and (max-width: 967px) {
   .course-detail-grid {
-    gap: var(--spacing-xl); /* 32px - standard tablet gap */
+    gap: var(--spacing-2xl); /* 48px - clear separation when stacked */
     padding-top: 0; /* Remove top padding on tablet */
     margin-top: 0; /* Remove top margin on tablet */
-  }
-  
-  /* Add proper spacing between main and sidebar on tablet */
-  .course-detail-main {
-    margin-bottom: var(--spacing-xl); /* 32px */
   }
 }
 
@@ -41561,7 +41556,7 @@ fieldset.booking-modal-field legend.booking-modal-label {
   .course-detail-grid {
     display: grid;
     grid-template-columns: 1fr; /* Single column on mobile - prevent overlap */
-    gap: var(--spacing-lg); /* 24px - reduced gap on mobile */
+    gap: var(--spacing-2xl); /* 48px - clear separation between sidebar and main when stacked */
     padding: 0;
     padding-top: 0; /* Remove top padding on mobile */
     margin-top: 0; /* Remove top margin on mobile */
@@ -41582,7 +41577,7 @@ fieldset.booking-modal-field legend.booking-modal-label {
     width: 100%;
     max-width: 100%;
     margin-top: 0; /* Remove any top margin on mobile */
-    margin-bottom: var(--spacing-lg); /* 24px spacing */
+    margin-bottom: 0; /* Grid gap handles spacing; avoid double margin */
     padding-top: 0; /* Remove any top padding on mobile */
     box-sizing: border-box;
     z-index: auto; /* Reset z-index on mobile */
@@ -41745,7 +41740,7 @@ fieldset.booking-modal-field legend.booking-modal-label {
     padding-top: 0; /* Remove top padding on tablet */
     margin-top: 0; /* Remove top margin on tablet */
     box-sizing: border-box;
-    gap: var(--spacing-xl); /* 32px */
+    gap: var(--spacing-2xl); /* 48px - match grid gap above */
   }
   
   .course-detail-sidebar {
@@ -41754,7 +41749,7 @@ fieldset.booking-modal-field legend.booking-modal-label {
     width: 100%;
     max-width: 100%;
     margin-top: 0; /* Remove any top margin on tablet */
-    margin-bottom: var(--spacing-xl); /* 32px spacing */
+    margin-bottom: 0; /* Grid gap handles spacing */
     padding-top: 0; /* Remove any top padding on tablet */
     box-sizing: border-box;
   }
