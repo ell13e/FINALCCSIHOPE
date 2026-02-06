@@ -1106,8 +1106,9 @@ function cta_maybe_seed_missing_static_pages() {
 add_action('admin_init', 'cta_maybe_seed_missing_static_pages', 20);
 
 /**
- * On 404 for a known static page slug, create missing static pages and redirect once.
- * Fixes /about/, /group-training/, etc. when those pages were never created.
+ * On 404 for a known static page slug: if the page exists (published), serve it by fixing the query.
+ * If the page does not exist, create missing static pages and redirect once.
+ * Prevents redirect loops when the page exists but rewrite rules didn't match (e.g. stale permalinks).
  */
 function cta_create_missing_static_page_on_404() {
     if (!is_404()) {
@@ -1118,7 +1119,6 @@ function cta_create_missing_static_page_on_404() {
     $path = $home_path !== '' && strpos($req_path, $home_path) === 0
         ? trim(substr($req_path, strlen($home_path)), '/')
         : $req_path;
-    // Strip index.php so /index.php/about/ yields slug "about"
     $path = preg_replace('#^index\.php/?#', '', $path);
     $segments = array_values(array_filter(explode('/', $path), function ($s) {
         return $s !== '' && $s !== 'index.php';
@@ -1132,14 +1132,47 @@ function cta_create_missing_static_page_on_404() {
     if (!in_array($slug, $allowed_slugs, true)) {
         return;
     }
-    if (get_page_by_path($slug, OBJECT, 'page')) {
+
+    // Page exists and is published: WordPress 404'd anyway (e.g. stale rewrite rules). Serve the page.
+    $page = get_page_by_path($slug, OBJECT, 'page');
+    if ($page && $page->post_status === 'publish') {
+        $GLOBALS['wp_query'] = new WP_Query([
+            'page_id' => $page->ID,
+            'post_type' => 'page',
+        ]);
+        $GLOBALS['wp_query']->is_404 = false;
+        status_header(200);
         return;
     }
+
+    // Page exists in trash or other status: do not redirect (would loop).
+    if (function_exists('cta_page_exists_by_slug_any_status') && cta_page_exists_by_slug_any_status($slug)) {
+        return;
+    }
+
+    // Page does not exist: create missing static pages and redirect once.
     if (!function_exists('cta_create_static_pages')) {
         return;
     }
     cta_create_static_pages();
+
     $redirect_url = ($slug === 'home') ? home_url('/') : home_url('/' . $slug . '/');
+    $current_url = (is_ssl() ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? '') . ($_SERVER['REQUEST_URI'] ?? '');
+    $redirect_normalized = rtrim($redirect_url, '/');
+    $current_normalized = rtrim(strtok($current_url, '?'), '/');
+    if ($redirect_normalized === $current_normalized) {
+        // Redirect would send to same URL → loop. Try once more to serve the page, then bail.
+        $page = get_page_by_path($slug, OBJECT, 'page');
+        if ($page && $page->post_status === 'publish') {
+            $GLOBALS['wp_query'] = new WP_Query([
+                'page_id' => $page->ID,
+                'post_type' => 'page',
+            ]);
+            $GLOBALS['wp_query']->is_404 = false;
+            status_header(200);
+        }
+        return;
+    }
     wp_safe_redirect($redirect_url, 302, 'CTA Create Missing Page');
     exit;
 }

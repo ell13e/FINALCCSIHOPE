@@ -54,16 +54,6 @@ function cta_add_seo_admin_menu() {
         'cta_seo_bulk_page'
     );
     
-    // Redirects
-    add_submenu_page(
-        'cta-seo',
-        'Redirects',
-        'Redirects',
-        'manage_options',
-        'cta-seo-redirects',
-        'cta_seo_redirects_page'
-    );
-    
     // Sitemap
     add_submenu_page(
         'cta-seo',
@@ -171,10 +161,8 @@ function cta_seo_dashboard_page() {
     $courses_count = wp_count_posts('course')->publish ?? 0;
     $events_count = wp_count_posts('course_event')->publish ?? 0;
     
-    // Count redirects
     global $wpdb;
-    $redirects_count = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}cta_redirects");
-    
+
     // Count images without alt text
     $images_without_alt = $wpdb->get_var("
         SELECT COUNT(*) 
@@ -265,19 +253,6 @@ function cta_seo_dashboard_page() {
                             <strong>Events:</strong> <?php echo number_format($events_count); ?>
                         </li>
                     </ul>
-                </div>
-                
-                <!-- Redirects Stats -->
-                <div class="card">
-                    <h2>Redirects</h2>
-                    <p style="font-size: 32px; margin: 10px 0; font-weight: bold;">
-                        <?php echo number_format($redirects_count); ?>
-                    </p>
-                    <p style="margin: 0;">
-                        <a href="<?php echo admin_url('admin.php?page=cta-seo-redirects'); ?>" class="button">
-                            Manage Redirects
-                        </a>
-                    </p>
                 </div>
                 
                 <!-- Image SEO Stats -->
@@ -819,18 +794,6 @@ function cta_seo_bulk_page() {
         </div>
     </div>
     <?php
-}
-
-/**
- * SEO Redirects Page (redirects to existing function)
- */
-function cta_seo_redirects_page() {
-    // Use existing redirects function
-    if (function_exists('cta_redirects_admin_page')) {
-        cta_redirects_admin_page();
-    } else {
-        echo '<div class="wrap"><h1>Redirects</h1><p>Redirects functionality not available.</p></div>';
-    }
 }
 
 /**
