@@ -618,12 +618,16 @@ function cta_discount_codes_page() {
                 </div>
                 <div>
                     <strong>Course Discounts:</strong> 
-                    <span style="color: #00a32a;"><?php echo esc_html($courses_with_discounts_count); ?> active</span>
+                    <?php if ($courses_with_discounts_count === 0) : ?>
+                        <span style="color: #8c8f94;">None active</span>
+                    <?php else : ?>
+                        <span style="color: #00a32a;"><?php echo esc_html($courses_with_discounts_count); ?> active</span>
+                    <?php endif; ?>
                 </div>
                 <div>
                     <strong>Discount Codes:</strong> 
                     <span style="color: #2271b1;"><?php echo esc_html(count($codes)); ?> total</span>
-                    (<?php echo esc_html($active_codes_count); ?> active, <?php echo esc_html($expired_codes_count); ?> expired)
+                    (<?php echo $active_codes_count === 0 ? '<span style="color: #8c8f94;">none active</span>' : esc_html($active_codes_count) . ' active'; ?>, <?php echo esc_html($expired_codes_count); ?> expired)
                 </div>
             </div>
         </div>
@@ -1117,6 +1121,103 @@ function cta_discount_codes_page() {
                 });
                 </script>
             <?php endif; ?>
+        </div>
+        
+        <!-- All course discounts -->
+        <div style="background: #fff; padding: 20px; border: 1px solid #ccd0d4; box-shadow: 0 1px 1px rgba(0,0,0,.04); margin-top: 20px;">
+            <h2 style="margin-top: 0;">All course discounts</h2>
+            <p style="color: #646970; margin-bottom: 16px;">Every course and its discount status. Use this view to see inactive, expired, or courses with no discount.</p>
+            <table class="wp-list-table widefat fixed striped">
+                <thead>
+                    <tr>
+                        <th style="width: 200px;">Course Name</th>
+                        <th style="width: 100px;">Status</th>
+                        <th style="width: 100px;">Discount %</th>
+                        <th style="width: 150px;">Label</th>
+                        <th style="width: 120px;">Type</th>
+                        <th style="width: 120px;">Code</th>
+                        <th style="width: 120px;">Expiry Date</th>
+                        <th style="width: 200px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $now_ts = current_time('timestamp');
+                    foreach ($all_courses as $course) :
+                        $discount = cta_get_course_discount($course->ID);
+                        $is_active = cta_is_course_discount_active($course->ID);
+                        $is_expired = false;
+                        if (!empty($discount['expiry_date'])) {
+                            $expiry = strtotime($discount['expiry_date']);
+                            $is_expired = $expiry && $now_ts > $expiry;
+                        }
+                        $has_discount_config = ($discount['active'] && $discount['percentage'] > 0) || !empty($discount['expiry_date']) || !empty($discount['discount_code']) || !empty($discount['label']);
+                        if ($is_active) {
+                            $status = 'Active';
+                            $status_style = 'color: #00a32a; font-weight: 600;';
+                        } elseif ($is_expired) {
+                            $status = 'Expired';
+                            $status_style = 'color: #d63638;';
+                        } elseif ($discount['active'] && $discount['percentage'] > 0) {
+                            $status = 'Inactive';
+                            $status_style = 'color: #856404;';
+                        } else {
+                            $status = 'None';
+                            $status_style = 'color: #8c8f94;';
+                        }
+                    ?>
+                    <tr>
+                        <td><strong><?php echo esc_html($course->post_title); ?></strong></td>
+                        <td><span style="<?php echo esc_attr($status_style); ?>"><?php echo esc_html($status); ?></span></td>
+                        <td><?php echo $has_discount_config && $discount['percentage'] > 0 ? esc_html($discount['percentage']) . '%' : '<span style="color: #8c8f94;">-</span>'; ?></td>
+                        <td><?php echo esc_html($discount['label'] ?: '-'); ?></td>
+                        <td>
+                            <?php if ($has_discount_config && $discount['requires_code']) : ?>
+                                <span style="color: #856404;">Code Required</span>
+                            <?php elseif ($has_discount_config) : ?>
+                                <span style="color: #00a32a;">Automatic</span>
+                            <?php else : ?>
+                                <span style="color: #8c8f94;">-</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($discount['requires_code'] && !empty($discount['discount_code'])) : ?>
+                                <code style="background: #f0f0f1; padding: 2px 6px; border-radius: 3px;"><?php echo esc_html($discount['discount_code']); ?></code>
+                            <?php else : ?>
+                                <span style="color: #8c8f94;">-</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if (!empty($discount['expiry_date'])) : ?>
+                                <?php if ($is_expired) : ?>
+                                    <span style="color: #d63638;">Expired</span><br>
+                                    <small style="color: #8c8f94;"><?php echo esc_html(date('d M Y', strtotime($discount['expiry_date']))); ?></small>
+                                <?php else : ?>
+                                    <?php echo esc_html(date('d M Y', strtotime($discount['expiry_date']))); ?>
+                                <?php endif; ?>
+                            <?php else : ?>
+                                <span style="color: #8c8f94;">-</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($has_discount_config) : ?>
+                                <button type="button" class="button button-small course-discount-edit" data-course-id="<?php echo esc_attr($course->ID); ?>" style="margin-right: 5px;">
+                                    Edit
+                                </button>
+                                <a href="<?php echo esc_url(wp_nonce_url(add_query_arg(['disable_course_discount' => $course->ID], admin_url('edit.php?post_type=course&page=cta-discount-codes')), 'cta_disable_course_discount_' . $course->ID)); ?>" class="button button-small">
+                                    Disable
+                                </a>
+                                <a href="<?php echo esc_url(wp_nonce_url(add_query_arg(['delete_course_discount' => $course->ID], admin_url('edit.php?post_type=course&page=cta-discount-codes')), 'cta_delete_course_discount_' . $course->ID)); ?>" class="button button-small" onclick="return confirm('Are you sure you want to delete the discount for <?php echo esc_js($course->post_title); ?>?');" style="color: #b32d2e; margin-left: 5px;">
+                                    Delete
+                                </a>
+                            <?php else : ?>
+                                <span style="color: #8c8f94;">-</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
         </div>
         

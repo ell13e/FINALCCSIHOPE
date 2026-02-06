@@ -632,10 +632,6 @@ function cta_fix_accessibility_page_slug() {
 }
 add_action('admin_init', 'cta_fix_accessibility_page_slug');
 
-/**
- * Fix 404s for single posts by serving them directly
- * Handles URLs with /news.html appended or .html extensions
- */
 function cta_fix_single_post_404s() {
     if (is_admin() || wp_doing_ajax()) {
         return;
@@ -677,8 +673,6 @@ function cta_fix_single_post_404s() {
                 $wp_query->is_post_type_archive = false;
                 $wp_query->is_archive = false;
                 $wp_query->is_home = false;
-                
-                // Status code should be 200, not 404
                 status_header(200);
             }
         }
@@ -686,13 +680,99 @@ function cta_fix_single_post_404s() {
 }
 add_action('template_redirect', 'cta_fix_single_post_404s', 1);
 
-/**
- * Populate test form submissions for each submission type on theme activation
- * 
- * Creates one test submission for each form type to help with testing and development
- */
+function cta_fix_single_course_404s() {
+    if (is_admin() || wp_doing_ajax()) {
+        return;
+    }
+    
+    if (!is_404()) {
+        return;
+    }
+    
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    $path = trim(strtok($request_uri, '?'), '/');
+    if (!preg_match('#^courses/([^/]+?)(?:\.html)?$#', $path, $matches)) {
+        return;
+    }
+    
+    $course_slug = $matches[1];
+    $course = get_page_by_path($course_slug, OBJECT, 'course');
+    
+    if (!$course || $course->post_status !== 'publish') {
+        return;
+    }
+    
+    global $wp_query;
+    
+    $wp_query->is_404 = false;
+    $wp_query->is_single = true;
+    $wp_query->is_singular = true;
+    
+    $wp_query->queried_object = $course;
+    $wp_query->queried_object_id = (int) $course->ID;
+    $wp_query->posts = [$course];
+    $wp_query->post_count = 1;
+    $wp_query->found_posts = 1;
+    $wp_query->max_num_pages = 1;
+    
+    $wp_query->post = $course;
+    $GLOBALS['post'] = $course;
+    
+    $wp_query->is_post_type_archive = false;
+    $wp_query->is_archive = false;
+    $wp_query->is_home = false;
+    
+    status_header(200);
+}
+add_action('template_redirect', 'cta_fix_single_course_404s', 1);
+
+function cta_fix_single_course_event_404s() {
+    if (is_admin() || wp_doing_ajax()) {
+        return;
+    }
+    
+    if (!is_404()) {
+        return;
+    }
+    
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    $path = trim(strtok($request_uri, '?'), '/');
+    if (!preg_match('#^upcoming-courses/([^/]+?)(?:\.html)?$#', $path, $matches)) {
+        return;
+    }
+    
+    $event_slug = $matches[1];
+    $event = get_page_by_path($event_slug, OBJECT, 'course_event');
+    
+    if (!$event || $event->post_status !== 'publish') {
+        return;
+    }
+    
+    global $wp_query;
+    
+    $wp_query->is_404 = false;
+    $wp_query->is_single = true;
+    $wp_query->is_singular = true;
+    
+    $wp_query->queried_object = $event;
+    $wp_query->queried_object_id = (int) $event->ID;
+    $wp_query->posts = [$event];
+    $wp_query->post_count = 1;
+    $wp_query->found_posts = 1;
+    $wp_query->max_num_pages = 1;
+    
+    $wp_query->post = $event;
+    $GLOBALS['post'] = $event;
+    
+    $wp_query->is_post_type_archive = false;
+    $wp_query->is_archive = false;
+    $wp_query->is_home = false;
+    
+    status_header(200);
+}
+add_action('template_redirect', 'cta_fix_single_course_event_404s', 1);
+
 function cta_populate_test_form_submissions() {
-    // Safety: only seed when the post type exists (it's registered on `init`)
     if (!post_type_exists('form_submission')) {
         return;
     }

@@ -1440,28 +1440,6 @@ function cta_slug_column_content($column, $post_id) {
 add_action('manage_course_posts_custom_column', 'cta_slug_column_content', 10, 2);
 
 /**
- * Quick edit support for slug
- */
-function cta_quick_edit_slug_field($column_name, $post_type) {
-    if ($post_type !== 'course' || $column_name !== 'course_slug') {
-        return;
-    }
-    ?>
-    <fieldset class="inline-edit-col-right">
-        <div class="inline-edit-col">
-            <label>
-                <span class="title">Slug</span>
-                <span class="input-text-wrap">
-                    <input type="text" name="post_name" class="ptitle" value="">
-                </span>
-            </label>
-        </div>
-    </fieldset>
-    <?php
-}
-add_action('quick_edit_custom_box', 'cta_quick_edit_slug_field', 10, 2);
-
-/**
  * Add filter dropdowns for course events
  */
 function cta_course_event_add_filters() {
