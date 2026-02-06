@@ -1175,6 +1175,33 @@ function cta_add_import_admin_page() {
 add_action('admin_menu', 'cta_add_import_admin_page');
 
 /**
+ * Fix single course/event URL conflict: rename Pages that shadow CPT URLs.
+ * Callable from admin so single /courses/slug/ and /upcoming-courses/slug/ work.
+ *
+ * @return array{changed: int, message: string}
+ */
+function cta_fix_cpt_page_slug_conflict_manual() {
+    $changed = 0;
+    $courses_page = get_page_by_path('courses', OBJECT, 'page');
+    if ($courses_page && $courses_page->post_status === 'publish') {
+        wp_update_post(['ID' => $courses_page->ID, 'post_name' => 'courses-landing']);
+        $changed++;
+    }
+    $upcoming_page = get_page_by_path('upcoming-courses', OBJECT, 'page');
+    if ($upcoming_page && $upcoming_page->post_status === 'publish') {
+        wp_update_post(['ID' => $upcoming_page->ID, 'post_name' => 'upcoming-courses-landing']);
+        $changed++;
+    }
+    if ($changed > 0) {
+        flush_rewrite_rules(false);
+    }
+    $message = $changed === 0
+        ? 'No conflicting pages found. Single course and event URLs should already work.'
+        : sprintf('Renamed %d page(s). Single course and event URLs will now load correctly.', $changed);
+    return ['changed' => $changed, 'message' => $message];
+}
+
+/**
  * Import admin page content
  */
 function cta_import_admin_page_content() {
@@ -1184,6 +1211,30 @@ function cta_import_admin_page_content() {
     $events_count = get_option('cta_events_imported_count', 0);
     $news_count = get_option('cta_news_imported_count', 0);
     $pages_count = get_option('cta_pages_created_count', 0);
+
+    // Create missing static pages only
+    if (isset($_POST['cta_create_missing_pages']) && check_admin_referer('cta_create_missing_pages_nonce')) {
+        $pages_created = cta_create_static_pages();
+        set_transient('cta_create_missing_pages_result', $pages_created, 45);
+        wp_redirect(admin_url('tools.php?page=cta-import-data&cta_pages_done=1'));
+        exit;
+    }
+
+    // Fix single course/event URLs (rename shadow pages)
+    if (isset($_POST['cta_fix_single_urls']) && check_admin_referer('cta_fix_single_urls_nonce')) {
+        $result = cta_fix_cpt_page_slug_conflict_manual();
+        set_transient('cta_fix_single_urls_result', $result, 45);
+        wp_redirect(admin_url('tools.php?page=cta-import-data&cta_urls_done=1'));
+        exit;
+    }
+
+    // Clean up course categories (enforce 2 max)
+    if (isset($_POST['cta_cleanup_categories']) && check_admin_referer('cta_cleanup_categories_nonce')) {
+        $cleaned = function_exists('cta_cleanup_course_categories') ? cta_cleanup_course_categories() : 0;
+        set_transient('cta_cleanup_categories_result', $cleaned, 45);
+        wp_redirect(admin_url('tools.php?page=cta-import-data&cta_categories_done=1'));
+        exit;
+    }
     
     // Handle manual import
     if (isset($_POST['cta_reimport']) && check_admin_referer('cta_reimport_nonce')) {
@@ -1264,6 +1315,10 @@ function cta_import_admin_page_content() {
         $session_titles_result = cta_bulk_update_session_titles();
     }
     
+    // Show result notices after redirects from fix actions
+    $create_pages_result = get_transient('cta_create_missing_pages_result');
+    $fix_urls_result = get_transient('cta_fix_single_urls_result');
+    $cleanup_cats_result = get_transient('cta_cleanup_categories_result');
     ?>
     <div class="wrap">
         <h1 class="wp-heading-inline">
@@ -1271,8 +1326,24 @@ function cta_import_admin_page_content() {
             Import CTA Course Data
         </h1>
         <hr class="wp-header-end">
-        
-        
+
+        <?php
+        if (isset($_GET['cta_pages_done']) && $create_pages_result !== false) {
+            delete_transient('cta_create_missing_pages_result');
+            $n = (int) $create_pages_result;
+            echo '<div class="notice notice-success is-dismissible"><p><strong>' . ($n > 0 ? sprintf('Created %d missing page(s).', $n) : 'No missing pages. All static pages already exist.') . '</strong></p></div>';
+        }
+        if (isset($_GET['cta_urls_done']) && $fix_urls_result !== false && is_array($fix_urls_result)) {
+            delete_transient('cta_fix_single_urls_result');
+            echo '<div class="notice notice-success is-dismissible"><p><strong>' . esc_html($fix_urls_result['message']) . '</strong></p></div>';
+        }
+        if (isset($_GET['cta_categories_done']) && $cleanup_cats_result !== false) {
+            delete_transient('cta_cleanup_categories_result');
+            $n = (int) $cleanup_cats_result;
+            echo '<div class="notice notice-success is-dismissible"><p><strong>' . ($n > 0 ? sprintf('Cleaned %d course(s) to a maximum of 2 categories each.', $n) : 'No courses had more than 2 categories.') . '</strong></p></div>';
+        }
+        ?>
+
         <?php if ($imported) : ?>
         <div class="notice notice-success" style="padding: 15px;">
             <h3 style="margin-top: 0;">
@@ -1292,6 +1363,42 @@ function cta_import_admin_page_content() {
             <p><strong>Course data has not been imported yet.</strong> This usually happens automatically when the theme is activated.</p>
         </div>
         <?php endif; ?>
+
+        <div class="postbox" style="margin-top: 20px;">
+            <h2 class="hndle">
+                <span class="dashicons dashicons-admin-tools" style="vertical-align: middle; margin-right: 5px;"></span>
+                Fix common issues
+            </h2>
+            <div class="inside" style="padding: 16px;">
+                <p class="description" style="margin-bottom: 16px;">Use these when single course/event pages 404, static pages are missing, or courses have more than 2 categories.</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+                    <div class="cta-fix-action" style="border: 1px solid #c3c4c7; border-radius: 4px; padding: 14px; background: #f6f7f7;">
+                        <h3 style="margin: 0 0 6px; font-size: 14px;">Create missing static pages</h3>
+                        <p style="margin: 0 0 12px; font-size: 13px; color: #50575e;">Creates only pages that don’t exist yet (About, Contact, Group Training, etc.). Safe to run multiple times.</p>
+                        <form method="post" style="margin: 0;">
+                            <?php wp_nonce_field('cta_create_missing_pages_nonce'); ?>
+                            <button type="submit" name="cta_create_missing_pages" class="button button-secondary">Create missing pages</button>
+                        </form>
+                    </div>
+                    <div class="cta-fix-action" style="border: 1px solid #c3c4c7; border-radius: 4px; padding: 14px; background: #f6f7f7;">
+                        <h3 style="margin: 0 0 6px; font-size: 14px;">Fix single course/event URLs</h3>
+                        <p style="margin: 0 0 12px; font-size: 13px; color: #50575e;">If single course or event pages 404, this renames the “Courses” and “Upcoming Courses” landing pages so WordPress uses the correct URLs.</p>
+                        <form method="post" style="margin: 0;">
+                            <?php wp_nonce_field('cta_fix_single_urls_nonce'); ?>
+                            <button type="submit" name="cta_fix_single_urls" class="button button-secondary">Fix single URLs</button>
+                        </form>
+                    </div>
+                    <div class="cta-fix-action" style="border: 1px solid #c3c4c7; border-radius: 4px; padding: 14px; background: #f6f7f7;">
+                        <h3 style="margin: 0 0 6px; font-size: 14px;">Clean up course categories</h3>
+                        <p style="margin: 0 0 12px; font-size: 13px; color: #50575e;">Ensures each course has at most 2 categories. Removes excess; you can also <a href="<?php echo esc_url(admin_url('edit-tags.php?taxonomy=course_category&post_type=course')); ?>">manage categories</a> manually.</p>
+                        <form method="post" style="margin: 0;">
+                            <?php wp_nonce_field('cta_cleanup_categories_nonce'); ?>
+                            <button type="submit" name="cta_cleanup_categories" class="button button-secondary">Clean up categories</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <div class="postbox">
             <h2 class="hndle">
