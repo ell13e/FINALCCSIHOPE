@@ -1215,6 +1215,30 @@ function cta_add_import_admin_page() {
 add_action('admin_menu', 'cta_add_import_admin_page');
 
 /**
+ * Enqueue styles and scripts only on Import CTA Data admin page
+ */
+function cta_import_admin_enqueue_scripts($hook) {
+    if ($hook !== 'tools_page_cta-import-data') {
+        return;
+    }
+    $version = defined('CTA_THEME_VERSION') ? CTA_THEME_VERSION : '1.0.0';
+    wp_enqueue_style(
+        'cta-import-admin',
+        get_template_directory_uri() . '/assets/css/cta-import-admin.css',
+        [],
+        $version
+    );
+    wp_enqueue_script(
+        'cta-import-admin',
+        get_template_directory_uri() . '/assets/js/cta-import-admin.js',
+        [],
+        $version,
+        true
+    );
+}
+add_action('admin_enqueue_scripts', 'cta_import_admin_enqueue_scripts');
+
+/**
  * Fix single course/event URL conflict: rename Pages that shadow CPT URLs.
  * Callable from admin so single /courses/slug/ and /upcoming-courses/slug/ work.
  *
@@ -1352,12 +1376,27 @@ function cta_import_admin_page_content() {
     }
     
     ?>
-    <div class="wrap">
+    <div class="wrap cta-import-page">
         <h1 class="wp-heading-inline">
-            <span class="dashicons dashicons-database-import" style="font-size: 32px; vertical-align: middle; margin-right: 8px; color: #2271b1;"></span>
+            <span class="dashicons dashicons-database-import" style="font-size: 32px; vertical-align: middle; margin-right: 8px; color: #2271b1;" aria-hidden="true"></span>
             Import CTA Course Data
         </h1>
         <hr class="wp-header-end">
+
+        <nav class="cta-import-jump-nav" aria-label="Page sections">
+            <p class="cta-import-jump-nav__title">Jump to section</p>
+            <ul class="cta-import-jump-nav__list">
+                <li><a href="#cta-fix-issues">Fix common issues</a></li>
+                <li><a href="#cta-reference">Data files &amp; pages</a></li>
+                <li><a href="#cta-reimport">Re-import &amp; events</a></li>
+                <li><a href="#cta-populate">Populate from JSON</a></li>
+                <li><a href="#cta-articles">Government articles</a></li>
+                <li><a href="#cta-session-titles">Session titles</a></li>
+                <li><a href="#cta-manual">Manual entry</a></li>
+                <li><a href="#cta-phase1">Phase 1 blog posts</a></li>
+                <li><a href="#cta-featured-images">Featured images</a></li>
+            </ul>
+        </nav>
 
         <?php
         if ($create_pages_result !== null) {
@@ -1374,18 +1413,25 @@ function cta_import_admin_page_content() {
         ?>
 
         <?php if ($imported) : ?>
-        <div class="notice notice-success" style="padding: 15px;">
+        <div class="notice notice-success cta-import-status" style="padding: 15px;">
             <h3 style="margin-top: 0;">
-                <span class="dashicons dashicons-yes-alt" style="vertical-align: middle;"></span>
+                <span class="dashicons dashicons-yes-alt" style="vertical-align: middle;" aria-hidden="true"></span>
                 Data Import Status
             </h3>
-            <ul>
+            <ul class="cta-import-status__grid">
                 <li>Courses imported: <?php echo intval($courses_count); ?></li>
                 <li>Scheduled events imported: <?php echo intval($events_count); ?></li>
                 <li>News articles imported: <?php echo intval($news_count); ?></li>
                 <li>Pages created: <?php echo intval($pages_count); ?></li>
                 <li>Import date: <?php echo esc_html($import_date); ?></li>
             </ul>
+            <?php
+            $last_result = get_option('cta_events_import_last_result');
+            if ($last_result && !empty($last_result['timestamp'])) {
+                echo '<p style="margin: 12px 0 0;"><strong>Last event import (' . esc_html($last_result['timestamp']) . '):</strong> ';
+                echo intval($last_result['imported']) . ' imported, ' . intval($last_result['skipped_exists']) . ' skipped (already exist).</p>';
+            }
+            ?>
         </div>
         <?php else : ?>
         <div class="notice notice-warning">
@@ -1393,33 +1439,33 @@ function cta_import_admin_page_content() {
         </div>
         <?php endif; ?>
 
-        <div class="postbox" style="margin-top: 20px;">
+        <div class="postbox" id="cta-fix-issues">
             <h2 class="hndle">
-                <span class="dashicons dashicons-admin-tools" style="vertical-align: middle; margin-right: 5px;"></span>
+                <span class="dashicons dashicons-admin-tools" style="vertical-align: middle; margin-right: 5px;" aria-hidden="true"></span>
                 Fix common issues
             </h2>
-            <div class="inside" style="padding: 16px;">
+            <div class="inside">
                 <p class="description" style="margin-bottom: 16px;">Use these when single course/event pages 404, static pages are missing, or courses have more than 2 categories.</p>
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
-                    <div class="cta-fix-action" style="border: 1px solid #c3c4c7; border-radius: 4px; padding: 14px; background: #f6f7f7;">
-                        <h3 style="margin: 0 0 6px; font-size: 14px;">Create missing static pages</h3>
-                        <p style="margin: 0 0 12px; font-size: 13px; color: #50575e;">Creates only pages that don’t exist yet (About, Contact, Group Training, etc.). Safe to run multiple times.</p>
+                <div class="cta-import-fix-grid">
+                    <div class="cta-import-fix-card">
+                        <h3>Create missing static pages</h3>
+                        <p>Creates only pages that don’t exist yet (About, Contact, Group Training, etc.). Safe to run multiple times.</p>
                         <form method="post" style="margin: 0;">
                             <?php wp_nonce_field('cta_create_missing_pages_nonce'); ?>
                             <button type="submit" name="cta_create_missing_pages" class="button button-secondary">Create missing pages</button>
                         </form>
                     </div>
-                    <div class="cta-fix-action" style="border: 1px solid #c3c4c7; border-radius: 4px; padding: 14px; background: #f6f7f7;">
-                        <h3 style="margin: 0 0 6px; font-size: 14px;">Fix single course/event URLs</h3>
-                        <p style="margin: 0 0 12px; font-size: 13px; color: #50575e;">If single course or event pages 404, this renames the “Courses” and “Upcoming Courses” landing pages so WordPress uses the correct URLs.</p>
+                    <div class="cta-import-fix-card">
+                        <h3>Fix single course/event URLs</h3>
+                        <p>If <code>/courses/course-slug/</code> or <code>/upcoming-courses/event-slug/</code> return 404, run this. It renames the Courses and Upcoming Courses <em>landing</em> pages to <code>courses-landing</code> and <code>upcoming-courses-landing</code> so single URLs resolve correctly.</p>
                         <form method="post" style="margin: 0;">
                             <?php wp_nonce_field('cta_fix_single_urls_nonce'); ?>
                             <button type="submit" name="cta_fix_single_urls" class="button button-secondary">Fix single URLs</button>
                         </form>
                     </div>
-                    <div class="cta-fix-action" style="border: 1px solid #c3c4c7; border-radius: 4px; padding: 14px; background: #f6f7f7;">
-                        <h3 style="margin: 0 0 6px; font-size: 14px;">Clean up course categories</h3>
-                        <p style="margin: 0 0 12px; font-size: 13px; color: #50575e;">Ensures each course has at most 2 categories. Removes excess; you can also <a href="<?php echo esc_url(admin_url('edit-tags.php?taxonomy=course_category&post_type=course')); ?>">manage categories</a> manually.</p>
+                    <div class="cta-import-fix-card">
+                        <h3>Clean up course categories</h3>
+                        <p>Ensures each course has at most 2 categories. Removes excess; you can also <a href="<?php echo esc_url(admin_url('edit-tags.php?taxonomy=course_category&post_type=course')); ?>">manage categories</a> manually.</p>
                         <form method="post" style="margin: 0;">
                             <?php wp_nonce_field('cta_cleanup_categories_nonce'); ?>
                             <button type="submit" name="cta_cleanup_categories" class="button button-secondary">Clean up categories</button>
@@ -1429,79 +1475,43 @@ function cta_import_admin_page_content() {
             </div>
         </div>
         
-        <div class="postbox">
+        <div class="postbox" id="cta-reference">
             <h2 class="hndle">
-                <span class="dashicons dashicons-media-document" style="vertical-align: middle; margin-right: 5px;"></span>
-                Course Data Files
+                <span class="dashicons dashicons-media-document" style="vertical-align: middle; margin-right: 5px;" aria-hidden="true"></span>
+                Data files &amp; pages
             </h2>
-            <div class="inside">
-        <p>The theme looks for course data in the following locations:</p>
-        <ul>
-            <li><code>/wp-content/themes/cta-theme/data/courses-database.json</code> - 40 courses</li>
-            <li><code>/wp-content/themes/cta-theme/data/scheduled-courses.json</code> - Scheduled training sessions</li>
-            <li><code>/wp-content/themes/cta-theme/data/news-articles.json</code> - Blog/news posts</li>
-        </ul>
+            <div class="inside cta-import-reference">
+                <details>
+                    <summary>Course data file locations</summary>
+                    <p style="margin-top: 10px;">The theme looks for course data in the following locations:</p>
+                    <ul>
+                        <li><code>/wp-content/themes/cta-theme/data/courses-database.json</code> — courses</li>
+                        <li><code>/wp-content/themes/cta-theme/data/scheduled-courses.json</code> — scheduled sessions</li>
+                        <li><code>/wp-content/themes/cta-theme/data/news-articles.json</code> — blog/news</li>
+                    </ul>
+                </details>
+                <details>
+                    <summary>Pages the theme creates</summary>
+                    <p style="margin-top: 10px;">The theme automatically creates these pages with their templates:</p>
+                    <ul>
+                        <li><strong>Home</strong> — front page</li>
+                        <li><strong>About Us</strong>, <strong>Contact</strong>, <strong>Group Training</strong>, <strong>News</strong></li>
+                        <li><strong>Privacy Policy</strong>, <strong>Terms &amp; Conditions</strong>, <strong>Cookie Policy</strong></li>
+                        <li><strong>Courses</strong> — list at <code>/courses/</code>, single at <code>/courses/course-slug/</code></li>
+                        <li><strong>Upcoming Courses</strong> — list at <code>/upcoming-courses/</code>, single events at <code>/upcoming-courses/event-slug/</code></li>
+                    </ul>
+                </details>
             </div>
         </div>
-        
-        <div class="postbox">
+
+        <div class="postbox" id="cta-reimport">
             <h2 class="hndle">
-                <span class="dashicons dashicons-admin-page" style="vertical-align: middle; margin-right: 5px;"></span>
-                Pages Created
-            </h2>
-            <div class="inside">
-        <p>The theme automatically creates these pages with their templates:</p>
-        <ul>
-            <li><strong>Home</strong> - Front page (set as static front page)</li>
-            <li><strong>About Us</strong> - About page with team info</li>
-            <li><strong>Contact</strong> - Contact form and details</li>
-            <li><strong>Group Training</strong> - Corporate training enquiries</li>
-            <li><strong>News</strong> - Blog posts page</li>
-            <li><strong>Privacy Policy</strong> - GDPR privacy policy</li>
-            <li><strong>Terms & Conditions</strong> - Legal terms</li>
-            <li><strong>Cookie Policy</strong> - Cookie information</li>
-            <li><strong>Courses</strong> – List at <code>/courses/</code>, single courses at <code>/courses/course-slug/</code> (no Page at /courses/ so these work)</li>
-            <li><strong>Upcoming Courses</strong> – List at <code>/upcoming-courses/</code> (same for events)</li>
-        </ul>
-            </div>
-        </div>
-        
-        <div class="postbox">
-            <h2 class="hndle">
-                <span class="dashicons dashicons-update" style="vertical-align: middle; margin-right: 5px;"></span>
+                <span class="dashicons dashicons-update" style="vertical-align: middle; margin-right: 5px;" aria-hidden="true"></span>
                 Re-import Data
             </h2>
             <div class="inside">
         <p>Use this to re-import course data. Existing courses with the same title will be skipped.</p>
-        
-        <?php
-        // Display last import results for course events
-        $last_result = get_option('cta_events_import_last_result');
-        if ($last_result && !empty($last_result['timestamp'])) {
-            echo '<div class="notice notice-info" style="margin-bottom: 15px;">';
-            echo '<p><strong>Last Event Import Results (' . esc_html($last_result['timestamp']) . '):</strong></p>';
-            echo '<ul style="margin-left: 20px;">';
-            echo '<li>Imported: ' . intval($last_result['imported']) . ' events</li>';
-            echo '<li>Skipped (course not found): ' . intval($last_result['skipped_no_course']) . '</li>';
-            echo '<li>Skipped (date parse failed): ' . intval($last_result['skipped_no_date']) . '</li>';
-            echo '<li>Skipped (already exists): ' . intval($last_result['skipped_exists']) . '</li>';
-            echo '</ul>';
-            
-            if (!empty($last_result['errors']) && count($last_result['errors']) > 0) {
-                echo '<details style="margin-top: 10px;"><summary style="cursor: pointer; font-weight: bold;">View errors (' . count($last_result['errors']) . ')</summary>';
-                echo '<ul style="margin-top: 10px; margin-left: 20px;">';
-                foreach (array_slice($last_result['errors'], 0, 20) as $error) { // Show first 20 errors
-                    echo '<li style="color: #d63638;">' . esc_html($error) . '</li>';
-                }
-                if (count($last_result['errors']) > 20) {
-                    echo '<li><em>... and ' . (count($last_result['errors']) - 20) . ' more errors</em></li>';
-                }
-                echo '</ul></details>';
-            }
-            echo '</div>';
-        }
-        ?>
-        
+
         <form method="post">
             <?php wp_nonce_field('cta_reimport_nonce'); ?>
             <p>
@@ -1512,8 +1522,7 @@ function cta_import_admin_page_content() {
             </p>
         </form>
         
-        <hr style="margin: 20px 0;">
-        
+        <div class="cta-import-subsection">
         <h3>Import Course Events Only</h3>
         <p>Use this to import only course events from <code>scheduled-courses.json</code> without re-importing all data.</p>
         
@@ -1554,12 +1563,13 @@ function cta_import_admin_page_content() {
                 </button>
             </p>
         </form>
+        </div>
             </div>
         </div>
-        
-        <div class="postbox">
+
+        <div class="postbox" id="cta-populate">
             <h2 class="hndle">
-                <span class="dashicons dashicons-database-import" style="vertical-align: middle; margin-right: 5px;"></span>
+                <span class="dashicons dashicons-database-import" style="vertical-align: middle; margin-right: 5px;" aria-hidden="true"></span>
                 Populate Course Data from JSON
             </h2>
             <div class="inside">
@@ -1571,7 +1581,12 @@ function cta_import_admin_page_content() {
             $courses_data = cta_get_courses_data();
             $all_course_titles = !empty($courses_data) ? array_keys($courses_data) : [];
             ?>
-            
+            <div class="cta-import-course-select-wrap">
+                <p>
+                    <label for="cta-populate-course-search">Filter courses:</label><br>
+                    <input type="text" id="cta-populate-course-search" class="cta-import-course-search" placeholder="Type to filter course list..." autocomplete="off" aria-describedby="cta-populate-course-search-desc">
+                </p>
+                <p id="cta-populate-course-search-desc" class="screen-reader-text">Filters the course list below as you type.</p>
             <p>
                 <label for="cta-populate-selected-courses"><strong>Select Courses:</strong></label><br>
                 <select id="cta-populate-selected-courses" name="selected_courses[]" multiple size="10" style="width: 100%; max-width: 600px; margin-top: 5px;">
@@ -1619,7 +1634,8 @@ function cta_import_admin_page_content() {
                 })();
                 </script>
             </p>
-            
+            </div>
+
             <p style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
                 <label for="cta-populate-course-title"><strong>Or enter course title manually:</strong></label><br>
                 <input type="text" id="cta-populate-course-title" name="course_title" class="regular-text" placeholder="Enter exact course title from JSON" style="width: 100%; max-width: 500px; margin-top: 5px;">
@@ -1659,9 +1675,9 @@ function cta_import_admin_page_content() {
             </div>
         </div>
         
-        <div class="postbox">
+        <div class="postbox" id="cta-articles">
             <h2 class="hndle">
-                <span class="dashicons dashicons-admin-post" style="vertical-align: middle; margin-right: 5px;"></span>
+                <span class="dashicons dashicons-admin-post" style="vertical-align: middle; margin-right: 5px;" aria-hidden="true"></span>
                 Auto-Populate Articles from Government Resources
             </h2>
             <div class="inside">
@@ -1724,9 +1740,9 @@ function cta_import_admin_page_content() {
             </div>
         </div>
         
-        <div class="postbox">
+        <div class="postbox" id="cta-session-titles">
             <h2 class="hndle">
-                <span class="dashicons dashicons-calendar-alt" style="vertical-align: middle; margin-right: 5px;"></span>
+                <span class="dashicons dashicons-calendar-alt" style="vertical-align: middle; margin-right: 5px;" aria-hidden="true"></span>
                 Update Session Titles from Courses
             </h2>
             <div class="inside">
@@ -1773,9 +1789,9 @@ function cta_import_admin_page_content() {
             </div>
         </div>
         
-        <div class="postbox">
+        <div class="postbox" id="cta-manual">
             <h2 class="hndle">
-                <span class="dashicons dashicons-edit" style="vertical-align: middle; margin-right: 5px;"></span>
+                <span class="dashicons dashicons-edit" style="vertical-align: middle; margin-right: 5px;" aria-hidden="true"></span>
                 Manual Data Entry
             </h2>
             <div class="inside">
@@ -1794,9 +1810,9 @@ function cta_import_admin_page_content() {
         }
         ?>
         
-        <div class="postbox">
+        <div class="postbox" id="cta-featured-images">
             <h2 class="hndle">
-                <span class="dashicons dashicons-format-image" style="vertical-align: middle; margin-right: 5px;"></span>
+                <span class="dashicons dashicons-format-image" style="vertical-align: middle; margin-right: 5px;" aria-hidden="true"></span>
                 Featured Images
             </h2>
             <div class="inside">
@@ -1822,20 +1838,7 @@ function cta_import_admin_page_content() {
         </div>
         
         <p>Upload the course thumbnail images to the <a href="<?php echo admin_url('upload.php'); ?>">Media Library</a>, then click the button below to automatically match them.</p>
-        
-        <?php
-        // Show match results if available
-        $match_result = get_transient('cta_bulk_match_result');
-        if ($match_result !== false) {
-            delete_transient('cta_bulk_match_result');
-            ?>
-            <div class="notice notice-success inline">
-                <p>✓ Matched <?php echo intval($match_result); ?> image(s) to courses.</p>
-            </div>
-            <?php
-        }
-        ?>
-        
+
         <form method="post">
             <?php wp_nonce_field('cta_bulk_match_nonce'); ?>
             <p>

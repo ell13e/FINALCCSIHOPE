@@ -399,11 +399,12 @@ function cta_render_phase1_posts_section() {
     }
     
     ?>
-    <div class="cta-import-section">
-        <h2>
-            <span class="dashicons dashicons-edit-page"></span>
+    <div class="postbox cta-import-section" id="cta-phase1">
+        <h2 class="hndle">
+            <span class="dashicons dashicons-edit-page" style="vertical-align: middle; margin-right: 5px;" aria-hidden="true"></span>
             Phase 1 Blog Posts
         </h2>
+        <div class="inside">
         <p>Create WordPress posts from the Phase 1 blog articles:</p>
         <ul>
             <li><strong>4 complete articles</strong> - Will be published immediately</li>
@@ -455,6 +456,7 @@ function cta_render_phase1_posts_section() {
                 </button>
             </p>
         </form>
+        </div>
     </div>
     <?php
 }
