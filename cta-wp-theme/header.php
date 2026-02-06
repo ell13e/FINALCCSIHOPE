@@ -281,10 +281,10 @@
         <a href="<?php echo esc_url(get_post_type_archive_link('course_event')); ?>" class="nav-link<?php echo is_post_type_archive('course_event') ? ' nav-link-active' : ''; ?>">Upcoming Courses</a>
 
         <div class="nav-item-dropdown">
-          <a href="<?php echo esc_url(get_permalink(get_page_by_path('group-training'))); ?>" class="nav-link">Group Training</a>
+          <a href="<?php echo esc_url(cta_page_url('group-training')); ?>" class="nav-link">Group Training</a>
         </div>
 
-        <a href="<?php echo esc_url(get_permalink(get_page_by_path('about'))); ?>" class="nav-link<?php echo is_page('about') ? ' nav-link-active' : ''; ?>">About Us</a>
+        <a href="<?php echo esc_url(cta_page_url('about')); ?>" class="nav-link<?php echo is_page('about') ? ' nav-link-active' : ''; ?>">About Us</a>
         
         <div class="nav-item-dropdown">
           <button
@@ -354,7 +354,7 @@
           <i class="fas fa-phone" aria-hidden="true"></i>
           <span><?php echo esc_html($contact['phone']); ?></span>
         </a>
-        <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact')) . '?type=schedule-call'); ?>" class="btn btn-primary btn-header-cta">Contact Us</a>
+        <a href="<?php echo esc_url(cta_page_url('contact') . '?type=schedule-call'); ?>" class="btn btn-primary btn-header-cta">Contact Us</a>
       </div>
     </div>
 
@@ -417,8 +417,8 @@
         </div>
 
         <a href="<?php echo esc_url(get_post_type_archive_link('course_event')); ?>" class="mobile-menu-link">Upcoming Courses</a>
-        <a href="<?php echo esc_url(get_permalink(get_page_by_path('group-training'))); ?>" class="mobile-menu-link">Group Training</a>
-        <a href="<?php echo esc_url(get_permalink(get_page_by_path('about'))); ?>" class="mobile-menu-link">About Us</a>
+        <a href="<?php echo esc_url(cta_page_url('group-training')); ?>" class="mobile-menu-link">Group Training</a>
+        <a href="<?php echo esc_url(cta_page_url('about')); ?>" class="mobile-menu-link">About Us</a>
         
         <div class="accordion" data-accordion-group="mobile-nav">
           <button
@@ -445,13 +445,13 @@
             </svg>
           </button>
           <div id="mobile-resources-content" class="accordion-content" aria-hidden="true">
-            <a href="<?php echo esc_url(get_permalink(get_page_by_path('cqc-compliance-hub'))); ?>" class="mobile-menu-link mobile-menu-link-sub">CQC Compliance Hub</a>
-            <a href="<?php echo esc_url(get_permalink(get_page_by_path('downloadable-resources'))); ?>" class="mobile-menu-link mobile-menu-link-sub">Downloadable Resources</a>
-            <a href="<?php echo esc_url(get_permalink(get_page_by_path('news'))); ?>" class="mobile-menu-link mobile-menu-link-sub">News & Articles</a>
-            <a href="<?php echo esc_url(get_permalink(get_page_by_path('faqs'))); ?>" class="mobile-menu-link mobile-menu-link-sub">FAQs</a>
+            <a href="<?php echo esc_url(cta_page_url('cqc-compliance-hub')); ?>" class="mobile-menu-link mobile-menu-link-sub">CQC Compliance Hub</a>
+            <a href="<?php echo esc_url(cta_page_url('downloadable-resources')); ?>" class="mobile-menu-link mobile-menu-link-sub">Downloadable Resources</a>
+            <a href="<?php echo esc_url(cta_page_url('news')); ?>" class="mobile-menu-link mobile-menu-link-sub">News & Articles</a>
+            <a href="<?php echo esc_url(cta_page_url('faqs')); ?>" class="mobile-menu-link mobile-menu-link-sub">FAQs</a>
           </div>
         </div>
-        <a href="<?php echo esc_url(get_permalink(get_page_by_path('contact')) . '?type=schedule-call'); ?>" class="mobile-menu-link">Contact</a>
+        <a href="<?php echo esc_url(cta_page_url('contact') . '?type=schedule-call'); ?>" class="mobile-menu-link">Contact</a>
         <a href="<?php echo esc_url($contact['phone_link']); ?>" class="mobile-menu-link mobile-menu-link-phone">
           <i class="fas fa-phone" aria-hidden="true"></i>
           Call <span><?php echo esc_html($contact['phone']); ?></span>

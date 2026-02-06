@@ -33,30 +33,12 @@ $contact = cta_get_contact_info();
     <div class="footer-modern-grid">
       <nav class="footer-modern-col" aria-label="Company navigation">
         <h3 class="footer-modern-heading">Company</h3>
-        <?php
-        wp_nav_menu([
-            'theme_location' => 'footer-company',
-            'container' => false,
-            'menu_class' => 'footer-modern-links',
-            'fallback_cb' => 'cta_footer_company_fallback_menu',
-            'walker' => new CTA_Footer_Walker(),
-            'depth' => 1,
-        ]);
-        ?>
+        <?php cta_footer_company_fallback_menu(); ?>
       </nav>
 
       <nav class="footer-modern-col" aria-label="Help and support navigation">
         <h3 class="footer-modern-heading">Help</h3>
-        <?php
-        wp_nav_menu([
-            'theme_location' => 'footer-help',
-            'container' => false,
-            'menu_class' => 'footer-modern-links',
-            'fallback_cb' => 'cta_footer_help_fallback_menu',
-            'walker' => new CTA_Footer_Walker(),
-            'depth' => 1,
-        ]);
-        ?>
+        <?php cta_footer_help_fallback_menu(); ?>
       </nav>
 
       <div class="footer-modern-col footer-modern-newsletter">

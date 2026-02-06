@@ -36,12 +36,10 @@ function cta_theme_setup() {
     // Add editor styles so content looks the same in editor as on front-end
     add_editor_style('assets/css/editor-style.css');
 
-    // Register navigation menus
+    // Register navigation menus.
+    // Only Resources is exposed in Appearance > Menus; header main nav and footer are hardcoded/fallback.
     register_nav_menus([
-        'primary' => __('Primary Navigation', 'cta-theme'),
         'resources' => __('Resources Dropdown', 'cta-theme'),
-        'footer-company' => __('Footer Company Links', 'cta-theme'),
-        'footer-help' => __('Footer Help Links', 'cta-theme'),
     ]);
 
     // Set content width

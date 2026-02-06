@@ -512,7 +512,9 @@ function cta_reading_time($content) {
 }
 
 /**
- * Get page URL by slug
+ * Get page URL by slug.
+ * Uses the page's post_name so the URL is always pretty (e.g. /group-training/) even when
+ * Settings > Permalinks is set to Plain (which would otherwise give ?page_id=11).
  */
 function cta_page_url($slug) {
     $slug_map = [
@@ -520,12 +522,12 @@ function cta_page_url($slug) {
         'terms' => 'terms-conditions',
         'cookies' => 'cookie-policy',
     ];
-    
+
     $actual_slug = isset($slug_map[$slug]) ? $slug_map[$slug] : $slug;
-    
+
     $page = get_page_by_path($actual_slug);
-    if ($page) {
-        return get_permalink($page->ID);
+    if ($page && $page->post_name) {
+        return home_url('/' . $page->post_name . '/');
     }
     return home_url('/' . $actual_slug . '/');
 }
@@ -1014,12 +1016,11 @@ function cta_footer_company_fallback_menu() {
         if (isset($item['url'])) {
             $url = $item['url'];
         } elseif (isset($item['slug'])) {
-            $page = get_page_by_path($item['slug']);
-            $url = $page ? get_permalink($page) : '';
+            $url = cta_page_url($item['slug']);
         } elseif (isset($item['page_id']) && $item['page_id']) {
             $url = get_permalink($item['page_id']);
         }
-        
+
         if ($url) {
             echo '<li><a href="' . esc_url($url) . '" class="footer-modern-link">' . esc_html($item['title']) . '</a></li>';
         }
@@ -1045,14 +1046,12 @@ function cta_footer_help_fallback_menu() {
     foreach ($items as $item) {
         $url = '';
         if (isset($item['slug'])) {
-            $page = get_page_by_path($item['slug']);
-            if (!$page && isset($item['fallback'])) {
+            $url = cta_page_url($item['slug']);
+            if ($url === home_url('/' . $item['slug'] . '/') && isset($item['fallback'])) {
                 $url = $item['fallback'];
-            } else {
-                $url = $page ? get_permalink($page) : '';
             }
         }
-        
+
         if ($url) {
             echo '<li><a href="' . esc_url($url) . '" class="footer-modern-link">' . esc_html($item['title']) . '</a></li>';
         }
