@@ -332,7 +332,7 @@ function cta_seo_dashboard_page() {
                 ?>
             </div>
 
-            <!-- SEO runbook: monitoring, security, redirects -->
+            <!-- SEO runbook: monitoring, security -->
             <div class="card" style="margin-top: 20px;">
                 <h2>SEO runbook</h2>
                 <p style="margin-top: 0;">Ongoing practice tied to theme improvements. No code changes here—process only.</p>
@@ -340,7 +340,6 @@ function cta_seo_dashboard_page() {
                     <li><strong>After schema changes:</strong> Validate key URLs (homepage, a post, a course, an event) with <a href="https://search.google.com/test/rich-results" target="_blank" rel="noopener">Google Rich Results Test</a>; fix errors and preferably warnings; re-check Search Console Enhancements after deployment.</li>
                     <li><strong>Traffic drops:</strong> Use Search Console Performance (16 months), compare date ranges, segment by query/page/device; use “Clicks difference” to find affected URLs; cross-check with Search Status Dashboard (core/spam/review updates).</li>
                     <li><strong>Security:</strong> Treat Security Issues and Safe Browsing as P0; keep WordPress, plugins, theme and server patched; use <code>site:yourdomain</code> periodically to spot odd URLs.</li>
-                    <li><strong>Redirects:</strong> Prefer 301 for permanent moves; keep chains to one hop; use real 404/410 and a helpful 404 page for removed content.</li>
                 </ul>
             </div>
         </div>
