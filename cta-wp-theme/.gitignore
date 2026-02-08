@@ -22,10 +22,6 @@
 tests/_output/
 coverage/
 
-# OS
-.DS_Store
-Thumbs.db
-
 # Logs
 *.log
 npm-debug.log*

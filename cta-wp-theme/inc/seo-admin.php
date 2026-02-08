@@ -93,7 +93,17 @@ function cta_add_seo_admin_menu() {
         'cta-seo-verification',
         'cta_seo_admin_verification_page'
     );
-    
+
+    // Redirects
+    add_submenu_page(
+        'cta-seo',
+        'Redirects',
+        'Redirects',
+        'manage_options',
+        'cta-seo-redirects',
+        'cta_seo_redirects_page'
+    );
+
     // SEO Tools (moved from Tools menu)
     // Note: Function is defined in seo.php, so we reference it directly
     if (function_exists('cta_seo_tools_admin_page')) {
@@ -310,6 +320,9 @@ function cta_seo_dashboard_page() {
                     <a href="<?php echo admin_url('admin.php?page=cta-seo-verification'); ?>" class="button">
                         Verification
                     </a>
+                    <a href="<?php echo admin_url('admin.php?page=cta-seo-redirects'); ?>" class="button">
+                        Redirects
+                    </a>
                     <a href="<?php echo admin_url('admin.php?page=cta-seo-sitemap-diagnostic'); ?>" class="button">
                         Sitemap Diagnostic
                     </a>
@@ -332,7 +345,7 @@ function cta_seo_dashboard_page() {
                 ?>
             </div>
 
-            <!-- SEO runbook: monitoring, security -->
+                <!-- SEO runbook: monitoring, security -->
             <div class="card" style="margin-top: 20px;">
                 <h2>SEO runbook</h2>
                 <p style="margin-top: 0;">Ongoing practice tied to theme improvements. No code changes here—process only.</p>
@@ -1180,5 +1193,69 @@ function cta_seo_admin_verification_page() {
         // Fallback if function doesn't exist
         echo '<div class="wrap"><h1>SEO Verification</h1><p>Verification functionality not available.</p></div>';
     }
+}
+
+/**
+ * SEO Redirects Page
+ * Toggle attachment redirects and view built-in redirects (from theme code).
+ */
+function cta_seo_redirects_page() {
+    if (isset($_POST['cta_save_redirects']) && check_admin_referer('cta_seo_redirects')) {
+        $redirect_attachments = isset($_POST['redirect_attachments']) ? 1 : 0;
+        update_option('cta_redirect_attachments_enabled', $redirect_attachments);
+        echo '<div class="notice notice-success is-dismissible"><p>Redirect settings saved.</p></div>';
+    }
+
+    $redirect_attachments = (int) get_option('cta_redirect_attachments_enabled', 1);
+    ?>
+    <div class="wrap cta-seo-page">
+        <header class="cta-seo-header">
+            <h1>Redirects</h1>
+            <p class="cta-seo-header-desc">Control attachment redirects and see built-in URL redirects defined in the theme.</p>
+        </header>
+
+        <div class="cta-seo-section">
+            <h2 class="cta-seo-section__title">Attachment redirects</h2>
+            <div class="cta-seo-section__body">
+                <form method="post">
+                    <?php wp_nonce_field('cta_seo_redirects'); ?>
+                    <table class="form-table">
+                        <tr>
+                            <th scope="row">Redirect attachment pages</th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" name="redirect_attachments" value="1" <?php checked($redirect_attachments, 1); ?> />
+                                    Redirect attachment URLs to parent post or homepage
+                                </label>
+                                <p class="description">When enabled, visiting a direct attachment URL (e.g. an image’s attachment page) sends users to the post that contains it, or to the homepage if the attachment has no parent. This avoids thin attachment pages in the index.</p>
+                            </td>
+                        </tr>
+                    </table>
+                    <?php submit_button('Save settings', 'primary', 'cta_save_redirects'); ?>
+                </form>
+            </div>
+        </div>
+
+        <div class="cta-seo-section">
+            <h2 class="cta-seo-section__title">Built-in redirects</h2>
+            <div class="cta-seo-section__body">
+                <p>These 301 redirects are defined in the theme (in <code>inc/seo.php</code>). To add or change them, edit that file.</p>
+                <table class="widefat striped" style="max-width: 640px;">
+                    <thead>
+                        <tr>
+                            <th>From (path)</th>
+                            <th>To</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>/contact-us</code></td><td><code>/contact</code></td></tr>
+                        <tr><td><code>/courses/medication-competency-management</code></td><td><code>/courses/medication-competency-management-1d-l3</code></td></tr>
+                        <tr><td><code>/courses/moving-positioning-inc-hoist</code></td><td><code>/courses/moving-positioning-inc-hoist-1d-l3</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <?php
 }
 

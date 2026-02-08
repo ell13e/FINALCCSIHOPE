@@ -2,9 +2,9 @@
 /**
  * SEO Links Configuration
  *
- * - Strip Category Base (remove /category/ from URLs)
- * - Redirect Attachments (redirect attachment pages to parent posts)
- * - Redirect Orphan Attachments (to homepage)
+ * - Redirect Attachments (redirect attachment pages to parent posts; toggle in SEO → Redirects)
+ * - External link attributes (target="_blank", rel="noopener noreferrer")
+ * - Image SEO (auto alt text)
  *
  * @package CTA_Theme
  */
@@ -13,148 +13,33 @@ defined('ABSPATH') || exit;
 
 /**
  * =========================================
- * STRIP CATEGORY BASE
- * =========================================
- */
-
-/**
- * Remove /category/ from category URLs
- */
-function cta_strip_category_base($rules) {
-    $category_base = get_option('category_base');
-    if ($category_base && $category_base !== 'category') {
-        return $rules; // Custom category base, don't modify
-    }
-    
-    // Remove category base from rewrite rules
-    foreach ($rules as $pattern => $rewrite) {
-        if (strpos($pattern, 'category/') !== false) {
-            $new_pattern = str_replace('category/', '', $pattern);
-            unset($rules[$pattern]);
-            $rules[$new_pattern] = $rewrite;
-        }
-    }
-    
-    return $rules;
-}
-add_filter('category_rewrite_rules', 'cta_strip_category_base');
-
-/**
- * Give pages and CPT singles precedence over category when category base is stripped.
- *
- * Stripping the category base makes category rules match first (e.g. single-segment
- * /about/ or two-segment /courses/foo/). WordPress then runs a category query;
- * if no category exists, it 404s and never tries the page or CPT. This filter runs
- * after parse_request: if the request was parsed as a category, we try page first,
- * then single course, then single course_event, and override the query when we find a match.
- */
-function cta_page_precedence_over_stripped_category($query_vars) {
-    $category_base = get_option('category_base');
-    if ($category_base && $category_base !== 'category') {
-        return $query_vars;
-    }
-
-    $category_name = isset($query_vars['category_name']) ? $query_vars['category_name'] : '';
-    if ($category_name === '') {
-        return $query_vars;
-    }
-
-    $path = trim($category_name, '/');
-    $segments = array_values(array_filter(explode('/', $path)));
-
-    // 1) Try page (single segment or hierarchical)
-    $page = get_page_by_path($path, OBJECT, 'page');
-    if ($page && $page->post_status === 'publish') {
-        $query_vars['pagename'] = $path;
-        unset($query_vars['category_name'], $query_vars['category']);
-        return $query_vars;
-    }
-
-    // 2) Two-segment URL: try course (courses/slug) or course_event (upcoming-courses/slug)
-    if (count($segments) === 2) {
-        $prefix = $segments[0];
-        $slug   = $segments[1];
-
-        if ($prefix === 'courses') {
-            $course = get_posts([
-                'name'           => $slug,
-                'post_type'      => 'course',
-                'post_status'    => 'publish',
-                'posts_per_page' => 1,
-                'fields'         => 'ids',
-                'no_found_rows'  => true,
-            ]);
-            if (!empty($course)) {
-                $query_vars['course'] = $slug;
-                unset($query_vars['category_name'], $query_vars['category']);
-                return $query_vars;
-            }
-        }
-
-        if ($prefix === 'upcoming-courses') {
-            $event = get_posts([
-                'name'           => $slug,
-                'post_type'      => 'course_event',
-                'post_status'    => 'publish',
-                'posts_per_page' => 1,
-                'fields'         => 'ids',
-                'no_found_rows'  => true,
-            ]);
-            if (!empty($event)) {
-                $query_vars['course_event'] = $slug;
-                unset($query_vars['category_name'], $query_vars['category']);
-                return $query_vars;
-            }
-        }
-    }
-
-    return $query_vars;
-}
-add_filter('request', 'cta_page_precedence_over_stripped_category', 10, 1);
-
-/**
- * Fix category links to not include /category/
- */
-function cta_fix_category_link($termlink, $term, $taxonomy) {
-    if ($taxonomy === 'category') {
-        $category_base = get_option('category_base');
-        if ($category_base === 'category' || empty($category_base)) {
-            // Remove /category/ from link
-            $termlink = str_replace('/category/', '/', $termlink);
-        }
-    }
-    return $termlink;
-}
-add_filter('term_link', 'cta_fix_category_link', 10, 3);
-
-/**
- * =========================================
  * ATTACHMENT REDIRECTS
  * =========================================
  */
 
 /**
- * Redirect attachment pages to parent post
+ * Redirect attachment pages to parent post (or homepage if orphan).
+ * Can be disabled in SEO → Redirects.
  */
 function cta_redirect_attachments() {
+    if (!get_option('cta_redirect_attachments_enabled', true)) {
+        return;
+    }
     if (!is_attachment()) {
         return;
     }
-    
+
     global $post;
-    
-    // Get parent post
+
     $parent_id = $post->post_parent;
-    
+
     if ($parent_id) {
-        // Redirect to parent post
         $parent_url = get_permalink($parent_id);
         if ($parent_url) {
             wp_redirect($parent_url, 301);
             exit;
         }
     } else {
-        // Orphan attachment - redirect to homepage
         wp_redirect(home_url('/'), 301);
         exit;
     }
