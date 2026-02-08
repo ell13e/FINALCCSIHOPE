@@ -1123,7 +1123,7 @@ function cta_register_acf_fields() {
                 'label' => 'Mission Content',
                 'name' => 'mission_text',
                 'type' => 'repeater',
-                'instructions' => 'Add paragraphs for the mission section. Each paragraph will be displayed separately.',
+                'instructions' => 'The mission section text on the page comes from here—not from the main editor below. Add or edit paragraphs; each row is one paragraph on the page.',
                 'layout' => 'block',
                 'button_label' => 'Add Paragraph',
                 'min' => 0,
@@ -1178,7 +1178,7 @@ function cta_register_acf_fields() {
                 'label' => 'Values',
                 'name' => 'values',
                 'type' => 'repeater',
-                'instructions' => 'Add value cards displayed in the values grid',
+                'instructions' => 'The value cards on the page come from here. Add or edit rows; each row is one card. If empty, the page shows placeholder cards until you add your own.',
                 'layout' => 'block',
                 'button_label' => 'Add Value',
                 'min' => 0,
@@ -1222,7 +1222,7 @@ function cta_register_acf_fields() {
                 'label' => 'Statistics',
                 'name' => 'stats',
                 'type' => 'repeater',
-                'instructions' => 'Add statistics displayed on the page',
+                'instructions' => 'The statistics (e.g. 40+ Courses, 2020 Established) on the page come from here. Add or edit rows. If empty, the page shows placeholder stats until you add your own.',
                 'layout' => 'table',
                 'button_label' => 'Add Statistic',
                 'min' => 0,
@@ -1315,6 +1315,70 @@ function cta_register_acf_fields() {
         'style' => 'default',
         'label_placement' => 'top',
     ]);
+
+    // Pre-populate Mission Content when empty so the default paragraphs are editable in the editor
+    add_filter('acf/load_value/name=mission_text', function ($value, $post_id, $field) {
+        if (empty($post_id)) {
+            return $value;
+        }
+        if (get_page_template_slug($post_id) !== 'page-templates/page-about.php') {
+            return $value;
+        }
+        if (!empty($value) && is_array($value) && count($value) > 0) {
+            return $value;
+        }
+        return [
+            [ 'paragraph' => "Continuity Training Academy's ethos reflects our goal: to urge businesses to invest in their staff, and individuals to invest in themselves." ],
+            [ 'paragraph' => "We position ourselves as <strong>'the external training room'</strong> that becomes part of your organisation. We don't just deliver courses, we partner with you." ],
+            [ 'paragraph' => "When working with new care providers, we take time to understand your policies and procedures, ensuring our training complements how your organisation operates. We tailor our training to align perfectly with your needs, creating a seamless integration with your existing processes and standards." ],
+        ];
+    }, 10, 3);
+
+    // Pre-populate Values when empty so default cards are editable (About page only; directors/trainers are in Team Members)
+    add_filter('acf/load_value/name=values', function ($value, $post_id, $field) {
+        if (empty($post_id) || get_page_template_slug($post_id) !== 'page-templates/page-about.php') {
+            return $value;
+        }
+        if (!empty($value) && is_array($value) && count($value) > 0) {
+            return $value;
+        }
+        return [
+            [ 'icon' => 'fas fa-hands-helping', 'title' => 'Hands-On Care Training', 'description' => 'Practical training that builds real competence, regardless of experience or background.' ],
+            [ 'icon' => 'fas fa-users', 'title' => 'Equality & Diversity in Training', 'description' => 'Anyone can reach success. The key is knowledge. We make training accessible to everyone.' ],
+            [ 'icon' => 'fas fa-graduation-cap', 'title' => 'Flexible Care Training', 'description' => 'Everyone learns differently. Our training adapts. Your team walks away with skills they can actually use.' ],
+            [ 'icon' => 'fas fa-handshake', 'title' => 'Partnership Care Training', 'description' => "We're your external training room. We learn your policies and procedures, then deliver training that fits how you actually work." ],
+        ];
+    }, 10, 3);
+
+    // Pre-populate Stats when empty so default stats are editable (About page only)
+    add_filter('acf/load_value/name=stats', function ($value, $post_id, $field) {
+        if (empty($post_id) || get_page_template_slug($post_id) !== 'page-templates/page-about.php') {
+            return $value;
+        }
+        if (!empty($value) && is_array($value) && count($value) > 0) {
+            return $value;
+        }
+        return [
+            [ 'number' => '40+', 'label' => 'Courses Offered' ],
+            [ 'number' => '2020', 'label' => 'Established' ],
+            [ 'number' => '4.6/5', 'label' => 'Trustpilot Rating' ],
+            [ 'number' => '100%', 'label' => 'CQC-Compliant' ],
+        ];
+    }, 10, 3);
+
+    // Pre-populate Testimonials when empty so default quotes are editable (Group Training page only)
+    add_filter('acf/load_value/name=testimonials', function ($value, $post_id, $field) {
+        if (empty($post_id) || get_post_type($post_id) !== 'page') {
+            return $value;
+        }
+        if (get_page_template_slug($post_id) !== 'page-templates/page-group-training.php') {
+            return $value;
+        }
+        if (!empty($value) && is_array($value) && count($value) > 0) {
+            return $value;
+        }
+        return cta_get_page_testimonials($post_id);
+    }, 10, 3);
 
     // =========================================
     // NEWS/BLOG POST FIELDS - Introduction (Separate Section)
@@ -1631,7 +1695,7 @@ function cta_register_acf_fields() {
                 'label' => 'Testimonials',
                 'name' => 'testimonials',
                 'type' => 'repeater',
-                'instructions' => 'Add testimonials to display on the page',
+                'instructions' => 'The testimonial cards on the page come from here. Add or edit rows. If empty, the page shows placeholder quotes until you add your own.',
                 'layout' => 'block',
                 'button_label' => 'Add Testimonial',
                 'min' => 0,
