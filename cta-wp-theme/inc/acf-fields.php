@@ -1317,14 +1317,20 @@ function cta_register_acf_fields() {
     ]);
 
     // Pre-populate Mission Content when empty so the default paragraphs are editable in the editor
-    add_filter('acf/load_value/name=mission_text', function ($value, $post_id, $field) {
-        if (empty($post_id)) {
+    // Use field key and priority 20 so ACF has run first; fallback to get_the_ID() when post_id not passed (e.g. block editor)
+    add_filter('acf/load_value/key=field_about_mission_text', function ($value, $post_id, $field) {
+        $pid = $post_id ? (int) $post_id : (int) get_the_ID();
+        if (!$pid) {
             return $value;
         }
-        if (get_page_template_slug($post_id) !== 'page-templates/page-about.php') {
+        if (get_post_type($pid) !== 'page') {
             return $value;
         }
-        if (!empty($value) && is_array($value) && count($value) > 0) {
+        $template = get_page_template_slug($pid);
+        if ($template !== 'page-templates/page-about.php') {
+            return $value;
+        }
+        if (is_array($value) && count($value) > 0) {
             return $value;
         }
         return [
@@ -1332,14 +1338,15 @@ function cta_register_acf_fields() {
             [ 'paragraph' => "We position ourselves as <strong>'the external training room'</strong> that becomes part of your organisation. We don't just deliver courses, we partner with you." ],
             [ 'paragraph' => "When working with new care providers, we take time to understand your policies and procedures, ensuring our training complements how your organisation operates. We tailor our training to align perfectly with your needs, creating a seamless integration with your existing processes and standards." ],
         ];
-    }, 10, 3);
+    }, 20, 3);
 
-    // Pre-populate Values when empty so default cards are editable (About page only; directors/trainers are in Team Members)
-    add_filter('acf/load_value/name=values', function ($value, $post_id, $field) {
-        if (empty($post_id) || get_page_template_slug($post_id) !== 'page-templates/page-about.php') {
+    // Pre-populate Values when empty (use field key + priority 20 like mission_text)
+    add_filter('acf/load_value/key=field_about_values', function ($value, $post_id, $field) {
+        $pid = $post_id ? (int) $post_id : (int) get_the_ID();
+        if (!$pid || get_post_type($pid) !== 'page' || get_page_template_slug($pid) !== 'page-templates/page-about.php') {
             return $value;
         }
-        if (!empty($value) && is_array($value) && count($value) > 0) {
+        if (is_array($value) && count($value) > 0) {
             return $value;
         }
         return [
@@ -1348,14 +1355,15 @@ function cta_register_acf_fields() {
             [ 'icon' => 'fas fa-graduation-cap', 'title' => 'Flexible Care Training', 'description' => 'Everyone learns differently. Our training adapts. Your team walks away with skills they can actually use.' ],
             [ 'icon' => 'fas fa-handshake', 'title' => 'Partnership Care Training', 'description' => "We're your external training room. We learn your policies and procedures, then deliver training that fits how you actually work." ],
         ];
-    }, 10, 3);
+    }, 20, 3);
 
-    // Pre-populate Stats when empty so default stats are editable (About page only)
-    add_filter('acf/load_value/name=stats', function ($value, $post_id, $field) {
-        if (empty($post_id) || get_page_template_slug($post_id) !== 'page-templates/page-about.php') {
+    // Pre-populate Stats when empty (use field key + priority 20)
+    add_filter('acf/load_value/key=field_about_stats', function ($value, $post_id, $field) {
+        $pid = $post_id ? (int) $post_id : (int) get_the_ID();
+        if (!$pid || get_post_type($pid) !== 'page' || get_page_template_slug($pid) !== 'page-templates/page-about.php') {
             return $value;
         }
-        if (!empty($value) && is_array($value) && count($value) > 0) {
+        if (is_array($value) && count($value) > 0) {
             return $value;
         }
         return [
@@ -1364,7 +1372,7 @@ function cta_register_acf_fields() {
             [ 'number' => '4.6/5', 'label' => 'Trustpilot Rating' ],
             [ 'number' => '100%', 'label' => 'CQC-Compliant' ],
         ];
-    }, 10, 3);
+    }, 20, 3);
 
     // Pre-populate Testimonials when empty so default quotes are editable (Group Training page only)
     add_filter('acf/load_value/name=testimonials', function ($value, $post_id, $field) {
