@@ -42100,13 +42100,12 @@ fieldset.booking-modal-field legend.booking-modal-label {
   font-weight: 600;
   color: var(--brown-dark, #2B1B0E);
   text-align: right;
-  white-space: nowrap; /* Keep on one line by default */
+  white-space: normal; /* Allow wrap when space is tight */
+  overflow-wrap: break-word;
   word-break: normal;
-  overflow-wrap: normal;
-  flex: 0 0 auto; /* Don't shrink or grow - maintain natural width */
+  flex: 1 1 0%; /* Take remaining space and allow shrink so value can wrap */
   min-width: 0;
   line-height: 1.5; /* Match parent line-height for alignment */
-  /* Align with button's right edge - button is full width, so values align naturally */
 }
 
 /* Category value - allow wrapping at ampersand */
@@ -43534,18 +43533,19 @@ article.single-post > .container:not(.single-post-header-modern .container) {
   line-height: 1.8; /* Increased line spacing for better readability */
 }
 
-.single-post-main .entry-content a:not(.article-cta-btn) {
+/* Exclude .btn so primary/secondary buttons in content keep their own contrast */
+.single-post-main .entry-content a:not(.article-cta-btn):not(.btn) {
   color: var(--gold-primary);
   text-decoration: underline;
   text-underline-offset: 2px;
   transition: color var(--transition-fast);
 }
 
-.single-post-main .entry-content a:not(.article-cta-btn):hover {
+.single-post-main .entry-content a:not(.article-cta-btn):not(.btn):hover {
   color: var(--gold-hover);
 }
 
-.single-post-main .entry-content a:not(.article-cta-btn):focus {
+.single-post-main .entry-content a:not(.article-cta-btn):not(.btn):focus {
   outline: 2px solid var(--gold-primary);
   outline-offset: 2px;
   border-radius: 2px;
@@ -51905,6 +51905,19 @@ a.article-cta-btn:focus-visible {
   display: inline-flex;
   margin: 1.5rem auto 0;
   align-self: center;
+}
+
+/* Desktop: centre button and its text inside the booking card */
+@media (min-width: 768px) {
+  .course-detail-booking-card .course-next-dates {
+    align-items: center;
+  }
+  .course-detail-booking-card .course-next-dates .btn {
+    text-align: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .course-dates-list {

@@ -1202,24 +1202,38 @@ function cta_seo_admin_verification_page() {
 function cta_seo_redirects_page() {
     if (isset($_POST['cta_save_redirects']) && check_admin_referer('cta_seo_redirects')) {
         $redirect_attachments = isset($_POST['redirect_attachments']) ? 1 : 0;
+        $strip_category_base = isset($_POST['strip_category_base']) ? 1 : 0;
         update_option('cta_redirect_attachments_enabled', $redirect_attachments);
+        update_option('cta_strip_category_base_enabled', $strip_category_base);
+        flush_rewrite_rules();
         echo '<div class="notice notice-success is-dismissible"><p>Redirect settings saved.</p></div>';
     }
 
     $redirect_attachments = (int) get_option('cta_redirect_attachments_enabled', 1);
+    $strip_category_base = (int) get_option('cta_strip_category_base_enabled', 1);
     ?>
     <div class="wrap cta-seo-page">
         <header class="cta-seo-header">
             <h1>Redirects</h1>
-            <p class="cta-seo-header-desc">Control attachment redirects and see built-in URL redirects defined in the theme.</p>
+            <p class="cta-seo-header-desc">Control category URL stripping, attachment redirects, and see built-in URL redirects defined in the theme.</p>
         </header>
 
         <div class="cta-seo-section">
-            <h2 class="cta-seo-section__title">Attachment redirects</h2>
+            <h2 class="cta-seo-section__title">URL and redirect settings</h2>
             <div class="cta-seo-section__body">
                 <form method="post">
                     <?php wp_nonce_field('cta_seo_redirects'); ?>
                     <table class="form-table">
+                        <tr>
+                            <th scope="row">Strip category base</th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" name="strip_category_base" value="1" <?php checked($strip_category_base, 1); ?> />
+                                    Remove <code>/category/</code> from category URLs
+                                </label>
+                                <p class="description">When enabled, category URLs become <code>/training/</code> instead of <code>/category/training/</code>. Pages take precedence when a page and a category share the same slug. Save permalinks (Settings → Permalinks) after changing this if URLs do not update.</p>
+                            </td>
+                        </tr>
                         <tr>
                             <th scope="row">Redirect attachment pages</th>
                             <td>
