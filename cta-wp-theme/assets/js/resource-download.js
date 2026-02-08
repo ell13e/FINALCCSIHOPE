@@ -2,6 +2,9 @@
   'use strict';
 
   let currentResourceName = '';
+  /** @type {HTMLElement | null} Element that had focus before a modal opened; used to return focus on close. */
+  let downloadModalPreviousFocus = null;
+  let unavailableModalPreviousFocus = null;
 
   function getCfg() {
     if (!window.ctaData || !ctaData.ajaxUrl || !ctaData.nonce) return null;
@@ -12,6 +15,7 @@
     const modal = document.getElementById('resource-download-modal');
     if (!modal) return;
 
+    downloadModalPreviousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     currentResourceName = resourceName || '';
 
     const idInput = document.getElementById('resource-download-resource-id');
@@ -34,6 +38,14 @@
   function closeModal() {
     const modal = document.getElementById('resource-download-modal');
     if (!modal) return;
+
+    const canReturnTo = downloadModalPreviousFocus &&
+      document.contains(downloadModalPreviousFocus) &&
+      !downloadModalPreviousFocus.closest('[aria-hidden="true"]');
+    const returnTo = canReturnTo ? downloadModalPreviousFocus : document.body;
+    returnTo.focus();
+    downloadModalPreviousFocus = null;
+
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   }
@@ -41,6 +53,8 @@
   function openUnavailableModal(resourceName) {
     const modal = document.getElementById('resource-unavailable-modal');
     if (!modal) return;
+
+    unavailableModalPreviousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
     const subtitle = document.getElementById('resource-unavailable-subtitle');
     if (subtitle && resourceName) {
@@ -59,6 +73,16 @@
   function closeUnavailableModal() {
     const modal = document.getElementById('resource-unavailable-modal');
     if (!modal) return;
+
+    // Move focus off the close button before hiding the modal. Otherwise aria-hidden on the modal
+    // would hide the focused element from assistive tech (spec violation).
+    const canReturnTo = unavailableModalPreviousFocus &&
+      document.contains(unavailableModalPreviousFocus) &&
+      !unavailableModalPreviousFocus.closest('[aria-hidden="true"]');
+    const returnTo = canReturnTo ? unavailableModalPreviousFocus : document.body;
+    returnTo.focus();
+    unavailableModalPreviousFocus = null;
+
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   }

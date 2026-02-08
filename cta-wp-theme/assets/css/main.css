@@ -52184,6 +52184,15 @@ a.article-cta-btn:focus-visible {
   border: none;
   margin-bottom: 0.75rem;
   box-shadow: none;
+  display: flex;
+  flex-direction: column;
+}
+.course-detail-price-prominent .course-detail-price-line,
+.course-detail-price-prominent .course-detail-price-container {
+  order: 1;
+}
+.course-detail-price-prominent .course-detail-price-includes {
+  order: 2;
 }
 
 .course-detail-price-prominent .course-detail-price-line {
