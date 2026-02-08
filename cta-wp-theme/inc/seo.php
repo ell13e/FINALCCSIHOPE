@@ -1717,11 +1717,12 @@ function cta_sitemap_entry($entry, $post, $post_type) {
         }
     }
     
-    // lastmod: only output when valid (ISO 8601). Unset when invalid so we don't emit bad dates.
+    // lastmod: only output when valid. Use date-only (YYYY-MM-DD) for compatibility; never emit future dates.
     if (!empty($post->post_modified_gmt) && $post->post_modified_gmt !== '0000-00-00 00:00:00') {
         $ts = strtotime($post->post_modified_gmt);
-        if ($ts !== false && $ts >= strtotime('2000-01-01')) {
-            $entry['lastmod'] = gmdate('Y-m-d\TH:i:s+00:00', $ts);
+        $now = time();
+        if ($ts !== false && $ts >= strtotime('2000-01-01') && $ts <= $now) {
+            $entry['lastmod'] = gmdate('Y-m-d', $ts);
         } else {
             unset($entry['lastmod']);
         }
@@ -1732,6 +1733,83 @@ function cta_sitemap_entry($entry, $post, $post_type) {
     return $entry;
 }
 add_filter('wp_sitemaps_posts_entry', 'cta_sitemap_entry', 10, 3);
+
+/**
+ * Check if a post's post_modified_gmt is valid for sitemap lastmod (same rules as cta_sitemap_entry).
+ */
+function cta_sitemap_lastmod_is_valid($post) {
+    if (empty($post->post_modified_gmt) || $post->post_modified_gmt === '0000-00-00 00:00:00') {
+        return false;
+    }
+    $ts = strtotime($post->post_modified_gmt);
+    $now = time();
+    return $ts !== false && $ts >= strtotime('2000-01-01') && $ts <= $now;
+}
+
+/**
+ * Fix invalid post_modified/post_modified_gmt on existing courses, course_events and news (posts) so sitemap lastmod is valid.
+ * - course_event: use event_date (meta) when set and in the past, else post_date, else now.
+ * - course, post (news): use post_date when valid, else now.
+ * Caps at now so lastmod is never in the future. Returns number of posts updated.
+ */
+function cta_fix_sitemap_lastmod_dates() {
+    $post_types = ['course', 'course_event', 'post'];
+    $now = time();
+    $now_gmt = gmdate('Y-m-d H:i:s', $now);
+    $now_local = current_time('mysql');
+    $min_ts = strtotime('2000-01-01');
+    $updated = 0;
+
+    foreach ($post_types as $post_type) {
+        if (!post_type_exists($post_type)) {
+            continue;
+        }
+        $posts = get_posts([
+            'post_type'      => $post_type,
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+            'fields'         => 'ids',
+        ]);
+        foreach ($posts as $post_id) {
+            $post = get_post($post_id);
+            if (!$post || cta_sitemap_lastmod_is_valid($post)) {
+                continue;
+            }
+            $modified_gmt = $now_gmt;
+            $modified_local = $now_local;
+
+            // For course_events, prefer event_date (meta) when in the past
+            if ($post_type === 'course_event') {
+                $event_date = get_post_meta($post_id, 'event_date', true);
+                if (!empty($event_date)) {
+                    $event_ts = is_numeric($event_date) ? (int) $event_date : strtotime($event_date);
+                    if ($event_ts !== false && $event_ts >= $min_ts && $event_ts <= $now) {
+                        $modified_gmt = gmdate('Y-m-d H:i:s', $event_ts);
+                        $modified_local = get_date_from_gmt($modified_gmt, 'Y-m-d H:i:s');
+                    }
+                }
+            }
+
+            // Fallback: post_date when valid
+            if ($modified_gmt === $now_gmt && !empty($post->post_date_gmt) && $post->post_date_gmt !== '0000-00-00 00:00:00') {
+                $date_ts = strtotime($post->post_date_gmt);
+                if ($date_ts !== false && $date_ts >= $min_ts && $date_ts <= $now) {
+                    $modified_gmt = gmdate('Y-m-d H:i:s', $date_ts);
+                    $modified_local = get_date_from_gmt($modified_gmt, 'Y-m-d H:i:s');
+                }
+            }
+
+            wp_update_post([
+                'ID'                => $post_id,
+                'post_modified'     => $modified_local,
+                'post_modified_gmt' => $modified_gmt,
+            ]);
+            $updated++;
+        }
+    }
+
+    return $updated;
+}
 
 /**
  * Increase max URLs per sitemap
@@ -1957,6 +2035,17 @@ function cta_sitemap_admin_page() {
         
         echo '<div class="notice notice-success"><p>Sitemap cache cleared and search engines pinged!</p></div>';
     }
+
+    // Handle fix lastmod dates for existing courses/events
+    if (isset($_POST['fix_lastmod_dates']) && check_admin_referer('cta_fix_lastmod_dates')) {
+        $count = cta_fix_sitemap_lastmod_dates();
+        wp_cache_flush();
+        delete_transient('wp_sitemap_index');
+        delete_transient('wp_sitemap_posts_course');
+        delete_transient('wp_sitemap_posts_course_event');
+        delete_transient('wp_sitemap_posts_post');
+        echo '<div class="notice notice-success"><p><strong>Lastmod dates updated.</strong> ' . (int) $count . ' course(s), event(s) or news post(s) had invalid <code>post_modified</code> and were set to a valid date (events: event date when in the past, else post date or now). Sitemap cache cleared.</p></div>';
+    }
     
     // Get sitemap stats
     $sitemap_url = home_url('/wp-sitemap.xml');
@@ -2073,13 +2162,21 @@ function cta_sitemap_admin_page() {
             }
             ?>
             
-            <form method="post">
+            <form method="post" style="margin-bottom: 1em;">
                 <?php wp_nonce_field('cta_refresh_sitemap'); ?>
                 <button type="submit" name="refresh_sitemap" class="button button-primary">
                     🔄 Refresh Sitemap & Ping Search Engines
                 </button>
             </form>
             <p class="description">This will clear the sitemap cache and notify Google and Bing of the update.</p>
+
+            <form method="post">
+                <?php wp_nonce_field('cta_fix_lastmod_dates'); ?>
+                <button type="submit" name="fix_lastmod_dates" class="button">
+                    Fix lastmod dates for courses &amp; events
+                </button>
+            </form>
+            <p class="description">Updates courses, scheduled events and news posts that have invalid or future <code>post_modified</code> so the sitemap emits valid <code>lastmod</code> (fixes Search Console “Invalid date” errors). Uses each post’s publish date when possible (events: event date when in the past).</p>
             </div>
         </div>
         
