@@ -313,14 +313,27 @@
           </button>
           <div id="resources-dropdown" class="dropdown-menu" role="menu" aria-labelledby="resources-link">
             <?php
-            wp_nav_menu([
-                'theme_location' => 'resources',
-                'container' => false,
-                'menu_class' => 'dropdown-menu-list',
-                'fallback_cb' => 'cta_resources_fallback_menu',
-                'walker' => new CTA_Resources_Walker(),
-                'depth' => 1,
-            ]);
+            // Only use wp_nav_menu if the menu assigned to this location is clearly the Resources menu (by slug/name).
+            // Otherwise a Primary/Header menu can be assigned and the dropdown would show wrong items.
+            $locations = get_nav_menu_locations();
+            $resources_menu_id = isset($locations['resources']) ? $locations['resources'] : 0;
+            $menu_obj = $resources_menu_id ? wp_get_nav_menu_object($resources_menu_id) : null;
+            $use_resources_menu = $menu_obj && (
+                $menu_obj->slug === 'resources' ||
+                $menu_obj->slug === 'resources-dropdown' ||
+                stripos($menu_obj->name, 'Resources') !== false
+            );
+            if ($use_resources_menu) {
+                wp_nav_menu([
+                    'menu' => $resources_menu_id,
+                    'container' => false,
+                    'menu_class' => 'dropdown-menu-list',
+                    'walker' => new CTA_Resources_Walker(),
+                    'depth' => 1,
+                ]);
+            } else {
+                cta_resources_fallback_menu();
+            }
             ?>
           </div>
         </div>

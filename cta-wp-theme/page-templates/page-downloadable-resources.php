@@ -7,11 +7,6 @@
 
 get_header();
 
-while (have_posts()) {
-    the_post();
-    break;
-}
-
 $meta_title = 'Downloadable Care Training Resources | Free Templates & Guides';
 $meta_description = 'Free downloadable resources for care providers. Training templates, compliance checklists, policy documents, and care sector guides.';
 ?>
@@ -138,16 +133,6 @@ foreach (array_keys($resources_by_category) as $slug) {
       </div>
     </div>
   </section>
-
-  <?php if (get_the_content()) : ?>
-  <section class="page-body page-editor-content">
-    <div class="container">
-      <div class="entry-content">
-        <?php the_content(); ?>
-      </div>
-    </div>
-  </section>
-  <?php endif; ?>
 
   <section class="content-section" id="resource-library" aria-labelledby="filter-heading">
     <div class="container">

@@ -7,11 +7,6 @@
 
 get_header();
 
-while (have_posts()) {
-    the_post();
-    break;
-}
-
 $contact = cta_get_contact_info();
 
 $hero_title = get_field('hero_title') ?: 'Group Training for Care Teams in Kent';
@@ -36,16 +31,6 @@ $hero_subtitle = get_field('hero_subtitle') ?: 'Train your entire team together.
       </div>
     </div>
   </section>
-
-  <?php if (get_the_content()) : ?>
-  <section class="page-body page-editor-content">
-    <div class="container">
-      <div class="entry-content">
-        <?php the_content(); ?>
-      </div>
-    </div>
-  </section>
-  <?php endif; ?>
 
   <section class="group-how-it-works-section" id="how-it-works" aria-labelledby="how-it-works-heading">
     <div class="container">

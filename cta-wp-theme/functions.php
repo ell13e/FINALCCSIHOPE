@@ -49,18 +49,6 @@ function cta_require_login_for_admin_area() {
 add_action('init', 'cta_require_login_for_admin_area', 0);
 
 /**
- * Ensure the blog/News page only shows posts, never pages.
- * When a page is set as "Posts page" in Reading, WordPress uses home.php and the main query.
- * This forces that query to post_type 'post' only so pages never appear as "articles".
- */
-function cta_blog_only_posts($query) {
-    if (!is_admin() && $query->is_main_query() && $query->is_home()) {
-        $query->set('post_type', 'post');
-    }
-}
-add_action('pre_get_posts', 'cta_blog_only_posts', 5);
-
-/**
  * Theme Constants
  */
 define('CTA_THEME_VERSION', '1.0.0');

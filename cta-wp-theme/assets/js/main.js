@@ -490,11 +490,19 @@
     }
   }
 
-  // Resources dropdown uses CSS position:absolute; top:100%; left:0 (below parent). No inline positioning.
+  // Helper function to position resources dropdown below header (aligned with resources button)
   function updateResourcesDropdownPosition() {
-    if (!resourcesDropdownRef) return;
-    resourcesDropdownRef.style.top = '';
-    resourcesDropdownRef.style.left = '';
+    if (!resourcesDropdownRef || !resourcesButtonRef) return;
+    const header = document.querySelector('.site-header');
+    if (header) {
+      const headerRect = header.getBoundingClientRect();
+      const headerHeight = headerRect.height;
+      const buttonRect = resourcesButtonRef.getBoundingClientRect();
+      
+      // Position dropdown 8px below header, aligned with the left edge of the button
+      resourcesDropdownRef.style.top = `${headerHeight + 8}px`;
+      resourcesDropdownRef.style.left = `${buttonRect.left}px`;
+    }
   }
 
   // These functions create a better UX by preventing accidental dropdown closures

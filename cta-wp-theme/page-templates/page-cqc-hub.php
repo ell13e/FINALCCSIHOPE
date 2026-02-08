@@ -9,11 +9,6 @@
 
 get_header();
 
-while (have_posts()) {
-    the_post();
-    break;
-}
-
 $contact = cta_get_contact_info();
 
 /**
@@ -405,16 +400,6 @@ $collection_schema = [
       </div>
     </div>
   </section>
-
-  <?php if (get_the_content()) : ?>
-  <section class="page-body page-editor-content">
-    <div class="container">
-      <div class="entry-content">
-        <?php the_content(); ?>
-      </div>
-    </div>
-  </section>
-  <?php endif; ?>
 
   <nav class="cqc-jump-nav" aria-label="Page sections">
     <div class="container">
