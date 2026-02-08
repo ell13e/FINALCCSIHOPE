@@ -7,6 +7,11 @@
 
 get_header();
 
+while (have_posts()) {
+    the_post();
+    break;
+}
+
 $contact = cta_get_contact_info();
 
 /**
@@ -433,6 +438,16 @@ foreach ($faqs as $faq) {
       </div>
     </div>
   </section>
+
+  <?php if (get_the_content()) : ?>
+  <section class="page-body page-editor-content">
+    <div class="container">
+      <div class="entry-content">
+        <?php the_content(); ?>
+      </div>
+    </div>
+  </section>
+  <?php endif; ?>
 
   <section class="content-section" aria-labelledby="faq-categories-heading">
     <div class="container">

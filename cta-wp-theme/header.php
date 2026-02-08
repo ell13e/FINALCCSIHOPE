@@ -316,7 +316,7 @@
             wp_nav_menu([
                 'theme_location' => 'resources',
                 'container' => false,
-                'menu_class' => '',
+                'menu_class' => 'dropdown-menu-list',
                 'fallback_cb' => 'cta_resources_fallback_menu',
                 'walker' => new CTA_Resources_Walker(),
                 'depth' => 1,

@@ -7,6 +7,11 @@
 
 get_header();
 
+while (have_posts()) {
+    the_post();
+    break;
+}
+
 $meta_title = 'About Continuity Training Academy | Care Training Providers Kent';
 $meta_description = 'Professional care training in Kent since 2020. CQC-compliant, CPD-accredited courses delivered by working care professionals. 4.6★ rated on Trustpilot.';
 ?>
@@ -80,6 +85,16 @@ $cta_text = get_field('cta_text') ?: 'Join hundreds of care professionals who tr
       <p class="hero-subtitle"><?php echo esc_html($hero_subtitle); ?></p>
     </div>
   </section>
+
+  <?php if (get_the_content()) : ?>
+  <section class="page-body page-editor-content">
+    <div class="container">
+      <div class="entry-content">
+        <?php the_content(); ?>
+      </div>
+    </div>
+  </section>
+  <?php endif; ?>
 
   <section class="about-mission-new">
     <div class="container">

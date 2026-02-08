@@ -7,6 +7,11 @@
 
 get_header();
 
+while (have_posts()) {
+    the_post();
+    break;
+}
+
 $contact = cta_get_contact_info();
 
 $hero_title = get_field('hero_title') ?: 'Contact Us for Care Training in Kent';
@@ -31,6 +36,16 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
       <p class="hero-subtitle"><?php echo esc_html($hero_subtitle); ?></p>
     </div>
   </section>
+
+  <?php if (get_the_content()) : ?>
+  <section class="page-body page-editor-content">
+    <div class="container">
+      <div class="entry-content">
+        <?php the_content(); ?>
+      </div>
+    </div>
+  </section>
+  <?php endif; ?>
 
   <section class="contact-main-section" aria-labelledby="contact-details-heading">
     <div class="container">
