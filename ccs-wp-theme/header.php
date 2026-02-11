@@ -90,7 +90,7 @@
                      <?php echo esc_url(ccs_image('logo/long_logo-1200w.webp')); ?> 1200w,
                      <?php echo esc_url(ccs_image('logo/long_logo-1600w.webp')); ?> 1600w"
              src="<?php echo esc_url(ccs_image('logo/long_logo-400w.webp')); ?>"
-             alt="<?php bloginfo('name'); ?> - Care Sector Training in Kent"
+             alt="<?php bloginfo('name'); ?> - Domiciliary care in Kent"
              class="logo-img"
              width="200"
              height="50"
@@ -285,7 +285,9 @@
         </div>
 
         <a href="<?php echo esc_url(ccs_page_url('about')); ?>" class="nav-link<?php echo is_page('about') ? ' nav-link-active' : ''; ?>">About Us</a>
-        
+        <a href="<?php echo esc_url(ccs_page_url('careers')); ?>" class="nav-link<?php echo is_page_template('page-templates/page-careers.php') ? ' nav-link-active' : ''; ?>">Careers</a>
+        <a href="<?php echo esc_url(ccs_page_url('for-professionals')); ?>" class="nav-link<?php echo is_page_template('page-templates/page-commissioning.php') ? ' nav-link-active' : ''; ?>">For Professionals</a>
+
         <div class="nav-item-dropdown">
           <button
             type="button"
@@ -432,7 +434,9 @@
         <a href="<?php echo esc_url(get_post_type_archive_link('course_event')); ?>" class="mobile-menu-link">Upcoming Courses</a>
         <a href="<?php echo esc_url(ccs_page_url('group-training')); ?>" class="mobile-menu-link">Group Training</a>
         <a href="<?php echo esc_url(ccs_page_url('about')); ?>" class="mobile-menu-link">About Us</a>
-        
+        <a href="<?php echo esc_url(ccs_page_url('careers')); ?>" class="mobile-menu-link">Careers</a>
+        <a href="<?php echo esc_url(ccs_page_url('for-professionals')); ?>" class="mobile-menu-link">For Professionals</a>
+
         <div class="accordion" data-accordion-group="mobile-nav">
           <button
             type="button"

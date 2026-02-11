@@ -13,6 +13,11 @@ $services_url = get_post_type_archive_link('care_service');
 if (!$services_url) {
     $services_url = home_url('/services/');
 }
+$news_url = ccs_page_url('news');
+if (!$news_url && get_option('page_for_posts')) {
+    $news_url = get_permalink(get_option('page_for_posts'));
+}
+$resources_url = ccs_page_url('downloadable-resources');
 ?>
 
 <nav class="skip-links" aria-label="Skip to page sections">
@@ -87,6 +92,23 @@ if (!$services_url) {
       </div>
     </div>
   </section>
+
+  <?php if ($news_url || $resources_url) : ?>
+  <section class="ccs-home-resources" aria-labelledby="ccs-resources-heading">
+    <div class="container">
+      <h2 id="ccs-resources-heading" class="ccs-home-resources-title">Resources</h2>
+      <p class="ccs-home-resources-lead">News, guides, and downloadable resources.</p>
+      <ul class="ccs-home-resources-links">
+        <?php if ($news_url) : ?>
+        <li><a href="<?php echo esc_url($news_url); ?>" class="ccs-home-resources-link">News &amp; Articles</a></li>
+        <?php endif; ?>
+        <?php if ($resources_url) : ?>
+        <li><a href="<?php echo esc_url($resources_url); ?>" class="ccs-home-resources-link">Downloadable Resources</a></li>
+        <?php endif; ?>
+      </ul>
+    </div>
+  </section>
+  <?php endif; ?>
 </main>
 
 <?php get_footer(); ?>

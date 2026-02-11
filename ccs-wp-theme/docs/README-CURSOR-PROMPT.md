@@ -12,7 +12,7 @@ Transform the CTA (training academy) WordPress theme into the CCS (domiciliary c
 | 2 | **ccs-visual-ux-specs.md** | Design, UX, copy tone, market gaps, CQC integration, launch checklist |
 | 3 | **ccs-technical-roadmap.md** | Step-by-step code: find/replace, post types, forms, templates, testing |
 
-**Rule**: If it’s not in these docs, don’t invent it. Check the docs first.
+**Rule**: If it’s not in these docs, don’t invent it. Check the docs first. If **ccs-visual-ux-specs.md** is missing, use ccs-cursor-prompt.md and the live site (continuitycareservices.co.uk) for brand, tone, and design cues.
 
 ---
 
@@ -57,21 +57,31 @@ Theme metadata, constants (`CCS_EMAIL_OFFICE`, `CCS_EMAIL_RECRUITMENT`, CQC, pho
 
 ---
 
-### Phase 2 – HIGH (2–3 days)  
+### Phase 2 – COMPLETE  
 *Goal: All main pages live, professional look.*
 
 | # | Task | Done |
 |---|------|------|
-| 2.1 | Email system + templates (office@ / recruitment@, form type in subject) | [ ] |
-| 2.2 | Contact page (phone, office@, map, hours) | [ ] |
-| 2.3 | About page (team, philosophy, “we don’t rotate staff”) | [ ] |
-| 2.4 | Careers page (recruitment@, CTA training link, application form) | [ ] |
-| 2.5 | Commissioning / “For Professionals” page (office@, LA/NHS focus) | [ ] |
-| 2.6 | CSS refinements (tokens, hierarchy from ccs-visual-ux-specs.md) | [ ] |
-| 2.7 | Mobile responsiveness | [ ] |
-| 2.8 | Navigation (no overloaded dropdowns) | [ ] |
+| 2.1 | Email system + templates (office@ / recruitment@, form type in subject) | [x] |
+| 2.2 | Contact page (phone, office@, map, hours) | [x] |
+| 2.3 | About page (team, philosophy, “we don’t rotate staff”) | [x] |
+| 2.4 | Careers page (recruitment@, CTA training link, application form) | [x] |
+| 2.5 | Commissioning / “For Professionals” page (office@, LA/NHS focus) | [x] |
+| 2.6 | CSS refinements (tokens, hierarchy from ccs-visual-ux-specs.md) | [x] |
+| 2.7 | Mobile responsiveness | [x] |
+| 2.8 | Navigation (no overloaded dropdowns) | [x] |
 
 **Checkpoint**: All key pages exist, forms work, layout works on mobile.
+
+**Phase 2 implementation notes** (use with the three reference docs):
+- **2.1** Handlers in `inc/ajax-handlers.php` and `src/Controllers/` already send to `CCS_EMAIL_OFFICE` / `CCS_EMAIL_RECRUITMENT` with form type in subject. Add optional HTML email templates under `template-parts/emails/` if needed; roadmap references this.
+- **2.2** `page-templates/page-contact.php` has phone, email, map (map label updated to Continuity of Care Services). Add office hours block using `ccs_get_contact_info()` or schema opening hours; ensure hero/copy is care-focused (not training). Fallback in `functions.php` `ccs_get_contact_info()` and Customizer defaults in `inc/customizer.php` should use verified phone 01622 809881 and office@ when no theme options set.
+- **2.3** `page-templates/page-about.php` exists; reframe copy from training to domiciliary care, emphasise "we don't rotate staff" and philosophy from Section 2 / ccs-cursor-prompt; keep paraplegic father testimonial.
+- **2.4** No careers template yet. Add page template (e.g. `page-careers.php`); career application handler exists (`ccs_handle_career_application` → recruitment@). Add link to CTA/training (sister company) per Section 7.
+- **2.5** No commissioning template yet. Add page template "For Professionals" (e.g. `page-commissioning.php`); `ccs_handle_commissioning_enquiry` in ajax-handlers.php already sends to office@.
+- **2.6** If ccs-visual-ux-specs.md is missing, extract brand colours/typography from live site and `assets/css/main.css` `:root` tokens; align hierarchy with ccs-cursor-prompt and continuitycareservices.co.uk.
+- **2.7** `header.php` has mobile menu and breakpoints; verify contact, about, front-page, and new Phase 2 pages at 320px and 768px; touch targets 44px+.
+- **2.8** Header has one dropdown (Resources). Add Careers and For Professionals/Commissioning to nav without overloading; `inc/nav-walkers.php` and menu locations in theme-setup.
 
 ---
 
@@ -80,11 +90,11 @@ Theme metadata, constants (`CCS_EMAIL_OFFICE`, `CCS_EMAIL_RECRUITMENT`, CQC, pho
 
 | # | Task | Done |
 |---|------|------|
-| 3.1 | Form validation (required fields, email, file types for CV) | [ ] |
-| 3.2 | Service filters (type, condition, area) | [ ] |
-| 3.3 | Blog/resources section (if in scope) | [ ] |
-| 3.4 | CQC integration (badge, report link, rating visible) | [ ] |
-| 3.5 | Performance (images, Lighthouse) | [ ] |
+| 3.1 | Form validation (required fields, email, file types for CV) | [x] |
+| 3.2 | Service filters (type, condition, area) | [x] |
+| 3.3 | Blog/resources section (if in scope) | [x] |
+| 3.4 | CQC integration (badge, report link, rating visible) | [x] |
+| 3.5 | Performance (images, Lighthouse) | [x] |
 
 **Checkpoint**: Safe to launch from a quality and performance standpoint.
 

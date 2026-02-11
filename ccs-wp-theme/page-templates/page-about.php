@@ -7,8 +7,8 @@
 
 get_header();
 
-$meta_title = 'About Continuity of Care Services | Care Training Providers Kent';
-$meta_description = 'Professional care training in Kent since 2020. CQC-compliant, CPD-accredited courses delivered by working care professionals. 4.6★ rated on Trustpilot.';
+$meta_title = 'About Continuity of Care Services | Domiciliary Care Kent';
+$meta_description = 'We don\'t rush or rotate staff. Person-centred domiciliary care across Maidstone, Kent and Medway. CQC-rated Good. Your Team, Your Time, Your Life.';
 ?>
 <meta name="description" content="<?php echo esc_attr($meta_description); ?>">
 <meta property="og:title" content="<?php echo esc_attr($meta_title); ?>">
@@ -22,15 +22,15 @@ $meta_description = 'Professional care training in Kent since 2020. CQC-complian
 
 $contact = ccs_get_contact_info();
 
-$hero_title = get_field('hero_title') ?: 'About Our Care Training in Kent';
-$hero_subtitle = get_field('hero_subtitle') ?: 'CQC-compliant, CPD-accredited care sector training in Kent since 2020';
+$hero_title = get_field('hero_title') ?: 'About Us';
+$hero_subtitle = get_field('hero_subtitle') ?: 'Your Team, Your Time, Your Life. We provide person-centred domiciliary care across Maidstone, Kent and Medway.';
 
-$mission_title = get_field('mission_title') ?: 'Our Care Training Approach';
+$mission_title = get_field('mission_title') ?: 'Our approach';
 $mission_text_raw = get_field('mission_text');
 $mission_text_default = [
-  "Continuity of Care Services's ethos reflects our goal: to urge businesses to invest in their staff, and individuals to invest in themselves.",
-  "We position ourselves as <strong>'the external training room'</strong> that becomes part of your organisation. We don't just deliver courses, we partner with you.",
-  "When working with new care providers, we take time to understand your policies and procedures, ensuring our training complements how your organisation operates. We tailor our training to align perfectly with your needs, creating a seamless integration with your existing processes and standards."
+  "We don't rush or rotate staff. We take time to get to know each person, not just their care plan.",
+  "Our caring, local team is dedicated to supporting families across Kent. Instead of rotating carers every other week, we commit to discovering the quirks of every client—from how they like their toast to what puts them at ease on a tough day.",
+  "We believe that the best care doesn't stop when the to-do list is ticked; it continues through our staff showing up in a way that feels friendly, familiar, and person-centred."
 ];
 // ACF free: mission_text is a single WYSIWYG (string). Legacy: repeater returned array of rows with 'paragraph' key.
 if (is_array($mission_text_raw) && !empty($mission_text_raw)) {
@@ -58,25 +58,28 @@ if (empty($mission_image)) {
   }
 }
 
-$values_title = get_field('values_title') ?: 'Core Care Training Values';
-$values_subtitle = get_field('values_subtitle') ?: 'These principles guide everything we do and shape the experience we provide to our learners.';
+$values_title = get_field('values_title') ?: 'What we stand for';
+$values_subtitle = get_field('values_subtitle') ?: 'These principles guide how we deliver care every day.';
 
 $stats_raw = get_field('stats');
 if (!is_array($stats_raw) || count($stats_raw) === 0) {
     $stats_raw = get_post_meta(get_the_ID(), 'stats', true);
 }
 $stats = is_array($stats_raw) && count($stats_raw) > 0 ? $stats_raw : [
-  ['number' => '40+', 'label' => 'Courses Offered'],
-  ['number' => '2020', 'label' => 'Established'],
-  ['number' => '4.6/5', 'label' => 'Trustpilot Rating'],
-  ['number' => '100%', 'label' => 'CQC-Compliant'],
+  ['number' => 'CQC Good', 'label' => 'Rating'],
+  ['number' => '2015', 'label' => 'Est.'],
+  ['number' => 'Kent', 'label' => 'Coverage'],
+  ['number' => '24/7', 'label' => 'Care available'],
 ];
 
-$team_title = get_field('team_title') ?: 'Expert Care Training Team';
-$team_subtitle = get_field('team_subtitle') ?: 'Experienced professionals dedicated to your development';
+$team_title = get_field('team_title') ?: 'Our team';
+$team_subtitle = get_field('team_subtitle') ?: 'People who care about the people we support';
 
-$ccs_title = get_field('ccs_title') ?: 'Start Your Care Training Today';
-$ccs_text = get_field('ccs_text') ?: 'Join hundreds of care professionals who trust us for their training needs. Get expert CQC compliance training with CPD-accredited certificates.';
+$ccs_title = get_field('ccs_title') ?: 'Get in touch';
+$ccs_text = get_field('ccs_text') ?: 'Request a care assessment or find out how we can support you or your family. We\'re here to help.';
+
+$paraplegic_testimonial_quote = "I am delighted to express my gratitude for the outstanding care CCS delivered to my paraplegic father, requiring complex care. The skilled and compassionate team went above and beyond, addressing his unique needs with unwavering dedication. Their expertise and empathy transformed what could have been a challenging situation into a positive and reassuring experience for him and his family.";
+$paraplegic_testimonial_author = "Home Care Maidstone Client – Family Member";
 ?>
 
 <main id="main-content">
@@ -97,6 +100,21 @@ $ccs_text = get_field('ccs_text') ?: 'Join hundreds of care professionals who tr
       <p class="hero-subtitle"><?php echo esc_html($hero_subtitle); ?></p>
     </div>
   </section>
+
+  <?php if (defined('CCS_CQC_RATING') && defined('CCS_CQC_LOCATION_ID') && defined('CCS_CQC_REPORT_URL')) : ?>
+  <section class="about-cqc-section" aria-labelledby="about-cqc-heading">
+    <div class="container">
+      <h2 id="about-cqc-heading" class="about-cqc-heading">CQC registration</h2>
+      <div class="about-cqc-block">
+        <p class="about-cqc-rating">CQC Rating: <strong><?php echo esc_html(CCS_CQC_RATING); ?></strong> (as of 06/12/2023)</p>
+        <p class="about-cqc-id">Location ID: <?php echo esc_html(CCS_CQC_LOCATION_ID); ?></p>
+        <p class="about-cqc-link">
+          <a href="<?php echo esc_url(CCS_CQC_REPORT_URL); ?>" target="_blank" rel="noopener noreferrer">View our full CQC report</a>
+        </p>
+      </div>
+    </div>
+  </section>
+  <?php endif; ?>
 
   <section class="about-mission-new">
     <div class="container">
@@ -128,6 +146,16 @@ $ccs_text = get_field('ccs_text') ?: 'Join hundreds of care professionals who tr
     </div>
   </section>
 
+  <section class="about-testimonial-section" aria-labelledby="about-testimonial-heading">
+    <div class="container">
+      <h2 id="about-testimonial-heading" class="sr-only">What families say</h2>
+      <blockquote class="about-testimonial-block">
+        <p class="about-testimonial-quote"><?php echo esc_html($paraplegic_testimonial_quote); ?></p>
+        <footer class="about-testimonial-author">— <?php echo esc_html($paraplegic_testimonial_author); ?></footer>
+      </blockquote>
+    </div>
+  </section>
+
   <section class="about-values-new">
     <div class="container">
       <div class="about-values-header">
@@ -143,26 +171,26 @@ if (!is_array($values_raw) || count($values_raw) === 0) {
 }
 $values = is_array($values_raw) && count($values_raw) > 0 ? $values_raw : [
   [
+    'icon' => 'fas fa-heart',
+    'title' => 'Person-centred care',
+    'description' => 'We get to know each person—not just their care plan. How they like their toast, what helps on a tough day.'
+  ],
+  [
+    'icon' => 'fas fa-users',
+    'title' => 'Consistency',
+    'description' => 'We don\'t rotate staff. Familiar faces and continuity so you feel safe and supported.'
+  ],
+  [
     'icon' => 'fas fa-hands-helping',
-            'title' => 'Hands-On Care Training',
-            'description' => 'Practical training that builds real competence, regardless of experience or background.'
-          ],
-          [
-            'icon' => 'fas fa-users',
-            'title' => 'Equality & Diversity in Training',
-            'description' => 'Anyone can reach success. The key is knowledge. We make training accessible to everyone.'
-          ],
-          [
-            'icon' => 'fas fa-graduation-cap',
-            'title' => 'Flexible Care Training',
-            'description' => 'Everyone learns differently. Our training adapts. Your team walks away with skills they can actually use.'
-          ],
-          [
-            'icon' => 'fas fa-handshake',
-            'title' => 'Partnership Care Training',
-            'description' => 'We\'re your external training room. We learn your policies and procedures, then deliver training that fits how you actually work.'
-          ]
-        ];
+    'title' => 'Compassion',
+    'description' => 'Care that doesn\'t stop when the to-do list is done. We show up in a way that feels friendly and familiar.'
+  ],
+  [
+    'icon' => 'fas fa-handshake',
+    'title' => 'Partnership',
+    'description' => 'We work closely with families, nurses and healthcare teams so we get it right, every time.'
+  ]
+];
 
 foreach ($values as $value) :
         ?>
@@ -421,8 +449,8 @@ foreach ($values as $value) :
         <h2><?php echo esc_html($ccs_title); ?></h2>
         <p><?php echo esc_html($ccs_text); ?></p>
         <div class="about-cta-buttons-new">
-          <a href="<?php echo esc_url(ccs_page_url('contact') . '?type=book-course'); ?>" class="btn btn-primary">Book Your Training</a>
-          <a href="<?php echo esc_url(get_post_type_archive_link('course')); ?>" class="btn btn-secondary">View All Courses</a>
+          <a href="<?php echo esc_url(ccs_page_url('contact')); ?>" class="btn btn-primary">Request a care assessment</a>
+          <a href="<?php echo esc_url(ccs_page_url('contact')); ?>" class="btn btn-secondary">Get in touch</a>
         </div>
       </div>
     </div>

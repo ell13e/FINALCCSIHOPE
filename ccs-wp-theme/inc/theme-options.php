@@ -22,11 +22,11 @@ function ccs_get_contact_info_from_options() {
         return ccs_get_contact_info_from_customizer();
     }
     
-    // Fallback to hardcoded values
+    // Fallback to hardcoded values (verified: README Section 2)
     return [
-        'phone' => '01622 587343',
-        'phone_link' => 'tel:01622587343',
-        'email' => 'enquiries@continuitytrainingacademy.co.uk',
+        'phone' => '01622 809881',
+        'phone_link' => 'tel:01622809881',
+        'email' => 'office@continuitycareservices.co.uk',
         'address' => [
             'line1' => 'Continuity of Care Services',
             'line2' => 'The Maidstone Studios, New Cut Road',
@@ -34,9 +34,9 @@ function ccs_get_contact_info_from_options() {
             'postcode' => 'ME14 5NZ',
         ],
         'social' => [
-            'facebook' => 'https://facebook.com/continuitytraining',
-            'instagram' => 'https://instagram.com/continuitytrainingacademy',
-            'linkedin' => 'https://www.linkedin.com/company/continuitytrainingacademy/',
+            'facebook' => '',
+            'instagram' => '',
+            'linkedin' => 'https://uk.linkedin.com/company/continuitycareservices',
             'twitter' => '',
         ],
     ];

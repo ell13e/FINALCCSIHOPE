@@ -73,6 +73,38 @@ add_filter('use_block_editor_for_post_type', 'ccs_disable_gutenberg', 10, 2);
 // Head cleanup is handled in inc/seo.php - ccs_cleanup_head()
 
 /**
+ * Apply service filters (tax_query) on care_service archive when GET params present.
+ */
+function ccs_care_service_archive_filters($query) {
+    if (!isset($query) || !$query->is_main_query() || !$query->is_post_type_archive('care_service')) {
+        return;
+    }
+    $tax_queries = [];
+    $taxonomies = [
+        'service_category' => 'service_category',
+        'care_condition'   => 'care_condition',
+        'coverage_area'    => 'coverage_area',
+    ];
+    foreach ($taxonomies as $param => $taxonomy) {
+        $slug = isset($_GET[$param]) ? sanitize_text_field(wp_unslash($_GET[$param])) : '';
+        if ($slug === '' || $slug === 'all') {
+            continue;
+        }
+        if (term_exists($slug, $taxonomy)) {
+            $tax_queries[] = [
+                'taxonomy' => $taxonomy,
+                'field'    => 'slug',
+                'terms'    => $slug,
+            ];
+        }
+    }
+    if (!empty($tax_queries)) {
+        $query->set('tax_query', array_merge(['relation' => 'AND'], $tax_queries));
+    }
+}
+add_action('pre_get_posts', 'ccs_care_service_archive_filters', 15);
+
+/**
  * Add body classes
  */
 function ccs_body_classes($classes) {

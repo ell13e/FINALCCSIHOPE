@@ -412,7 +412,9 @@ section,
   
   /* Alias for consistency */
   --brown-muted: var(--brown-light);
-  
+  --color-primary: var(--gold-primary);
+  --color-accent: var(--gold-primary-light);
+
   /* Typography */
   --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: "IBM Plex Mono", 'Courier New', monospace;
@@ -3863,6 +3865,45 @@ input[type="search"]::-ms-clear,
   /* Match latest-news spacing: 8px between title and subtitle/intro */
   /* Section-title now has margin-bottom: 8px (same as latest-news-title-main), so no offset needed */
   margin-top: 0; /* Spacing handled by section-title margin-bottom (8px) */
+}
+
+/* Homepage Resources block */
+.ccs-home-resources {
+  padding: 2rem 0;
+  background: var(--cream-light, #faf8f5);
+}
+
+.ccs-home-resources-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--brown-dark, #2B1B0E);
+  margin: 0 0 0.25rem 0;
+}
+
+.ccs-home-resources-lead {
+  font-size: 0.9375rem;
+  color: var(--brown-medium, #5c4a3d);
+  margin: 0 0 1rem 0;
+}
+
+.ccs-home-resources-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ccs-home-resources-link {
+  color: var(--gold-primary, #B29456);
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.ccs-home-resources-link:hover,
+.ccs-home-resources-link:focus {
+  text-decoration: none;
 }
 
 .section-header {
@@ -9754,6 +9795,79 @@ textarea:focus-visible,
   }
 }
 
+/* Care services archive filters */
+.ccs-service-filters {
+  margin-bottom: 1.5rem;
+  padding: 1rem 0;
+}
+
+.ccs-service-filters-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.ccs-service-filters-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ccs-service-filters-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--brown-dark, #2B1B0E);
+}
+
+.ccs-service-filters-select {
+  min-width: 160px;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  font-size: 0.9375rem;
+  border: 1px solid var(--cream-border, #E8E3D6);
+  border-radius: 6px;
+  background: var(--white);
+  color: var(--brown-dark, #2B1B0E);
+  appearance: auto;
+}
+
+.ccs-service-filters-select:focus {
+  outline: 2px solid var(--gold-primary, #B29456);
+  outline-offset: 2px;
+}
+
+.ccs-service-filters-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ccs-service-filters-btn {
+  flex-shrink: 0;
+}
+
+.ccs-service-filters-clear {
+  font-size: 0.875rem;
+  color: var(--gold-primary, #B29456);
+  text-decoration: underline;
+}
+
+.ccs-service-filters-clear:hover,
+.ccs-service-filters-clear:focus {
+  text-decoration: none;
+}
+
+@media (max-width: 639px) {
+  .ccs-service-filters-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .ccs-service-filters-select {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
 /* Active Filters */
 .active-filters {
   margin-bottom: 16px;
@@ -14632,6 +14746,67 @@ input[type="email"].contact-form-input {
   line-height: 1.5;
 }
 
+.contact-office-hours {
+  padding: 1rem 1.25rem;
+  background: var(--white);
+  border: 1px solid rgba(178, 148, 86, 0.12);
+  border-radius: 14px;
+}
+
+.contact-office-hours-heading {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--brown-dark);
+  margin: 0 0 0.25rem 0;
+}
+
+.contact-office-hours-value {
+  font-size: 0.9375rem;
+  color: var(--brown-medium);
+  margin: 0;
+}
+
+/* Careers page */
+.careers-intro-section {
+  padding: 2rem 1rem 1.5rem;
+}
+.careers-intro-lead {
+  max-width: 42rem;
+  margin: 0 0 1rem 0;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--brown-dark, #2B1B0E);
+}
+.careers-intro-cta {
+  margin: 0;
+}
+.careers-cta-training {
+  padding: 1rem 1.25rem;
+  background: var(--white);
+  border: 1px solid rgba(178, 148, 86, 0.12);
+  border-radius: 14px;
+  margin-top: 1rem;
+}
+.careers-cta-training-heading {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--brown-dark, #2B1B0E);
+  margin: 0 0 0.35rem 0;
+}
+.careers-cta-training-text {
+  font-size: 0.9375rem;
+  color: var(--brown-medium, #5c4a3d);
+  margin: 0;
+  line-height: 1.5;
+}
+.careers-cta-training-link {
+  color: var(--gold-primary, #B29456);
+  text-decoration: underline;
+}
+.careers-cta-training-link:hover,
+.careers-cta-training-link:focus {
+  text-decoration: none;
+}
 
 /* Main Contact Section */
 .contact-main-section {
@@ -15750,6 +15925,21 @@ input[type="email"].contact-form-input {
   flex-shrink: 0;
   margin-top: 1px;
   opacity: 0.9;
+}
+
+/* Phase 2 pages: 320px viewport – prevent overflow, readable text, touch targets */
+@media (max-width: 360px) {
+  .careers-intro-section .container,
+  .commissioning-intro .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .contact-form-actions .btn,
+  .contact-form-submit {
+    min-height: 44px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
 }
 
 /* Mobile Optimizations */
@@ -37649,6 +37839,22 @@ font-size: 0.875rem;
   text-align: center;
 }
 
+.footer-modern-cqc {
+  font-size: 13px;
+  color: var(--brown-dark);
+  margin: 0 0 8px 0;
+}
+
+.footer-modern-cqc a {
+  color: var(--gold-primary);
+  text-decoration: underline;
+}
+
+.footer-modern-cqc a:hover,
+.footer-modern-cqc a:focus {
+  text-decoration: none;
+}
+
 .footer-modern-copyright {
   font-size: 13px;
   color: var(--brown-dark);
@@ -46445,6 +46651,42 @@ a.article-cta-btn:focus-visible {
    About Page - New Styles (from static site)
    ============================================ */
 
+.about-cqc-section {
+  padding: 1.5rem 1rem;
+  background: var(--cream-light, #faf8f5);
+}
+
+.about-cqc-heading {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--brown-dark, #2B1B0E);
+  margin: 0 0 0.5rem 0;
+}
+
+.about-cqc-block {
+  margin: 0;
+}
+
+.about-cqc-block p {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9375rem;
+  color: var(--brown-medium, #5c4a3d);
+}
+
+.about-cqc-block .about-cqc-link {
+  margin-top: 0.5rem;
+}
+
+.about-cqc-block .about-cqc-link a {
+  color: var(--gold-primary, #B29456);
+  text-decoration: underline;
+}
+
+.about-cqc-block .about-cqc-link a:hover,
+.about-cqc-block .about-cqc-link a:focus {
+  text-decoration: none;
+}
+
 .about-mission-new {
   padding: var(--section-padding-mobile) 0;
   background: var(--white);
@@ -46550,6 +46792,33 @@ a.article-cta-btn:focus-visible {
   .about-mission-image-new img {
     min-height: 400px;
   }
+}
+
+.about-testimonial-section {
+  padding: var(--section-padding-mobile, 2rem) 1rem;
+  background: var(--cream-light, #faf8f5);
+}
+
+.about-testimonial-block {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 1.5rem 0;
+  border: none;
+}
+
+.about-testimonial-quote {
+  font-size: 1.125rem;
+  line-height: 1.65;
+  color: var(--brown-dark, #2B1B0E);
+  margin: 0 0 1rem 0;
+  font-style: italic;
+}
+
+.about-testimonial-author {
+  font-size: 0.9375rem;
+  color: var(--brown-medium, #5c4a3d);
+  margin: 0;
+  font-style: normal;
 }
 
 .about-values-new {

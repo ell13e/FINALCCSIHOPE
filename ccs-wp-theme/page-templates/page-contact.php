@@ -9,8 +9,8 @@ get_header();
 
 $contact = ccs_get_contact_info();
 
-$hero_title = get_field('hero_title') ?: 'Contact Us for Care Training in Kent';
-$hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group training, or ask about compliance. Call, email, or use the form below.";
+$hero_title = get_field('hero_title') ?: 'Get in Touch';
+$hero_subtitle = get_field('hero_subtitle') ?: 'Ask about care, request an assessment, or find out how we can support you. Call, email, or use the form below.';
 ?>
 
 <main id="main-content">
@@ -59,10 +59,15 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
             </a>
           </div>
 
+          <div class="contact-office-hours" aria-labelledby="office-hours-heading">
+            <h3 id="office-hours-heading" class="contact-office-hours-heading">Office hours</h3>
+            <p class="contact-office-hours-value"><?php echo esc_html(function_exists('ccs_get_opening_hours_display') ? ccs_get_opening_hours_display() : 'Mon–Fri 9:00 AM – 5:00 PM'); ?></p>
+          </div>
+
           <div class="contact-map-card">
             <div class="contact-map-wrapper">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2495.717049057254!2d0.546680377251131!3d51.27952727176235!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47df3394790a6a17%3A0x6bb94452df2da3f5!2sContinuity%20Training%20Academy!5e0!3m2!1sen!2suk!4v1766494532400!5m2!1sen!2suk"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2495.717049057254!2d0.546680377251131!3d51.27952727176235!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47df3394790a6a17%3A0x6bb94452df2da3f5!2sContinuity%20of%20Care%20Services!5e0!3m2!1sen!2suk!4v1766494532400!5m2!1sen!2suk"
                 width="100%"
                 height="100%"
                 style="border:0;"
@@ -317,7 +322,7 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
                     aria-invalid="false"
                   />
                   <label for="contact-consent" class="contact-form-consent-label">
-                    I would like to be contacted about training services. <span class="contact-form-required">*</span>
+                    I consent to being contacted regarding my enquiry. <span class="contact-form-required">*</span>
                   </label>
                 </div>
                 <div class="contact-form-consent-checkbox-wrapper" style="margin-top: 12px;">
@@ -330,7 +335,7 @@ $hero_subtitle = get_field('hero_subtitle') ?: "Book a course, arrange group tra
                     aria-describedby="marketing-consent-info"
                   />
                   <label for="contact-marketing-consent" class="contact-form-consent-label">
-                    I would like to receive updates, offers, and training news from Continuity of Care Services.
+                    I would like to receive updates and news from Continuity of Care Services.
                   </label>
                 </div>
                 <p

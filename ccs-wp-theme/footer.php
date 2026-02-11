@@ -25,7 +25,7 @@ $contact = ccs_get_contact_info();
                sizes="(max-width: 640px) 180px, 200px">
         </a>
         <p class="footer-modern-description">
-          Professional care sector training in Kent. CQC-compliant, CPD-accredited courses since 2020.
+          Person-centred domiciliary care across Maidstone, Kent and Medway. We don't rush or rotate staff—we take time to get to know each person.
         </p>
       </div>
     </div>
@@ -51,6 +51,12 @@ $contact = ccs_get_contact_info();
     </div>
 
     <div class="footer-modern-bottom">
+      <?php if (defined('CCS_CQC_LOCATION_ID') && defined('CCS_CQC_REPORT_URL')) : ?>
+      <p class="footer-modern-cqc">
+        CQC Registered | Location ID: <?php echo esc_html(CCS_CQC_LOCATION_ID); ?> |
+        <a href="<?php echo esc_url(CCS_CQC_REPORT_URL); ?>" target="_blank" rel="noopener noreferrer">View full report</a>
+      </p>
+      <?php endif; ?>
       <p class="footer-modern-copyright">
         © Copyright <?php echo date('Y'); ?>. All Rights Reserved by Continuity of Care Services
       </p>

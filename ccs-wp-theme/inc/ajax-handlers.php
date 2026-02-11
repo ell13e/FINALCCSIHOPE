@@ -1330,11 +1330,11 @@ add_action('wp_ajax_ccs_commissioning_enquiry', 'ccs_handle_commissioning_enquir
 add_action('wp_ajax_nopriv_ccs_commissioning_enquiry', 'ccs_handle_commissioning_enquiry');
 
 /**
- * Career application – sends to CCS_EMAIL_RECRUITMENT
+ * Career application – sends to CCS_EMAIL_RECRUITMENT. Optional CV: PDF, DOC, DOCX, max 5MB.
  */
 function ccs_handle_career_application() {
     if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ccs_nonce')) {
-        wp_send_json_error(['message' => 'Security verification failed. Please refresh and try again.', 'code' => 'nonce_failed'], 403);
+        wp_send_json_error(['message' => 'Security verification failed. Please refresh and try again.', 'errors' => [], 'code' => 'nonce_failed'], 403);
     }
     $full_name = sanitize_text_field($_POST['full_name'] ?? '');
     $email = sanitize_email($_POST['email'] ?? '');
@@ -1348,17 +1348,60 @@ function ccs_handle_career_application() {
     if (empty($email) || !is_email($email)) {
         $errors['email'] = 'Please enter a valid email address';
     }
+
+    $cv_path = '';
+    $cv_filename = '';
+    $allowed_cv_mimes = ['pdf' => 'application/pdf', 'doc' => 'application/msword', 'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    $max_cv_bytes = 5 * 1024 * 1024; // 5MB
+
+    if (!empty($_FILES['cv']['name']) && (int) $_FILES['cv']['error'] === UPLOAD_ERR_OK) {
+        $file = $_FILES['cv'];
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        if (!isset($allowed_cv_mimes[$ext])) {
+            $errors['cv'] = 'CV must be PDF, DOC or DOCX';
+        } elseif ($file['size'] > $max_cv_bytes) {
+            $errors['cv'] = 'CV must be 5MB or smaller';
+        } else {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            $override = ['test_form' => false, 'mimes' => $allowed_cv_mimes];
+            $upload = wp_handle_upload($file, $override);
+            if (isset($upload['file'])) {
+                $cv_path = $upload['file'];
+                $cv_filename = isset($upload['file']) ? wp_basename($upload['file']) : $file['name'];
+            } else {
+                $errors['cv'] = isset($upload['error']) ? $upload['error'] : 'CV could not be uploaded. Please try again.';
+            }
+        }
+    }
+
     if (!empty($errors)) {
         wp_send_json_error(['message' => 'Please correct the errors below.', 'errors' => $errors], 400);
     }
+
     $data = array_filter(compact('full_name', 'email', 'phone', 'position', 'cover_letter'));
     $data['name'] = $full_name;
     $data['message'] = $cover_letter;
+    if ($cv_filename) {
+        $data['cv_filename'] = $cv_filename;
+    }
     ccs_save_form_submission($data, 'career-application', false, '');
     $subject = 'Career Application – ' . ($position ?: $full_name);
-    $body = "New career application:\n\nName: {$full_name}\nEmail: {$email}\nPhone: {$phone}\nPosition: {$position}\n\nCover letter:\n{$cover_letter}\n\nSubmitted: " . current_time('mysql');
+    $body = "New career application:\n\nName: {$full_name}\nEmail: {$email}\nPhone: {$phone}\nPosition: {$position}\n\nCover letter:\n{$cover_letter}\n\n";
+    if ($cv_filename) {
+        $body .= "CV attached: {$cv_filename}\n\n";
+    }
+    $body .= "Submitted: " . current_time('mysql');
+
+    $headers = ['Content-Type: text/plain; charset=UTF-8', 'Reply-To: ' . $full_name . ' <' . $email . '>'];
+    $attachments = [];
+    if ($cv_path && is_readable($cv_path)) {
+        $attachments[] = $cv_path;
+    }
     if (defined('CCS_EMAIL_RECRUITMENT')) {
-        wp_mail(CCS_EMAIL_RECRUITMENT, $subject, $body, ['Content-Type: text/plain; charset=UTF-8', 'Reply-To: ' . $full_name . ' <' . $email . '>']);
+        wp_mail(CCS_EMAIL_RECRUITMENT, $subject, $body, $headers, $attachments);
+    }
+    if ($cv_path && file_exists($cv_path)) {
+        @unlink($cv_path);
     }
     wp_send_json_success(['message' => 'Thank you for applying. We will review your application and be in touch soon.']);
 }

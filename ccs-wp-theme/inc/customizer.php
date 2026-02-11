@@ -26,7 +26,7 @@ function ccs_customize_register($wp_customize) {
     
     // Phone Number
     $wp_customize->add_setting('ccs_contact_phone', [
-        'default' => '01622 587343',
+        'default' => '01622 809881',
         'sanitize_callback' => 'sanitize_text_field',
         'transport' => 'postMessage',
     ]);
@@ -38,7 +38,7 @@ function ccs_customize_register($wp_customize) {
     
     // Email Address
     $wp_customize->add_setting('ccs_contact_email', [
-        'default' => 'enquiries@continuitytrainingacademy.co.uk',
+        'default' => 'office@continuitycareservices.co.uk',
         'sanitize_callback' => 'sanitize_email',
         'transport' => 'postMessage',
     ]);
@@ -436,12 +436,12 @@ add_action('customize_register', 'ccs_customize_register');
  * This replaces the ACF Options version
  */
 function ccs_get_contact_info_from_customizer() {
-    $phone = get_theme_mod('ccs_contact_phone', '01622 587343');
+    $phone = get_theme_mod('ccs_contact_phone', '01622 809881');
     
     return [
         'phone' => $phone,
         'phone_link' => 'tel:' . preg_replace('/[^0-9]/', '', $phone),
-        'email' => get_theme_mod('ccs_contact_email', 'enquiries@continuitytrainingacademy.co.uk'),
+        'email' => get_theme_mod('ccs_contact_email', 'office@continuitycareservices.co.uk'),
         'address' => [
             'line1' => get_theme_mod('ccs_address_line1', 'Continuity of Care Services'),
             'line2' => get_theme_mod('ccs_address_line2', 'The Maidstone Studios, New Cut Road'),
